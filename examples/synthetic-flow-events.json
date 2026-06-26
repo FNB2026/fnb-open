@@ -1,0 +1,51 @@
+[
+  {
+    "event_id": "fnb_evt_001",
+    "type": "message",
+    "timestamp": "2026-01-15T09:30:00+08:00",
+    "actor": "alice_chen",
+    "content_preview": "早！设计方案我看了",
+    "flow_id": "fnb_flow_alice_ben_001"
+  },
+  {
+    "event_id": "fnb_evt_002",
+    "type": "message",
+    "timestamp": "2026-01-15T09:32:00+08:00",
+    "actor": "ben_lin",
+    "content_preview": "有几个细节我想确认一下",
+    "flow_id": "fnb_flow_alice_ben_001"
+  },
+  {
+    "event_id": "fnb_evt_003",
+    "type": "message",
+    "timestamp": "2026-01-15T14:00:00+08:00",
+    "actor": "alice_chen",
+    "content_preview": "刚开完会，有个事想跟你聊聊",
+    "flow_id": "fnb_flow_alice_ben_001"
+  },
+  {
+    "event_id": "fnb_evt_004",
+    "type": "trip_proposal",
+    "timestamp": "2026-01-15T14:06:00+08:00",
+    "actor": "alice_chen",
+    "content_preview": "大理旅行提议",
+    "flow_id": "fnb_flow_alice_ben_001",
+    "metadata": {
+      "destination": "大理",
+      "proposed_dates": "2026-01-25 to 2026-02-08"
+    }
+  },
+  {
+    "event_id": "fnb_evt_005",
+    "type": "relationship_inference",
+    "timestamp": "2026-01-15T14:30:00+08:00",
+    "actor": "system_agent",
+    "content_preview": "Alice和Ben的关系强度达到阈值",
+    "flow_id": "fnb_flow_alice_ben_001",
+    "metadata": {
+      "confidence": 0.82,
+      "evidence_count": 12,
+      "suggested_type": "close_friend_colleague"
+    }
+  }
+]

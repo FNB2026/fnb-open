@@ -1,0 +1,34 @@
+{
+  "assets": [
+    {
+      "asset_id": "ast_001",
+      "type": "image",
+      "filename": "design-sketch-v3.png",
+      "variant": "thumbnail",
+      "size_bytes": 24576,
+      "hash": "sha256-ab12cd34ef56...",
+      "owner": "alice_chen",
+      "source": "upload",
+      "processed": true,
+      "processing_jobs": [
+        {"type": "thumbnail", "status": "completed"},
+        {"type": "caption", "status": "completed"}
+      ]
+    },
+    {
+      "asset_id": "ast_002",
+      "type": "audio",
+      "filename": "voice-memo-trip-idea.m4a",
+      "variant": "original",
+      "size_bytes": 1048576,
+      "hash": "sha256-78cd90ef12ab...",
+      "owner": "alice_chen",
+      "source": "recording",
+      "processed": false,
+      "processing_jobs": [
+        {"type": "transcription", "status": "pending"},
+        {"type": "summary", "status": "pending"}
+      ]
+    }
+  ]
+}

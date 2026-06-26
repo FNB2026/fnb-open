@@ -1,0 +1,36 @@
+{
+  "timeline": [
+    {
+      "memory_id": "fnb_mem_001",
+      "type": "conversation",
+      "title": "设计项目讨论",
+      "date": "2026-01-15",
+      "source": "synthetic-chat.md",
+      "confidence": 0.95,
+      "actors": ["alice_chen", "ben_lin"],
+      "summary": "Alice和Ben就设计项目方案进行了讨论，Ben提出了添加时间轴的建议"
+    },
+    {
+      "memory_id": "fnb_mem_002",
+      "type": "trip_planning",
+      "title": "大理旅行规划",
+      "date": "2026-01-15",
+      "source": "synthetic-chat.md",
+      "confidence": 0.88,
+      "actors": ["alice_chen", "ben_lin"],
+      "summary": "Alice提议春节前去大理旅行，Ben表示有兴趣，将查看假期安排"
+    },
+    {
+      "memory_id": "fnb_mem_003",
+      "type": "relationship",
+      "title": "Alice-Ben工作关系",
+      "date": "2026-01-15",
+      "source": "system_inference",
+      "confidence": 0.82,
+      "actors": ["alice_chen", "ben_lin"],
+      "evidence_count": 12,
+      "status": "suggested",
+      "summary": "AI推断Alice和Ben之间可能为亲密同事/朋友关系，建议用户确认"
+    }
+  ]
+}

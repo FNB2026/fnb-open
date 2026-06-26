@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "node_id": "actor_alice_chen",
+      "type": "person",
+      "name": "Alice Chen",
+      "attributes": {
+        "occupation": "architect",
+        "location": "Shanghai"
+      }
+    },
+    {
+      "node_id": "actor_ben_lin",
+      "type": "person",
+      "name": "Ben Lin",
+      "attributes": {
+        "occupation": "designer",
+        "location": "Shenzhen"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "relationship_id": "rel_alice_ben_001",
+      "type": "colleague",
+      "status": "confirmed",
+      "participants": [
+        {"node_id": "actor_alice_chen", "role": "colleague"},
+        {"node_id": "actor_ben_lin", "role": "colleague"}
+      ],
+      "evidence": [
+        {"type": "conversation", "source": "synthetic-chat.md", "date": "2026-01-15"},
+        {"type": "project", "source": "design_project_x", "date": "2026-01-10"}
+      ]
+    },
+    {
+      "relationship_id": "rel_alice_ben_002",
+      "type": "friend",
+      "status": "suggested",
+      "confidence": 0.75,
+      "participants": [
+        {"node_id": "actor_alice_chen", "role": "friend"},
+        {"node_id": "actor_ben_lin", "role": "friend"}
+      ],
+      "evidence": [
+        {"type": "conversation", "source": "synthetic-chat.md", "date": "2026-01-15", "excerpt": "关于旅行规划"},
+        {"type": "ai_inference", "model": "fnb-relationship-v1", "confidence": 0.82}
+      ]
+    }
+  ]
+}
