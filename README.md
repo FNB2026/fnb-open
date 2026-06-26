@@ -1,5 +1,11 @@
 # FNB Open
 
+<p align="center">
+  <b>English</b> | <a href="#中文">中文</a>
+</p>
+
+---
+
 FNB is a **local-first personal memory operating system and AI social paradigm platform**.
 
 It turns flows of life, digital assets, conversations, events, and relationships into user-owned, auditable, explainable, permissioned domain objects.
@@ -90,7 +96,14 @@ FNB is built on the belief that:
 | Phase 3 | Selective engineering modules | 📋 Future |
 | Phase 4 | Full open-source evaluation after beta | 📋 Future |
 
-## License
+## Contact / 联系我们
+
+- **Discussions / 社区讨论**: [GitHub Discussions](https://github.com/FNB2026/fnb-open/discussions) — philosophical discussions, protocol proposals, Q&A
+- **Issues / 问题反馈**: [GitHub Issues](https://github.com/FNB2026/fnb-open/issues) — bug reports, documentation issues
+- **Security / 安全报告**: See [SECURITY.md](./SECURITY.md) — report vulnerabilities privately
+- **Maintainer / 维护者**: [FNB2026 on GitHub](https://github.com/FNB2026)
+
+## License / 许可证
 
 - **Documents**: CC BY-NC-SA 4.0
 - **Protocol and SDK repositories**: Apache 2.0
@@ -98,3 +111,119 @@ FNB is built on the belief that:
 ---
 
 **FNB is not finished. It is being built in the open, one principled decision at a time.**
+
+---
+
+<h2 id="中文">中文</h2>
+
+<p align="center">
+  <a href="#fnb-open">English</a> | <b>中文</b>
+</p>
+
+# FNB Open
+
+FNB 是一个**本地优先的个人记忆操作系统与 AI 社交新范式平台**。
+
+它将人生流、数字资产、对话、事件和关系，转化为用户拥有的、可审计、可解释、有权限控制的领域对象。
+
+本仓库包含公开发布的宣言、领域模型、协议草案、合成样本和社区治理文档。
+
+**官方产品实现保持私有**，直到安全、隐私和 Beta 就绪门禁全部通过。
+
+---
+
+## FNB 是什么
+
+FNB 相信：
+
+- **用户拥有自己的数据** — 而非平台或 AI 模型
+- **每一次 AI 推断都应有证据** — 不做黑箱式的关��决策
+- **每一段关系都应由用户治理** — 而非由算法定义
+- **每一份记忆都应可追溯来源** — 可追踪、可验证、可审计
+- **每一次纠正都应被保留** — 用户可以确认、拒绝或重写
+- **本地优先，云端可选** — 你的数据存在于你的设备上
+
+## FNB 不是
+
+- 不是传统信息流或内容平台
+- 不是通用笔记或日记应用
+- 不是 CRM
+- 不是区块链投机项目
+- 不是数据收割型 AI 助手
+- 不是"下一个微信"或"下一个 Notion"
+
+## 核心概念
+
+| 概念 | 说明 |
+|------|------|
+| **Flow（流）** | 事件流 / 运行时 — 持续流动的人生 |
+| **Node（节点）** | 角色、实体、消息或计算单元 — 流中的稳定对象 |
+| **Block（块）** | 聚合状态、知识块或资产块 — 从流中结构化产出 |
+| **Memory（记忆）** | 具有来源、评分、生命周期和可见性的一等对象 |
+| **Asset（资产）** | 文件、图片、音频或变体 — 统一媒体基础设施 |
+| **Event（事件）** | 仅追加的操作日志 — 审计真相的来源 |
+| **Relationship（关系）** | 有证据支撑、用户治理的角色间连接 |
+| **Permission（权限）** | 具有所有权和策略的细粒度访问控制矩阵 |
+| **Audit（审计）** | 不可篡改的数据访问和变更记录 |
+| **Correction（纠正）** | 用户控制的 PATCH 操作，支持完全撤销/编辑 |
+| **AIInference（AI 推断）** | 每一次模型判断的结构化记录 |
+| **Explanation（解释）** | 每一次 AI 决策的人类可读理据 |
+
+## 当前开源边界
+
+### 现已公开
+- 宣言
+- 领域模型文档
+- 协议草案
+- 合成样本
+- 社区治理
+
+### 计划后续公开（Phase 2+）
+- JSON Schema 定义
+- OpenAPI 预览
+- TypeScript SDK
+- Go SDK
+- Mock 服务器
+- 插件启动模板
+
+### Beta 就绪前不公开
+- 官方后端实现
+- 官方移动端应用
+- 官方 Web 控制台
+- 认证内部实现
+- Worker 凭据内部实现
+- 生产存储和账本逻辑
+- 真实用户数据流水线
+- 真实部署脚本
+
+### 永不公开
+- 真实用户数据
+- 真实聊天记录、照片、录音
+- 真实关系图谱
+- 私钥或生产密钥
+- 私有基础设施拓扑
+
+## 路线图
+
+| 阶段 | 目标 | 状态 |
+|------|------|------|
+| Phase 1 | 公开发布宣言和领域模型 | 🟢 当前 |
+| Phase 2 | 协议规范和 SDK 预览 | 📋 计划中 |
+| Phase 3 | 选择性开放工程模块 | 📋 未来 |
+| Phase 4 | Beta 后评估完整开源 | 📋 未来 |
+
+## 联系我们
+
+- **社区讨论**: [GitHub Discussions](https://github.com/FNB2026/fnb-open/discussions) — 哲学讨论、协议提案、问答
+- **问题反馈**: [GitHub Issues](https://github.com/FNB2026/fnb-open/issues) — Bug 报告、文档问题
+- **安全报告**: 参见 [SECURITY.md](./SECURITY.md) — 私密提交漏洞
+- **维护者**: [FNB2026 on GitHub](https://github.com/FNB2026)
+
+## 许可证
+
+- **文档**: CC BY-NC-SA 4.0
+- **协议和 SDK 仓库**: Apache 2.0
+
+---
+
+**FNB 尚未完成。它正在开放构建，一个有原则的决策接一个决策。**
