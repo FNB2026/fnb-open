@@ -1,4 +1,9 @@
-# FNB Open Source Boundary
+# FNB Public Release Boundary
+
+This file defines what is public today, what may become public later, and what
+must never be published. The current `fnb-open` repository is a public
+documentation and protocol-draft repository; it is not the official product
+source-code release.
 
 ## Public Now
 

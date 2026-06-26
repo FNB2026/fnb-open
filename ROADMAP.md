@@ -25,14 +25,14 @@
 - [ ] Define local-first plugin guidelines
 - [ ] Publish starter plugins with synthetic data
 
-## Phase 4: Selective Engineering Open Source 📋
+## Phase 4: Selective Engineering Source Release 📋
 
 - [ ] Open selected domain packages
 - [ ] Open synthetic importer
 - [ ] Open public mobile shell
 - [ ] Open public web demo
 
-## Phase 5: Full Open Source Evaluation 📋
+## Phase 5: Full Source Release Evaluation 📋
 
 Full official implementation will be evaluated after:
 - Beta readiness with real users

@@ -1,6 +1,7 @@
 # FNB Governance
 
-This document describes the governance model of the FNB open-source ecosystem.
+This document describes the governance model of the FNB public documentation,
+protocol, and future source-code ecosystem.
 
 FNB is not just a software project — it is a protocol and philosophy around **data sovereignty, personal memory, explainable AI, and user-governed relationships**. Its governance must reflect these values.
 
@@ -142,7 +143,7 @@ See [rfcs/0000-rfc-process.md](./rfcs/0000-rfc-process.md) for the full RFC proc
 
 ### Forks
 
-- Are permitted (AGPL v3 allows it)
+- Are permitted for future code modules when their stated license allows it
 - Must clearly state they are a fork and not "Official FNB"
 - Must not use the FNB brand assets
 - Are encouraged to contribute improvements upstream via PRs or RFCs
@@ -156,6 +157,10 @@ See [rfcs/0000-rfc-process.md](./rfcs/0000-rfc-process.md) for the full RFC proc
 - **SDKs and tools** (packages/): Apache 2.0
 - **Official implementation** (future public modules): AGPL v3
 - **Brand and logo**: Reserved to the Project Steward — see [TRADEMARK.md](./TRADEMARK.md)
+
+The current `fnb-open` repository is a public documentation repository, not an
+OSI open-source code release. Code repositories or future engineering modules
+will declare their own license at the repository or directory level.
 
 ---
 

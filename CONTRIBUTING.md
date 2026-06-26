@@ -133,3 +133,7 @@ By contributing, you agree that your contributions will be licensed under the re
 - **Documents**: CC BY-NC-SA 4.0
 - **Protocol/SDK repositories**: Apache 2.0 or as stated
 - **Official implementation (future)**: AGPL v3
+
+This repository currently accepts documentation, governance, RFC, and synthetic
+example contributions. It is not a general-purpose open-source code release;
+future code repositories or directories will state their own license.

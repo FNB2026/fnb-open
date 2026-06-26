@@ -107,6 +107,8 @@ This security policy covers:
 
 - The `FNB2026/fnb-open` public showcase repository
 - The `FNB2026/fnb-protocol` protocol and SDK repository
-- Future selectively open-sourced engineering modules
+- Future selectively released engineering modules
 
-It does **not** cover the private official implementation repository (`FNB2026/FNB`). Security issues related to the private repository should be communicated through established internal channels.
+It does **not** cover the private official implementation repository. Security
+issues related to private implementation code should be communicated through
+established internal channels.

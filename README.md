@@ -53,7 +53,7 @@ FNB is built on the belief that:
 | **AIInference** | Structured record of every model judgment |
 | **Explanation** | Human-readable rationale for every AI decision |
 
-## Current Open-Source Boundary
+## Current Public Boundary
 
 ### Public Now
 - Manifesto
@@ -94,7 +94,7 @@ FNB is built on the belief that:
 | Phase 1 | Public manifesto and domain model | 🟢 Now |
 | Phase 2 | Protocol schemas and SDK preview | 📋 Planned |
 | Phase 3 | Selective engineering modules | 📋 Future |
-| Phase 4 | Full open-source evaluation after beta | 📋 Future |
+| Phase 4 | Full source-code release evaluation after beta | 📋 Future |
 
 ## Contact / 联系我们
 
@@ -107,6 +107,10 @@ FNB is built on the belief that:
 
 - **Documents**: CC BY-NC-SA 4.0
 - **Protocol and SDK repositories**: Apache 2.0
+
+This repository is a public documentation and protocol-draft repository. Its
+documents use a non-commercial Creative Commons license; future code repositories
+or modules will carry their own OSI-compatible or copyleft license as stated.
 
 ---
 
@@ -169,7 +173,7 @@ FNB 相信：
 | **AIInference（AI 推断）** | 每一次模型判断的结构化记录 |
 | **Explanation（解释）** | 每一次 AI 决策的人类可读理据 |
 
-## 当前开源边界
+## 当前公开边界
 
 ### 现已公开
 - 宣言
@@ -210,7 +214,7 @@ FNB 相信：
 | Phase 1 | 公开发布宣言和领域模型 | 🟢 当前 |
 | Phase 2 | 协议规范和 SDK 预览 | 📋 计划中 |
 | Phase 3 | 选择性开放工程模块 | 📋 未来 |
-| Phase 4 | Beta 后评估完整开源 | 📋 未来 |
+| Phase 4 | Beta 后评估完整源码开放 | 📋 未来 |
 
 ## 联系我们
 
@@ -223,6 +227,10 @@ FNB 相信：
 
 - **文档**: CC BY-NC-SA 4.0
 - **协议和 SDK 仓库**: Apache 2.0
+
+本仓库是公开文档与协议草案仓库。文档使用带非商业限制的 Creative Commons
+许可证；未来代码仓库或工程模块会在各自仓库/目录中声明 OSI 兼容或 copyleft
+许可证。
 
 ---
 

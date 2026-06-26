@@ -1,0 +1,21 @@
+FNB Open License Notice
+
+This repository is a public documentation, manifesto, protocol draft, and
+synthetic-example repository.
+
+Unless a file states otherwise, the documents in this repository are licensed
+under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+International License (CC BY-NC-SA 4.0).
+
+Full license text:
+https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+Human-readable summary:
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Code, protocol schemas, SDKs, tools, and future engineering modules are not
+licensed by this notice unless explicitly included in this repository and
+marked as such. Those repositories or directories will carry their own license,
+such as Apache 2.0 or AGPL v3.
+
+The FNB name, marks, and brand assets are reserved. See TRADEMARK.md.

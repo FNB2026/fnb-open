@@ -37,3 +37,7 @@ Eventually yes. The architecture is local-first, and offline-capable operation i
 - Documents: CC BY-NC-SA 4.0
 - Protocol/SDK repos: Apache 2.0
 - Official implementation (future public modules): AGPL v3
+
+The current `fnb-open` repository is a public documentation and protocol-draft
+repository. Because the documentation license includes a non-commercial term, it
+should not be described as an OSI open-source code release.
