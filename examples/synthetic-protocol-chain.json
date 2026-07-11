@@ -1,0 +1,66 @@
+{
+  "flow_event": {
+    "event_id": "fnb_evt_100",
+    "flow_id": "fnb_flow_alice_ben_001",
+    "event_type": "message",
+    "occurred_at": "2026-01-15T14:06:00+08:00",
+    "actor_id": "fnb_actor_alice",
+    "source_ref": "synthetic:message:100",
+    "content_preview": "春节前一起去大理旅行吗？",
+    "permission_snapshot_id": "fnb_perm_public_demo_001"
+  },
+  "node": {
+    "node_id": "fnb_node_trip_proposal_001",
+    "node_type": "event",
+    "source_event_ids": ["fnb_evt_100"],
+    "status": "confirmed",
+    "label": "大理旅行提议"
+  },
+  "ai_inference": {
+    "inference_id": "fnb_inf_trip_memory_001",
+    "purpose": "propose_memory_block",
+    "model_id": "synthetic-demo-model-v1",
+    "input_refs": ["fnb_evt_100", "fnb_node_trip_proposal_001"],
+    "output_summary": "Alice 提议与 Ben 在春节前规划一次大理旅行。",
+    "confidence": 0.84,
+    "status": "confirmed",
+    "explanation": {
+      "explanation_id": "fnb_exp_trip_memory_001",
+      "rationale": "提议包含明确参与人、目的地和时间范围。",
+      "evidence_refs": ["fnb_evt_100"],
+      "limitations": ["Ben 是否参加仍未确认"]
+    }
+  },
+  "block_draft": {
+    "draft_id": "fnb_draft_trip_001",
+    "owner_id": "fnb_actor_alice",
+    "block_type": "memory",
+    "source_node_ids": ["fnb_node_trip_proposal_001"],
+    "inference_id": "fnb_inf_trip_memory_001",
+    "proposed_title": "春节前的大理旅行提议",
+    "proposed_summary": "Alice 和 Ben 已决定春节前去大理旅行。",
+    "status": "rewritten"
+  },
+  "correction": {
+    "correction_id": "fnb_corr_trip_001",
+    "actor_id": "fnb_actor_alice",
+    "target_type": "block_draft",
+    "target_id": "fnb_draft_trip_001",
+    "operation": "replace",
+    "path": "/proposed_summary",
+    "before": "Alice 和 Ben 已决定春节前去大理旅行。",
+    "after": "Alice 提议春节前去大理；Ben 尚未确认。",
+    "reason": "原摘要把提议错误写成了已确认计划。",
+    "created_at": "2026-01-15T14:10:00+08:00"
+  },
+  "block": {
+    "block_id": "fnb_block_trip_001",
+    "owner_id": "fnb_actor_alice",
+    "block_type": "memory",
+    "source_node_ids": ["fnb_node_trip_proposal_001"],
+    "draft_id": "fnb_draft_trip_001",
+    "title": "春节前的大理旅行提议",
+    "summary": "Alice 提议春节前去大理；Ben 尚未确认。",
+    "confirmed_at": "2026-01-15T14:11:00+08:00"
+  }
+}
