@@ -9,9 +9,11 @@
 - [x] Publish Permission / Audit / Correction model
 - [x] Publish synthetic examples
 
-## Phase 2: Protocol Preview 📋
+## Phase 2: Protocol Preview 🟡
 
-- [ ] Publish JSON Schema for core domain objects
+- [x] Publish JSON Schema v0.1 drafts for the first core domain objects
+- [x] Publish end-to-end synthetic protocol chain
+- [x] Open initial protocol RFCs for discussion
 - [ ] Publish OpenAPI preview
 - [ ] Publish TypeScript SDK preview
 - [ ] Publish Go SDK preview

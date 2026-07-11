@@ -13,10 +13,13 @@ source-code release.
 - Synthetic examples (no real data)
 - Community governance (CoC, Contributing, Governance, Security)
 - Public roadmap
+- Draft JSON Schemas for implementation-neutral domain objects
+- Synthetic end-to-end protocol chains
+- Draft RFCs for public discussion
 
 ## Planned Public Later (Phase 2+)
 
-- JSON Schema definitions for core domain objects
+- Additional JSON Schema definitions and versioned conformance rules
 - OpenAPI preview (public API surface only)
 - TypeScript SDK
 - Go SDK

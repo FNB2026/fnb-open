@@ -59,11 +59,13 @@ FNB is built on the belief that:
 - Manifesto
 - Domain model documentation
 - Protocol drafts
+- JSON Schema v0.1 drafts
+- End-to-end synthetic protocol examples
 - Synthetic examples
 - Community governance
 
 ### Planned Public Later (Phase 2+)
-- JSON Schema definitions
+- Additional JSON Schema definitions and conformance rules
 - OpenAPI preview
 - TypeScript SDK
 - Go SDK
@@ -92,7 +94,7 @@ FNB is built on the belief that:
 | Phase | Focus | Status |
 |-------|-------|--------|
 | Phase 1 | Public manifesto and domain model | 🟢 Now |
-| Phase 2 | Protocol schemas and SDK preview | 📋 Planned |
+| Phase 2 | Protocol schemas and SDK preview | 🟡 In progress |
 | Phase 3 | Selective engineering modules | 📋 Future |
 | Phase 4 | Full source-code release evaluation after beta | 📋 Future |
 
@@ -179,11 +181,13 @@ FNB 相信：
 - 宣言
 - 领域模型文档
 - 协议草案
+- JSON Schema v0.1 草案
+- 端到端合成协议示例
 - 合成样本
 - 社区治理
 
 ### 计划后续公开（Phase 2+）
-- JSON Schema 定义
+- 更多 JSON Schema 定义与一致性规则
 - OpenAPI 预览
 - TypeScript SDK
 - Go SDK
@@ -212,7 +216,7 @@ FNB 相信：
 | 阶段 | 目标 | 状态 |
 |------|------|------|
 | Phase 1 | 公开发布宣言和领域模型 | 🟢 当前 |
-| Phase 2 | 协议规范和 SDK 预览 | 📋 计划中 |
+| Phase 2 | 协议规范和 SDK 预览 | 🟡 进行中 |
 | Phase 3 | 选择性开放工程模块 | 📋 未来 |
 | Phase 4 | Beta 后评估完整源码开放 | 📋 未来 |
 
