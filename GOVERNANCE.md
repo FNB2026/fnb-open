@@ -34,9 +34,24 @@ The project has a single **Steward** (the founder/creator) who holds the followi
 
 These powers are not for arbitrary use — they exist to **protect the project's founding philosophy** from being diluted by short-term commercial, technical, or community pressure.
 
+## Current Governance
+
+As of 2026-07-13, FNB Open is steward-led:
+
+- `@FNB2026` is the sole CODEOWNER and active maintainer.
+- No separate Core Maintainer, Protocol Maintainer, SDK Maintainer, Security
+  Reviewer, Plugin Reviewer, or Community Moderator role has yet been appointed.
+- Pull requests require the public repository check and conversation resolution,
+  but independent approval is not yet a branch-protection requirement.
+- Protocol decisions still use public RFC discussion windows; an external review
+  should be recorded before this repository claims stable compatibility review.
+
+The following hierarchy is the planned structure as the contributor community
+grows; it does not describe currently staffed roles.
+
 ---
 
-## Maintainer Hierarchy
+## Planned Maintainer Hierarchy
 
 ```
 Project Steward
@@ -50,14 +65,14 @@ Project Steward
 └── Contributors
 ```
 
-### Core Maintainers
+### Future Core Maintainers
 
 - Appointed by the Project Steward
 - Responsible for the overall health of the project
 - Vote on protocol RFCs (Steward has final say)
 - Can veto changes that violate project philosophy
 
-### Maintainer Types
+### Future Maintainer Types
 
 - **Protocol Maintainers**: Review and merge changes to spec/, schema/, and RFCs
 - **SDK Maintainers**: Review and merge changes to packages/ and SDK code
@@ -133,12 +148,14 @@ See [rfcs/0000-rfc-process.md](./rfcs/0000-rfc-process.md) for the full RFC proc
 
 - Maintained by the Project Steward and Core Maintainers
 - The only implementation that can use the "Official FNB" designation
-- Must pass all conformance tests
+- Must pass the official conformance package once that package and certification
+  process are published
 
 ### Third-Party Implementations
 
 - Can implement the FNB protocol independently
-- Must pass conformance tests to claim "FNB-compatible"
+- Must not claim "FNB-compatible" until an official third-party conformance
+  package and compatibility-report process are published and passed
 - Must not use the FNB brand, logo, or "Official" designation without authorization
 
 ### Forks
@@ -152,9 +169,10 @@ See [rfcs/0000-rfc-process.md](./rfcs/0000-rfc-process.md) for the full RFC proc
 
 ## License
 
-- **Documents** (MANIFESTO, docs/): CC BY-NC-SA 4.0
-- **Protocol schemas** (specs/, openapi/): CC BY 4.0 or Apache 2.0
-- **SDKs and tools** (packages/): Apache 2.0
+- **Documents** (`MANIFESTO*.md`, `docs/`, `rfcs/`, `community/`, governance): CC BY-NC-SA 4.0
+- **Protocol schemas** (`specs/`): Apache 2.0
+- **Conformance fixtures and validation tools** (`tests/conformance/`, `tools/`): Apache 2.0
+- **Future SDKs and code**: license stated by their repository or directory
 - **Official implementation** (future public modules): AGPL v3
 - **Brand and logo**: Reserved to the Project Steward — see [TRADEMARK.md](./TRADEMARK.md)
 

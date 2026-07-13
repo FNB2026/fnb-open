@@ -1,12 +1,17 @@
 # FNB Open
 
+[![Official site](https://img.shields.io/badge/site-fnbapp.net-0b6bcb)](https://www.fnbapp.net/)
+[![Protocol status](https://img.shields.io/badge/protocol-v0.1%20discussion-f59e0b)](./docs/protocol-preview-status.md)
+[![Repository Hygiene](https://github.com/FNB2026/fnb-open/actions/workflows/repository-hygiene.yml/badge.svg)](https://github.com/FNB2026/fnb-open/actions/workflows/repository-hygiene.yml)
+
 <p align="center">
   <b>English</b> | <a href="#中文">中文</a>
 </p>
 
 ---
 
-FNB is a **local-first personal memory operating system and AI social paradigm platform**.
+FNB is a **local-first relationship and memory operating system for the
+post-platform AI era**.
 
 It turns flows of life, digital assets, conversations, events, and relationships into user-owned, auditable, explainable, permissioned domain objects.
 
@@ -25,7 +30,7 @@ FNB is built on the belief that:
 - **Every relationship should be user-governed** — not algorithm-defined
 - **Every memory should have a source** — traceable, verifiable, auditable
 - **Every correction should be preserved** — users can confirm, reject, or rewrite
-- **Local-first first, cloud optional** — your data lives on your device
+- **Local-first, cloud optional** — your data lives on your device
 
 ## What FNB is Not
 
@@ -60,9 +65,8 @@ FNB is built on the belief that:
 - Domain model documentation
 - Protocol drafts
 - JSON Schema v0.1 drafts
-- End-to-end synthetic protocol examples
+- End-to-end and additional synthetic protocol examples
 - Executable v0.1 conformance fixtures and CI validation
-- Synthetic examples
 - Community governance
 
 ### Planned Public Later (Phase 2+)
@@ -109,11 +113,10 @@ FNB is built on the belief that:
 ## License / 许可证
 
 - **Documents**: CC BY-NC-SA 4.0
-- **Protocol and SDK repositories**: Apache 2.0
+- **Protocol schemas, conformance fixtures, and validation tools**: Apache 2.0
 
-This repository is a public documentation and protocol-draft repository. Its
-documents use a non-commercial Creative Commons license; future code repositories
-or modules will carry their own OSI-compatible or copyleft license as stated.
+See [LICENSE](./LICENSE) for the exact path-based license matrix and the bundled
+full license texts.
 
 ---
 
@@ -129,7 +132,7 @@ or modules will carry their own OSI-compatible or copyleft license as stated.
 
 # FNB Open
 
-FNB 是一个**本地优先的个人记忆操作系统与 AI 社交新范式平台**。
+FNB 是一个**面向后平台 AI 时代的本地优先关系与记忆操作系统**。
 
 它将人生流、数字资产、对话、事件和关系，转化为用户拥有的、可审计、可解释、有权限控制的领域对象。
 
@@ -183,8 +186,8 @@ FNB 相信：
 - 领域模型文档
 - 协议草案
 - JSON Schema v0.1 草案
-- 端到端合成协议示例
-- 合成样本
+- 端到端及其他合成协议示例
+- 可执行的 v0.1 一致性夹具与 CI 校验
 - 社区治理
 
 ### 计划后续公开（Phase 2+）
@@ -231,11 +234,9 @@ FNB 相信：
 ## 许可证
 
 - **文档**: CC BY-NC-SA 4.0
-- **协议和 SDK 仓库**: Apache 2.0
+- **协议 Schema、一致性夹具与校验工具**: Apache 2.0
 
-本仓库是公开文档与协议草案仓库。文档使用带非商业限制的 Creative Commons
-许可证；未来代码仓库或工程模块会在各自仓库/目录中声明 OSI 兼容或 copyleft
-许可证。
+具体适用范围和完整许可证文本见 [LICENSE](./LICENSE)。
 
 ---
 
