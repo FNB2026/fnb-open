@@ -5,37 +5,114 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "inference_id", "purpose", "model", "input_refs", "output_summary", "confidence",
-    "inference_status", "confirmation_status", "explanation"
+    "inference_id",
+    "purpose",
+    "model",
+    "input_refs",
+    "output_summary",
+    "confidence",
+    "inference_status",
+    "confirmation_status",
+    "explanation"
   ],
   "properties": {
-    "inference_id": {"type": "string", "pattern": "^fnb_inf_"},
-    "purpose": {"type": "string", "minLength": 1},
+    "inference_id": {
+      "type": "string",
+      "pattern": "^fnb_inf_"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
     "model": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["provider", "name", "version", "configuration_fingerprint"],
+      "required": [
+        "provider",
+        "name",
+        "version",
+        "configuration_fingerprint"
+      ],
       "properties": {
-        "provider": {"type": "string", "minLength": 1},
-        "name": {"type": "string", "minLength": 1},
-        "version": {"type": "string", "minLength": 1},
-        "configuration_fingerprint": {"type": "string", "minLength": 8}
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_fingerprint": {
+          "type": "string",
+          "minLength": 8
+        }
       }
     },
-    "input_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
-    "output_summary": {"type": "string", "minLength": 1},
-    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-    "inference_status": {"enum": ["completed", "superseded"]},
-    "confirmation_status": {"enum": ["candidate", "confirmed", "rejected"]},
+    "input_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "output_summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "inference_status": {
+      "enum": [
+        "completed",
+        "superseded"
+      ]
+    },
+    "confirmation_status": {
+      "enum": [
+        "candidate",
+        "confirmed",
+        "rejected"
+      ]
+    },
     "explanation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["explanation_id", "rationale", "evidence_refs"],
+      "required": [
+        "explanation_id",
+        "rationale",
+        "evidence_refs"
+      ],
       "properties": {
-        "explanation_id": {"type": "string", "pattern": "^fnb_exp_"},
-        "rationale": {"type": "string", "minLength": 1},
-        "evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
-        "limitations": {"type": "array", "items": {"type": "string"}}
+        "explanation_id": {
+          "type": "string",
+          "pattern": "^fnb_exp_"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       }
     }
   }

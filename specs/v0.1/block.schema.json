@@ -5,35 +5,125 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "block_id", "owner_id", "block_type", "creation_mode", "source_node_ids",
-    "confirmed_by_actor_id", "confirmation_event_id", "confirmation_operation", "confirmed_at"
+    "block_id",
+    "owner_id",
+    "block_type",
+    "creation_mode",
+    "source_node_ids",
+    "confirmed_by_actor_id",
+    "confirmation_event_id",
+    "confirmation_operation",
+    "confirmed_at"
   ],
   "properties": {
-    "block_id": {"type": "string", "pattern": "^fnb_block_"},
-    "owner_id": {"type": "string", "pattern": "^fnb_actor_"},
-    "block_type": {"enum": ["memory", "relation", "knowledge", "task", "asset", "credit"]},
-    "creation_mode": {"enum": ["manual", "imported", "ai_derived"]},
-    "source_node_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
-    "draft_id": {"type": "string", "pattern": "^fnb_draft_"},
-    "correction_id": {"type": "string", "pattern": "^fnb_corr_"},
-    "title": {"type": "string"},
-    "summary": {"type": "string"},
-    "confirmed_by_actor_id": {"type": "string", "pattern": "^fnb_actor_"},
-    "confirmation_event_id": {"type": "string", "pattern": "^fnb_evt_"},
-    "confirmation_operation": {"enum": ["confirm", "rewrite", "accept_import"]},
-    "confirmed_at": {"type": "string", "format": "date-time"}
+    "block_id": {
+      "type": "string",
+      "pattern": "^fnb_block_"
+    },
+    "owner_id": {
+      "type": "string",
+      "pattern": "^fnb_actor_"
+    },
+    "block_type": {
+      "enum": [
+        "memory",
+        "relation",
+        "knowledge",
+        "task",
+        "asset",
+        "credit"
+      ]
+    },
+    "creation_mode": {
+      "enum": [
+        "manual",
+        "imported",
+        "ai_derived"
+      ]
+    },
+    "source_node_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "draft_id": {
+      "type": "string",
+      "pattern": "^fnb_draft_"
+    },
+    "correction_id": {
+      "type": "string",
+      "pattern": "^fnb_corr_"
+    },
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "confirmed_by_actor_id": {
+      "type": "string",
+      "pattern": "^fnb_actor_"
+    },
+    "confirmation_event_id": {
+      "type": "string",
+      "pattern": "^fnb_evt_"
+    },
+    "confirmation_operation": {
+      "enum": [
+        "confirm",
+        "rewrite",
+        "accept_import"
+      ]
+    },
+    "confirmed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
   },
   "allOf": [
     {
-      "if": {"properties": {"creation_mode": {"const": "ai_derived"}}, "required": ["creation_mode"]},
+      "if": {
+        "properties": {
+          "creation_mode": {
+            "const": "ai_derived"
+          }
+        },
+        "required": [
+          "creation_mode"
+        ]
+      },
       "then": {
-        "required": ["draft_id"],
-        "properties": {"confirmation_operation": {"enum": ["confirm", "rewrite"]}}
+        "required": [
+          "draft_id"
+        ],
+        "properties": {
+          "confirmation_operation": {
+            "enum": [
+              "confirm",
+              "rewrite"
+            ]
+          }
+        }
       }
     },
     {
-      "if": {"properties": {"confirmation_operation": {"const": "rewrite"}}, "required": ["confirmation_operation"]},
-      "then": {"required": ["correction_id"]}
+      "if": {
+        "properties": {
+          "confirmation_operation": {
+            "const": "rewrite"
+          }
+        },
+        "required": [
+          "confirmation_operation"
+        ]
+      },
+      "then": {
+        "required": [
+          "correction_id"
+        ]
+      }
     }
   ]
 }

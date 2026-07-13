@@ -1,1 +1,48 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/node.schema.json","title":"Node","type":"object","additionalProperties":false,"required":["node_id","node_type","source_event_ids","status"],"properties":{"node_id":{"type":"string","pattern":"^fnb_node_"},"node_type":{"enum":["message","person","event","evidence","memory","relation","device","ai_inference"]},"source_event_ids":{"type":"array","minItems":1,"items":{"type":"string"}},"status":{"enum":["candidate","confirmed","rejected"]},"label":{"type":"string"}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/node.schema.json",
+  "title": "Node",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "node_id",
+    "node_type",
+    "source_event_ids",
+    "status"
+  ],
+  "properties": {
+    "node_id": {
+      "type": "string",
+      "pattern": "^fnb_node_"
+    },
+    "node_type": {
+      "enum": [
+        "message",
+        "person",
+        "event",
+        "evidence",
+        "memory",
+        "relation",
+        "device",
+        "ai_inference"
+      ]
+    },
+    "source_event_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "enum": [
+        "candidate",
+        "confirmed",
+        "rejected"
+      ]
+    },
+    "label": {
+      "type": "string"
+    }
+  }
+}
