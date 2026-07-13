@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://fnb.example/specs/v0.1/memory.schema.json",
+  "$id": "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/memory.schema.json",
   "title": "Memory",
   "type": "object",
   "additionalProperties": false,

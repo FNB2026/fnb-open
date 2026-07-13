@@ -1,0 +1,24 @@
+{
+  "schema": "relationship.schema.json",
+  "instance": {
+    "relationship_id": "fnb_rel_invalid_assertion_001",
+    "participant_ids": ["fnb_actor_alice", "fnb_actor_ben"],
+    "lifecycle_state": "active",
+    "assertions": [
+      {
+        "actor_id": "fnb_actor_mira",
+        "relationship_kind": "friend",
+        "confirmation_state": "candidate",
+        "visibility_scope": "private"
+      }
+    ],
+    "evidence": [
+      {
+        "evidence_id": "fnb_evidence_synthetic_nonparticipant",
+        "source_type": "event",
+        "source_id": "fnb_evt_100",
+        "stance": "context"
+      }
+    ]
+  }
+}
