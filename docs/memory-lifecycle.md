@@ -19,15 +19,21 @@ Every Memory must have a traceable source:
 ## Memory States
 
 ```
-raw → candidate → confirmed → archived → deleted
-                → rejected → (remains as raw)
+source material → candidate → confirmed
+                          ↘ rejected
 ```
 
-- **raw** — ingested but unprocessed
 - **candidate** — AI-suggested, waiting for user review
 - **confirmed** — user-approved, fully active
-- **archived** — user-hidden but not deleted
-- **deleted** — soft-deleted, recoverable for a period
+- **rejected** — reviewed and rejected; remains auditable but is not canonical
+
+Raw imported material is a source object, not a Memory status. Memory confirmation
+is independent from its retention lifecycle:
+
+- **active** — available under its current permissions
+- **archived** — user-hidden but retained
+- **redacted** — content hidden while an audit record remains
+- **deleted** — soft-deleted and recoverable only under the implementation's policy
 
 ## Memory Properties
 
@@ -37,7 +43,8 @@ raw → candidate → confirmed → archived → deleted
 | owner | User who owns this memory |
 | confidence | AI confidence score (if AI-generated) |
 | visibility | Private, shared, or public scope |
-| lifecycle | Current state in the lifecycle |
+| status | Candidate, confirmed, or rejected user-governance state |
+| lifecycle_state | Active, archived, redacted, or deleted retention state |
 | scores | Relevance, recency, importance metrics |
 | evidence | Supporting data or references |
 

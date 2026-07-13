@@ -14,6 +14,10 @@
 - [x] Publish JSON Schema v0.1 drafts for the first core domain objects
 - [x] Publish end-to-end synthetic protocol chain
 - [x] Open initial protocol RFCs for discussion
+- [x] Add executable schema and cross-file conformance baseline
+- [x] Add positive and negative protocol fixtures
+- [ ] Complete the first public v0.1 review window (not before 2026-07-20)
+- [ ] Revise or accept RFC-0001 through RFC-0003
 - [ ] Publish OpenAPI preview
 - [ ] Publish TypeScript SDK preview
 - [ ] Publish Go SDK preview

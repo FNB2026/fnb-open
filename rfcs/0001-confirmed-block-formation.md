@@ -2,7 +2,8 @@
 
 ## Status
 
-Draft
+Discussion — [public review #5](https://github.com/FNB2026/fnb-open/discussions/5),
+opened 2026-07-13; decision no earlier than 2026-07-20
 
 ## Summary
 
@@ -22,8 +23,9 @@ into user-owned truth.
 4. The owner confirms, rejects, or rewrites the draft.
 5. Only confirmation or an explicit rewrite creates a Block.
 
-Every Block retains its source Node identifiers and, when applicable, its draft
-identifier. Rejection remains auditable and does not create a Block.
+Every Block retains its source Node identifiers. An AI-derived Block must retain
+the identifier of the BlockDraft that the user confirmed or rewrote. Rejection
+remains auditable and does not create a Block.
 
 ## Data Sovereignty Impact
 

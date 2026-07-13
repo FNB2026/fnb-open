@@ -1,0 +1,17 @@
+{
+  "schema": "asset.schema.json",
+  "instance": {
+    "asset_id": "fnb_asset_synthetic_001",
+    "owner_id": "fnb_actor_alice",
+    "media_type": "image/png",
+    "content_hash": "sha256:synthetic-demo-hash-001",
+    "created_at": "2026-01-15T14:00:00+08:00",
+    "variants": [
+      {
+        "variant_id": "fnb_variant_synthetic_thumb_001",
+        "kind": "thumbnail",
+        "content_hash": "sha256:synthetic-demo-thumb-hash-001"
+      }
+    ]
+  }
+}

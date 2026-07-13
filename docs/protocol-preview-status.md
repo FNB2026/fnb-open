@@ -19,10 +19,16 @@ smaller than the private product implementation.
 
 ## Next gates
 
-1. Public review of names, identifiers, and lifecycle states
-2. Schema validation and cross-file conformance fixtures
-3. A deliberately narrow OpenAPI preview
-4. TypeScript SDK preview generated from accepted public schemas
+1. Complete [public review #5](https://github.com/FNB2026/fnb-open/discussions/5)
+   of names, identifiers, lifecycle states, provenance, and invalidation semantics
+2. Keep schema, example, cross-reference, and negative-fixture validation green
+3. Revise or accept RFC-0001 through RFC-0003 after the review window
+4. Publish a deliberately narrow OpenAPI preview
+5. Generate a TypeScript SDK preview from reviewed public schemas
+
+The current review opened on 2026-07-13 and cannot close before 2026-07-20.
+Private product changes are not copied into this preview while they remain
+uncommitted or implementation-specific.
 
 Draft schemas may change incompatibly until an RFC promotes them to a stable
 version.

@@ -26,6 +26,12 @@ jobs:
           while IFS= read -r -d '' file; do
             python3 -m json.tool "$file" >/dev/null
           done < <(find examples -type f -name '*.json' -print0)
+      - name: Validate protocol schemas and conformance fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --requirement tools/requirements-validation.txt
+          python3 tools/validate-public-artifacts.py
       - name: Reject private material
         shell: bash
         run: |

@@ -78,6 +78,11 @@ Use our synthetic personas:
 - Write in clear, plain language
 - For Chinese translations, match the original tone and structure
 
+**Protocol schemas and fixtures:**
+- Install `tools/requirements-validation.txt`
+- Run `python3 tools/validate-public-artifacts.py`
+- Add synthetic valid and invalid fixtures for new protocol invariants
+
 ### 5. Submit a Pull Request
 
 1. Fork the repository

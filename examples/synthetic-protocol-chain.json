@@ -57,6 +57,7 @@
     "block_id": "fnb_block_trip_001",
     "owner_id": "fnb_actor_alice",
     "block_type": "memory",
+    "creation_mode": "ai_derived",
     "source_node_ids": ["fnb_node_trip_proposal_001"],
     "draft_id": "fnb_draft_trip_001",
     "title": "春节前的大理旅行提议",

@@ -1,0 +1,9 @@
+{
+  "schema": "actor.schema.json",
+  "instance": {
+    "actor_id": "fnb_actor_alice",
+    "kind": "person",
+    "display_name": "Alice Chen",
+    "status": "active"
+  }
+}

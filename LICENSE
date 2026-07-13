@@ -13,9 +13,10 @@ https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
 Human-readable summary:
 https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-Code, protocol schemas, SDKs, tools, and future engineering modules are not
-licensed by this notice unless explicitly included in this repository and
-marked as such. Those repositories or directories will carry their own license,
-such as Apache 2.0 or AGPL v3.
+Protocol schemas under `specs/`, conformance fixtures under `tests/conformance/`,
+and validation tools under `tools/` are licensed under Apache 2.0 as stated in
+`LICENSE-CODE.md`. Other code, SDKs, tools, and future engineering modules are
+not licensed by this notice unless explicitly marked; their repositories or
+directories will carry their own license, such as Apache 2.0 or AGPL v3.
 
 The FNB name, marks, and brand assets are reserved. See TRADEMARK.md.

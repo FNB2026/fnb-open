@@ -61,6 +61,7 @@ FNB is built on the belief that:
 - Protocol drafts
 - JSON Schema v0.1 drafts
 - End-to-end synthetic protocol examples
+- Executable v0.1 conformance fixtures and CI validation
 - Synthetic examples
 - Community governance
 
