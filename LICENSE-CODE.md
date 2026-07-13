@@ -4,9 +4,7 @@ Unless a file or directory states otherwise, the protocol schemas under
 `specs/`, conformance fixtures under `tests/conformance/`, and validation tools
 under `tools/` are licensed under the Apache License, Version 2.0.
 
-You may obtain a copy of the license at:
-
-https://www.apache.org/licenses/LICENSE-2.0
+The complete license text is bundled at [`LICENSE-APACHE-2.0.txt`](./LICENSE-APACHE-2.0.txt).
 
 Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR

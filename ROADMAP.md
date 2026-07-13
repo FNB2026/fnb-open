@@ -22,7 +22,8 @@
 - [ ] Publish TypeScript SDK preview
 - [ ] Publish Go SDK preview
 - [ ] Publish mock server with synthetic data
-- [ ] Publish conformance tests
+- [ ] Publish a standalone third-party conformance package, runner, and
+      compatibility-report format (the repository-level baseline already exists)
 
 ## Phase 3: Plugin Ecosystem Preview 📋
 
