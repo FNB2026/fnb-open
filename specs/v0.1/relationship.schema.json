@@ -4,16 +4,34 @@
   "title": "Relationship",
   "type": "object",
   "additionalProperties": false,
-  "required": ["relationship_id", "participant_ids", "lifecycle_state", "assertions", "evidence"],
+  "required": [
+    "relationship_id",
+    "participant_ids",
+    "lifecycle_state",
+    "assertions",
+    "evidence"
+  ],
   "properties": {
-    "relationship_id": {"type": "string", "pattern": "^fnb_rel_"},
+    "relationship_id": {
+      "type": "string",
+      "pattern": "^fnb_rel_"
+    },
     "participant_ids": {
       "type": "array",
       "minItems": 2,
       "uniqueItems": true,
-      "items": {"type": "string", "pattern": "^fnb_actor_"}
+      "items": {
+        "type": "string",
+        "pattern": "^fnb_actor_"
+      }
     },
-    "lifecycle_state": {"enum": ["active", "contested", "redacted"]},
+    "lifecycle_state": {
+      "enum": [
+        "active",
+        "contested",
+        "redacted"
+      ]
+    },
     "assertions": {
       "description": "Participant-specific views; no assertion defines the relationship for every participant.",
       "type": "array",
@@ -21,19 +39,64 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["actor_id", "relationship_kind", "confirmation_state", "visibility_scope"],
+        "required": [
+          "actor_id",
+          "relationship_kind",
+          "confirmation_state",
+          "visibility_scope"
+        ],
         "properties": {
-          "actor_id": {"type": "string", "pattern": "^fnb_actor_"},
-          "relationship_kind": {"type": "string", "minLength": 1},
-          "confirmation_state": {"enum": ["candidate", "confirmed", "rejected", "contested"]},
-          "confirmed_at": {"type": "string", "format": "date-time"},
-          "confirmation_event_id": {"type": "string", "pattern": "^fnb_evt_"},
-          "visibility_scope": {"enum": ["private", "participants", "shared", "public"]}
+          "actor_id": {
+            "type": "string",
+            "pattern": "^fnb_actor_"
+          },
+          "relationship_kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confirmation_state": {
+            "enum": [
+              "candidate",
+              "confirmed",
+              "rejected",
+              "contested"
+            ]
+          },
+          "confirmed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "confirmation_event_id": {
+            "type": "string",
+            "pattern": "^fnb_evt_"
+          },
+          "visibility_scope": {
+            "enum": [
+              "private",
+              "participants",
+              "shared",
+              "public"
+            ]
+          }
         },
         "allOf": [
           {
-            "if": {"properties": {"confirmation_state": {"const": "confirmed"}}, "required": ["confirmation_state"]},
-            "then": {"required": ["confirmed_at", "confirmation_event_id"]}
+            "if": {
+              "properties": {
+                "confirmation_state": {
+                  "const": "confirmed"
+                }
+              },
+              "required": [
+                "confirmation_state"
+              ]
+            },
+            "then": {
+              "required": [
+                "confirmed_at",
+                "confirmation_event_id"
+              ]
+            }
           }
         ]
       }
@@ -44,12 +107,34 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["evidence_id", "source_type", "source_id", "stance"],
+        "required": [
+          "evidence_id",
+          "source_type",
+          "source_id",
+          "stance"
+        ],
         "properties": {
-          "evidence_id": {"type": "string"},
-          "source_type": {"enum": ["event", "node", "block", "memory"]},
-          "source_id": {"type": "string"},
-          "stance": {"enum": ["supports", "contests", "context"]}
+          "evidence_id": {
+            "type": "string"
+          },
+          "source_type": {
+            "enum": [
+              "event",
+              "node",
+              "block",
+              "memory"
+            ]
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "stance": {
+            "enum": [
+              "supports",
+              "contests",
+              "context"
+            ]
+          }
         }
       }
     }

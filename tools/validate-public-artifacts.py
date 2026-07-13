@@ -44,6 +44,11 @@ def load_schemas() -> dict[str, dict[str, Any]]:
     schema_ids: set[str] = set()
     for path in sorted(SCHEMA_DIR.glob("*.schema.json")):
         schema = load_json(path)
+        canonical = json.dumps(schema, ensure_ascii=False, indent=2) + "\n"
+        if path.read_text(encoding="utf-8") != canonical:
+            raise AssertionError(
+                f"{path.relative_to(ROOT)}: schema must use canonical two-space JSON formatting"
+            )
         Draft202012Validator.check_schema(schema)
         schema_id = schema.get("$id")
         if not schema_id:

@@ -79,7 +79,7 @@ Use our synthetic personas:
 - For Chinese translations, match the original tone and structure
 
 **Protocol schemas and fixtures:**
-- Install `tools/requirements-validation.txt`
+- Install `tools/requirements-validation.lock` with `--require-hashes`
 - Run `python3 tools/validate-public-artifacts.py`
 - Add synthetic valid and invalid fixtures for new protocol invariants
 

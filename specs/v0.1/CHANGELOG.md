@@ -3,6 +3,13 @@
 The v0.1 protocol remains unstable. This changelog makes draft-breaking changes
 visible during public review.
 
+## 2026-07-13 — Reproducible publication gate
+
+- Canonically formatted all public schemas with two-space JSON indentation.
+- Added a CI gate requiring every schema-changing pull request to update this
+  changelog. This records draft-breaking changes without claiming backward
+  compatibility before v0.1 is accepted.
+
 ## 2026-07-13 — Protocol invariants
 
 - Replaced Relationship's global status/label with participant-specific

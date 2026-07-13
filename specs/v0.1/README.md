@@ -33,7 +33,7 @@ version. Accepted schema content will never be replaced in place.
 Install the pinned validation dependency and run the public conformance baseline:
 
 ```bash
-python3 -m pip install --requirement tools/requirements-validation.txt
+python3 -m pip install --require-hashes --requirement tools/requirements-validation.lock
 python3 tools/validate-public-artifacts.py
 ```
 
