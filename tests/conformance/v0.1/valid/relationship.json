@@ -3,8 +3,23 @@
   "instance": {
     "relationship_id": "fnb_rel_alice_ben_001",
     "participant_ids": ["fnb_actor_alice", "fnb_actor_ben"],
-    "status": "suggested",
-    "label": "travel collaborators",
+    "lifecycle_state": "active",
+    "assertions": [
+      {
+        "actor_id": "fnb_actor_alice",
+        "relationship_kind": "travel collaborator",
+        "confirmation_state": "confirmed",
+        "confirmed_at": "2026-01-15T14:20:00+08:00",
+        "confirmation_event_id": "fnb_evt_relationship_confirmation_001",
+        "visibility_scope": "participants"
+      },
+      {
+        "actor_id": "fnb_actor_ben",
+        "relationship_kind": "travel collaborator",
+        "confirmation_state": "candidate",
+        "visibility_scope": "private"
+      }
+    ],
     "evidence": [
       {
         "evidence_id": "fnb_evidence_synthetic_001",

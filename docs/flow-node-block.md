@@ -46,4 +46,7 @@ Messages / Events → Flow → Node candidates → BlockDraft → User confirms 
                         Asset processing
 ```
 
-Key principle: **AI output must not directly become a Block.** It must first become a BlockDraft, then be confirmed, rejected, or rewritten by the user.
+Key principle: **AI output must not directly become a Block.** It must first
+become a BlockDraft, then be confirmed, rejected, or rewritten by the user. A
+durable AI-derived Block records the confirming actor, confirmation event,
+operation, timestamp, and the source Draft; rewrites also retain the Correction.

@@ -17,10 +17,12 @@ and must be able to correct it without erasing the audit trail.
 
 ## Design
 
-AIInference records purpose, model identity, input references, output summary,
-confidence, and lifecycle status. Explanation records a human-readable rationale,
-evidence references, and known limitations. CorrectionPatch records the actor,
-target, operation, reason, timestamp, and optional before/after values.
+AIInference records purpose, structured model identity, input references, output
+summary, confidence, model-record status, and a separate user-confirmation
+status. Every persisted inference includes an Explanation with a human-readable
+rationale and at least one evidence reference resolvable through its inputs.
+CorrectionPatch records the actor, target, operation, reason, timestamp, and
+optional before/after values.
 
 Corrections append new state transitions; they do not rewrite historical
 inference records in place.

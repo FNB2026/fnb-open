@@ -4,8 +4,8 @@ Relationships in FNB are not simple friend lists or connection graphs. They are 
 
 ## Core Concepts
 
-- **Relationship** — a declared connection between two or more actors
-- **RelationshipParticipant** — an actor's role within a relationship
+- **Relationship** — an evidence-backed context connecting two or more actors
+- **RelationshipAssertion** — one participant's own relationship description and confirmation state
 - **RelationshipEvidence** — the evidence supporting a relationship claim
 
 ## Evidence Requirements
@@ -20,22 +20,24 @@ Every relationship must have at least one piece of evidence:
 | AI inference | Model-suggested relationship (requires user confirmation) |
 | Manual declaration | User explicitly states a relationship |
 
-## Relationship States
+## Participant Assertions
 
-```
-suggested → confirmed → active → archived → dissolved
-         → rejected
-```
+FNB does not collapse every participant's view into one global relationship
+label. Each assertion records:
 
-- **suggested** — AI-detected, waiting for user review
-- **confirmed** — user-approved relationship
-- **active** — currently relevant and used
-- **archived** — preserved but inactive
-- **dissolved** — relationship formally ended
+- the participant making the assertion;
+- that participant's relationship description;
+- `candidate`, `confirmed`, `rejected`, or `contested` confirmation state;
+- a confirmation event and timestamp for confirmed assertions;
+- the assertion's own visibility scope.
+
+The Relationship itself has only a retention/dispute lifecycle: `active`,
+`contested`, or `redacted`. Two participants may legitimately hold different
+private assertions about the same evidence.
 
 ## Permission Model
 
-- Each relationship has an owner (the user)
+- Each participant controls their own assertion and visibility scope
 - Participants can have different permission levels (view, infer, train, export)
-- AI can suggest relationships but **cannot create confirmed relationships** without user approval
+- AI can propose candidate assertions but **cannot confirm an assertion** without that participant's decision
 - Relationship evidence is auditable and cannot be silently deleted

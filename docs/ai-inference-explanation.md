@@ -6,17 +6,20 @@ Every AI judgment in FNB creates a structured `AIInference` record:
 
 | Field | Description |
 |-------|-------------|
-| model_id | Which model produced the inference |
-| input_hash | Hash of the input data |
-| output_hash | Hash of the output data |
+| model | Provider, model name, version, and configuration fingerprint |
+| input_refs | Permission-aware references used as model inputs |
+| output_summary | Human-readable summary of the model output |
 | confidence | Model confidence score (0.0 - 1.0) |
-| claim_type | Type of claim (relationship, memory, classification, etc.) |
-| evidence_ids | References to supporting evidence |
-| state_delta | What changed as a result |
+| inference_status | Model-record lifecycle: completed or superseded |
+| confirmation_status | Separate user decision: candidate, confirmed, or rejected |
+| explanation | Rationale, evidence references, and known limitations |
 
 ## Explanation
 
-Every AI inference that affects user data must have a corresponding `Explanation` — a human-readable rationale.
+Every persisted AI inference in the public protocol must have a corresponding
+`Explanation` — a human-readable rationale with at least one evidence reference.
+Those evidence references must resolve through the inference's permission-aware
+inputs.
 
 An Explanation must answer:
 

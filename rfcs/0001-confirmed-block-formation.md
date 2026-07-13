@@ -24,8 +24,10 @@ into user-owned truth.
 5. Only confirmation or an explicit rewrite creates a Block.
 
 Every Block retains its source Node identifiers. An AI-derived Block must retain
-the identifier of the BlockDraft that the user confirmed or rewrote. Rejection
-remains auditable and does not create a Block.
+the identifier of the BlockDraft that the user confirmed or rewrote, the
+confirming actor, confirmation event, operation, and timestamp. Rewrites also
+retain their Correction identifier. A rejected Draft remains auditable and must
+not create a Block.
 
 ## Data Sovereignty Impact
 

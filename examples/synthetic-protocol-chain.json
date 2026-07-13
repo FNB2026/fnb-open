@@ -19,11 +19,17 @@
   "ai_inference": {
     "inference_id": "fnb_inf_trip_memory_001",
     "purpose": "propose_memory_block",
-    "model_id": "synthetic-demo-model-v1",
+    "model": {
+      "provider": "synthetic-local",
+      "name": "demo-model",
+      "version": "v1",
+      "configuration_fingerprint": "sha256:synthetic-config-001"
+    },
     "input_refs": ["fnb_evt_100", "fnb_node_trip_proposal_001"],
     "output_summary": "Alice 提议与 Ben 在春节前规划一次大理旅行。",
     "confidence": 0.84,
-    "status": "confirmed",
+    "inference_status": "completed",
+    "confirmation_status": "confirmed",
     "explanation": {
       "explanation_id": "fnb_exp_trip_memory_001",
       "rationale": "提议包含明确参与人、目的地和时间范围。",
@@ -60,8 +66,12 @@
     "creation_mode": "ai_derived",
     "source_node_ids": ["fnb_node_trip_proposal_001"],
     "draft_id": "fnb_draft_trip_001",
+    "correction_id": "fnb_corr_trip_001",
     "title": "春节前的大理旅行提议",
     "summary": "Alice 提议春节前去大理；Ben 尚未确认。",
+    "confirmed_by_actor_id": "fnb_actor_alice",
+    "confirmation_event_id": "fnb_evt_confirmation_trip_001",
+    "confirmation_operation": "rewrite",
     "confirmed_at": "2026-01-15T14:11:00+08:00"
   }
 }

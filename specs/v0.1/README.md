@@ -15,6 +15,19 @@ Relationship, AIInference, and Correction/Patch. All examples are synthetic.
 Breaking changes are allowed while the version remains `v0.1`; proposed changes
 should use the public RFC process.
 
+## Canonical identifiers and releases
+
+Draft schema identifiers resolve from the public `FNB2026/fnb-open` repository:
+
+```text
+https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/<schema-file>
+```
+
+The mutable `main` location is intentional while v0.1 is under review. Before an
+accepted release, the repository will create an immutable Git tag, publish a
+versioned manifest of schema digests, and freeze identifiers for that accepted
+version. Accepted schema content will never be replaced in place.
+
 ## Validation
 
 Install the pinned validation dependency and run the public conformance baseline:
@@ -24,6 +37,7 @@ python3 -m pip install --requirement tools/requirements-validation.txt
 python3 tools/validate-public-artifacts.py
 ```
 
-The validator meta-validates every schema, checks the end-to-end synthetic chain,
-enforces its cross-object references, and proves that both valid and invalid
-fixtures behave as expected.
+The validator meta-validates every schema and canonical identifier, checks the
+end-to-end synthetic chain, enforces its cross-object references, and proves that
+both valid and invalid fixtures behave as expected. This is a reference-chain
+baseline, not yet a third-party compatibility certification suite.

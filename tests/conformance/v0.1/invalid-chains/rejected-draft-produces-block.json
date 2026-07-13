@@ -1,0 +1,67 @@
+{
+  "flow_event": {
+    "event_id": "fnb_evt_rejected_001",
+    "flow_id": "fnb_flow_synthetic_001",
+    "event_type": "message",
+    "occurred_at": "2026-01-15T14:00:00+08:00",
+    "actor_id": "fnb_actor_alice",
+    "source_ref": "synthetic:message:rejected-001"
+  },
+  "node": {
+    "node_id": "fnb_node_rejected_001",
+    "node_type": "event",
+    "source_event_ids": ["fnb_evt_rejected_001"],
+    "status": "confirmed"
+  },
+  "ai_inference": {
+    "inference_id": "fnb_inf_rejected_001",
+    "purpose": "propose_memory_block",
+    "model": {
+      "provider": "synthetic-local",
+      "name": "demo-model",
+      "version": "v1",
+      "configuration_fingerprint": "sha256:synthetic-config-rejected"
+    },
+    "input_refs": ["fnb_evt_rejected_001", "fnb_node_rejected_001"],
+    "output_summary": "A proposal the user rejects.",
+    "confidence": 0.5,
+    "inference_status": "completed",
+    "confirmation_status": "rejected",
+    "explanation": {
+      "explanation_id": "fnb_exp_rejected_001",
+      "rationale": "Synthetic negative conformance scenario.",
+      "evidence_refs": ["fnb_evt_rejected_001"]
+    }
+  },
+  "block_draft": {
+    "draft_id": "fnb_draft_rejected_001",
+    "owner_id": "fnb_actor_alice",
+    "block_type": "memory",
+    "source_node_ids": ["fnb_node_rejected_001"],
+    "inference_id": "fnb_inf_rejected_001",
+    "status": "rejected"
+  },
+  "correction": {
+    "correction_id": "fnb_corr_rejected_001",
+    "actor_id": "fnb_actor_alice",
+    "target_type": "block_draft",
+    "target_id": "fnb_draft_rejected_001",
+    "operation": "reject",
+    "reason": "The proposal is not true.",
+    "created_at": "2026-01-15T14:05:00+08:00"
+  },
+  "block": {
+    "block_id": "fnb_block_must_not_exist_001",
+    "owner_id": "fnb_actor_alice",
+    "block_type": "memory",
+    "creation_mode": "ai_derived",
+    "source_node_ids": ["fnb_node_rejected_001"],
+    "draft_id": "fnb_draft_rejected_001",
+    "title": "Invalid Block",
+    "summary": "A rejected proposal must not become a Block.",
+    "confirmed_by_actor_id": "fnb_actor_alice",
+    "confirmation_event_id": "fnb_evt_invalid_confirmation_002",
+    "confirmation_operation": "confirm",
+    "confirmed_at": "2026-01-15T14:06:00+08:00"
+  }
+}

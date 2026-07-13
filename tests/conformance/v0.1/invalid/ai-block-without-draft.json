@@ -8,6 +8,9 @@
     "source_node_ids": ["fnb_node_trip_proposal_001"],
     "title": "Unconfirmed model output",
     "summary": "This must not become a Block without a draft.",
+    "confirmed_by_actor_id": "fnb_actor_alice",
+    "confirmation_event_id": "fnb_evt_invalid_confirmation_001",
+    "confirmation_operation": "confirm",
     "confirmed_at": "2026-01-15T14:11:00+08:00"
   }
 }

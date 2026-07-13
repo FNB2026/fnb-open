@@ -1,0 +1,18 @@
+{
+  "schema": "ai-inference.schema.json",
+  "instance": {
+    "inference_id": "fnb_inf_invalid_001",
+    "purpose": "relationship_analysis",
+    "model": {
+      "provider": "synthetic-local",
+      "name": "demo-model",
+      "version": "v1",
+      "configuration_fingerprint": "sha256:synthetic-config-001"
+    },
+    "input_refs": ["fnb_evt_001"],
+    "output_summary": "The relationship may be close.",
+    "confidence": 0.91,
+    "inference_status": "completed",
+    "confirmation_status": "candidate"
+  }
+}
