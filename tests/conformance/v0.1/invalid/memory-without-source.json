@@ -1,0 +1,11 @@
+{
+  "schema": "memory.schema.json",
+  "instance": {
+    "memory_id": "fnb_mem_invalid_001",
+    "owner_id": "fnb_actor_alice",
+    "title": "A memory without provenance",
+    "status": "candidate",
+    "lifecycle_state": "active",
+    "sources": []
+  }
+}

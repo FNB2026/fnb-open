@@ -2,7 +2,8 @@
 
 ## Status
 
-Draft
+Discussion — [public review #5](https://github.com/FNB2026/fnb-open/discussions/5),
+opened 2026-07-13; decision no earlier than 2026-07-20
 
 ## Summary
 

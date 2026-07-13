@@ -1,1 +1,38 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://fnb.example/specs/v0.1/memory.schema.json","title":"Memory","type":"object","additionalProperties":false,"required":["memory_id","owner_id","title","status","sources"],"properties":{"memory_id":{"type":"string","pattern":"^fnb_mem_"},"owner_id":{"type":"string"},"title":{"type":"string","minLength":1},"summary":{"type":"string"},"status":{"enum":["suggested","confirmed","rejected","redacted"]},"confidence":{"type":"number","minimum":0,"maximum":1},"sources":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["source_id","object_type","object_id"],"properties":{"source_id":{"type":"string"},"object_type":{"enum":["asset","event","node","block","message"]},"object_id":{"type":"string"},"content_hash":{"type":"string"}}}}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fnb.example/specs/v0.1/memory.schema.json",
+  "title": "Memory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["memory_id", "owner_id", "title", "status", "lifecycle_state", "sources"],
+  "properties": {
+    "memory_id": {"type": "string", "pattern": "^fnb_mem_"},
+    "owner_id": {"type": "string"},
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string"},
+    "status": {
+      "description": "User-governed confirmation state.",
+      "enum": ["candidate", "confirmed", "rejected"]
+    },
+    "lifecycle_state": {
+      "description": "Retention and visibility lifecycle, independent of confirmation.",
+      "enum": ["active", "archived", "redacted", "deleted"]
+    },
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "object_type", "object_id"],
+        "properties": {
+          "source_id": {"type": "string"},
+          "object_type": {"enum": ["asset", "event", "node", "block", "message"]},
+          "object_id": {"type": "string"},
+          "content_hash": {"type": "string"}
+        }
+      }
+    }
+  }
+}
