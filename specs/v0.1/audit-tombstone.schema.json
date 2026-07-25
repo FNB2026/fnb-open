@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/audit-tombstone.schema.json",
+  "title": "AuditTombstone",
+  "description": "A data-minimized audit record that may replace an identifiable correction or deletion record when retention has a valid basis.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_id",
+    "action",
+    "target_type",
+    "outcome",
+    "occurred_on",
+    "retention_basis",
+    "purge_after"
+  ],
+  "properties": {
+    "audit_id": {
+      "type": "string",
+      "pattern": "^fnb_audit_"
+    },
+    "action": {
+      "enum": [
+        "redact",
+        "delete"
+      ]
+    },
+    "target_type": {
+      "enum": [
+        "node",
+        "block_draft",
+        "block",
+        "memory",
+        "relationship",
+        "ai_inference",
+        "source"
+      ]
+    },
+    "outcome": {
+      "enum": [
+        "completed",
+        "denied",
+        "failed"
+      ]
+    },
+    "occurred_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "retention_basis": {
+      "enum": [
+        "statutory_obligation",
+        "security_integrity",
+        "dispute_resolution"
+      ]
+    },
+    "purge_after": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

@@ -23,8 +23,8 @@ implementation.
 The first review opened on 2026-07-13 and completed on 2026-07-26:
 
 - RFC-0001 is **Accepted** for individually attributable BlockDraft decisions.
-- RFC-0002 is in **Revision** pending downstream invalidation and deletion-safe
-  audit semantics.
+- RFC-0002 is in **Revision** with a concrete downstream invalidation and
+  deletion-safe audit proposal prepared for a second public review.
 - RFC-0003 is in **Revision** pending portable permission snapshots and
   source-invalidation semantics.
 

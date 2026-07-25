@@ -4,9 +4,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -98,11 +99,39 @@ def validate_inference_semantics(inference: dict[str, Any], label: str) -> None:
         raise AssertionError(f"{label}: AIInference evidence must resolve through its inputs")
 
 
+def validate_invalidation_semantics(record: dict[str, Any], label: str) -> None:
+    material = "|".join(
+        [
+            record["trigger_type"],
+            record["trigger_id"],
+            record["target_type"],
+            record["target_id"],
+            record["resulting_state"],
+        ]
+    )
+    expected = f"sha256:{hashlib.sha256(material.encode('utf-8')).hexdigest()}"
+    if record["idempotency_key"] != expected:
+        raise AssertionError(
+            f"{label}: invalidation idempotency_key must be the SHA-256 of the canonical trigger and target tuple"
+        )
+
+
+def validate_audit_tombstone_semantics(record: dict[str, Any], label: str) -> None:
+    occurred_on = date.fromisoformat(record["occurred_on"])
+    purge_after = date.fromisoformat(record["purge_after"])
+    if purge_after < occurred_on:
+        raise AssertionError(f"{label}: audit tombstone purge_after must not predate occurred_on")
+
+
 def validate_object_semantics(schema_name: str, instance: dict[str, Any], label: str) -> None:
     if schema_name == "relationship.schema.json":
         validate_relationship_semantics(instance, label)
     elif schema_name == "ai-inference.schema.json":
         validate_inference_semantics(instance, label)
+    elif schema_name == "invalidation-record.schema.json":
+        validate_invalidation_semantics(instance, label)
+    elif schema_name == "audit-tombstone.schema.json":
+        validate_audit_tombstone_semantics(instance, label)
 
 
 def validate_protocol_chain_instance(
@@ -171,12 +200,55 @@ def validate_protocol_chain(schemas: dict[str, dict[str, Any]]) -> None:
     validate_protocol_chain_instance(schemas, load_json(path), str(path.relative_to(ROOT)))
 
 
+def validate_invalidation_chain_instance(
+    schemas: dict[str, dict[str, Any]], chain: dict[str, Any], label: str
+) -> None:
+    records = chain.get("records")
+    if not isinstance(records, list) or not records:
+        raise AssertionError(f"{label}: invalidation chain must contain records")
+    seen_ids: set[str] = set()
+    seen_targets: set[tuple[str, str]] = set()
+    for index, record in enumerate(records):
+        record_label = f"{label}#records[{index}]"
+        validate_instance(
+            schemas, "invalidation-record.schema.json", record, record_label
+        )
+        validate_invalidation_semantics(record, record_label)
+        if (
+            record["trigger_type"] == "parent_invalidation"
+            and record["trigger_id"] not in seen_ids
+        ):
+            raise AssertionError(
+                f"{record_label}: parent invalidation must reference an earlier record"
+            )
+        target = (record["target_type"], record["target_id"])
+        if target in seen_targets:
+            raise AssertionError(
+                f"{record_label}: an invalidation chain must transition each target once"
+            )
+        seen_ids.add(record["invalidation_id"])
+        seen_targets.add(target)
+
+
 def validate_fixtures(schemas: dict[str, dict[str, Any]]) -> None:
     valid_paths = sorted((FIXTURE_DIR / "valid").glob("*.json"))
     invalid_paths = sorted((FIXTURE_DIR / "invalid").glob("*.json"))
     invalid_chain_paths = sorted((FIXTURE_DIR / "invalid-chains").glob("*.json"))
     invalid_semantic_paths = sorted((FIXTURE_DIR / "invalid-semantics").glob("*.json"))
-    if not valid_paths or not invalid_paths or not invalid_chain_paths or not invalid_semantic_paths:
+    valid_invalidation_chain_paths = sorted(
+        (FIXTURE_DIR / "valid-invalidation-chains").glob("*.json")
+    )
+    invalid_invalidation_chain_paths = sorted(
+        (FIXTURE_DIR / "invalid-invalidation-chains").glob("*.json")
+    )
+    if (
+        not valid_paths
+        or not invalid_paths
+        or not invalid_chain_paths
+        or not invalid_semantic_paths
+        or not valid_invalidation_chain_paths
+        or not invalid_invalidation_chain_paths
+    ):
         raise AssertionError("conformance suite requires both valid and invalid fixtures")
 
     for path in valid_paths:
@@ -207,6 +279,22 @@ def validate_fixtures(schemas: dict[str, dict[str, Any]]) -> None:
         except AssertionError:
             continue
         raise AssertionError(f"{label}: expected object semantics to fail")
+
+    for path in valid_invalidation_chain_paths:
+        validate_invalidation_chain_instance(
+            schemas, load_json(path), str(path.relative_to(ROOT))
+        )
+
+    for path in invalid_invalidation_chain_paths:
+        try:
+            validate_invalidation_chain_instance(
+                schemas, load_json(path), str(path.relative_to(ROOT))
+            )
+        except AssertionError:
+            continue
+        raise AssertionError(
+            f"{path.relative_to(ROOT)}: expected invalidation-chain semantics to fail"
+        )
 
     covered = {load_json(path)["schema"] for path in valid_paths}
     covered.update(CHAIN_SCHEMA_MAP.values())

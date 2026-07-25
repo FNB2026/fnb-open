@@ -1,0 +1,14 @@
+{
+  "schema": "invalidation-record.schema.json",
+  "instance": {
+    "invalidation_id": "fnb_inv_bad_key_001",
+    "trigger_type": "source_change",
+    "trigger_id": "fnb_source_deleted_001",
+    "target_type": "memory",
+    "target_id": "fnb_memory_trip_001",
+    "resulting_state": "invalidated",
+    "reason_code": "source_deleted",
+    "idempotency_key": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "created_at": "2026-07-26T10:00:00Z"
+  }
+}
