@@ -1,7 +1,8 @@
 # Protocol Preview Status
 
-FNB's public protocol preview is now in **v0.1 Draft**. It is intentionally
-smaller than the private product implementation.
+FNB's public protocol preview remains a **v0.1 Draft**, with its first review
+window completed. It is intentionally smaller than the private product
+implementation.
 
 ## Published in this preview
 
@@ -17,18 +18,33 @@ smaller than the private product implementation.
 - Real user data or examples derived from real conversations
 - Unimplemented research objects presented as stable protocol contracts
 
+## First review outcome
+
+The first review opened on 2026-07-13 and completed on 2026-07-26:
+
+- RFC-0001 is **Accepted** for individually attributable BlockDraft decisions.
+- RFC-0002 is in **Revision** pending downstream invalidation and deletion-safe
+  audit semantics.
+- RFC-0003 is in **Revision** pending portable permission snapshots and
+  source-invalidation semantics.
+
+The absence of external comments does not turn unresolved questions into stable
+protocol contracts. The Steward decision records accepted scope explicitly and
+keeps unresolved semantics in Revision.
+
 ## Next gates
 
-1. Complete [public review #5](https://github.com/FNB2026/fnb-open/discussions/5)
-   of names, identifiers, lifecycle states, provenance, and invalidation semantics
-2. Keep schema, example, cross-reference, and negative-fixture validation green
-3. Revise or accept RFC-0001 through RFC-0003 after the review window
-4. Publish a deliberately narrow OpenAPI preview
-5. Generate a TypeScript SDK preview from reviewed public schemas
+1. Keep schema, example, cross-reference, and negative-fixture validation green
+2. Complete reviewed revisions of RFC-0002 and RFC-0003
+3. Freeze accepted schema identifiers with an immutable Git tag and publish a
+   versioned digest manifest
+4. Publish a deliberately narrow, schema-first OpenAPI preview
+5. Generate a TypeScript SDK preview from the reviewed OpenAPI and public schemas
 
-The current review opened on 2026-07-13 and cannot close before 2026-07-20.
 Private product changes are not copied into this preview while they remain
-uncommitted or implementation-specific.
+uncommitted, unreviewed, or implementation-specific. Authentication, workers,
+ledger, storage, IM/WebSocket, administration, and deployment remain outside the
+first OpenAPI preview.
 
-Draft schemas may change incompatibly until an RFC promotes them to a stable
-version.
+Draft schemas may change incompatibly until their governing RFCs are Accepted
+and an immutable release freezes their identifiers and digests.

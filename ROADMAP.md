@@ -16,8 +16,11 @@
 - [x] Open initial protocol RFCs for discussion
 - [x] Add executable schema and cross-file conformance baseline
 - [x] Add positive and negative protocol fixtures
-- [ ] Complete the first public v0.1 review window (not before 2026-07-20)
-- [ ] Revise or accept RFC-0001 through RFC-0003
+- [x] Complete the first public v0.1 review window (2026-07-13 to 2026-07-26)
+- [x] Record the first decisions: accept RFC-0001; move RFC-0002 and RFC-0003
+      to Revision
+- [ ] Complete reviewed revisions and accept RFC-0002 and RFC-0003
+- [ ] Publish an immutable v0.1 preview tag and versioned schema-digest manifest
 - [ ] Publish OpenAPI preview
 - [ ] Publish TypeScript SDK preview
 - [ ] Publish Go SDK preview
