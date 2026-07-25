@@ -3,6 +3,18 @@
 The v0.1 protocol remains unstable. This changelog makes draft-breaking changes
 visible during public review.
 
+## 2026-07-26 — First review decision
+
+- Completed the first public v0.1 review window.
+- Accepted RFC-0001 with individually attributable decisions and an explicit
+  minimum rejection record.
+- Moved RFC-0002 and RFC-0003 to Revision until downstream invalidation,
+  deletion-safe audit metadata, portable permission snapshots, and
+  source-invalidation semantics are represented in public artifacts.
+- Kept private implementation experiments non-normative and deferred the
+  immutable tag, digest manifest, OpenAPI preview, and SDK generation until the
+  remaining protocol semantics are reviewed.
+
 ## 2026-07-13 — Reproducible publication gate
 
 - Canonically formatted all public schemas with two-space JSON indentation.

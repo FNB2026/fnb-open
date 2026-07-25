@@ -2,8 +2,10 @@
 
 ## Status
 
-Discussion — [public review #5](https://github.com/FNB2026/fnb-open/discussions/5),
-opened 2026-07-13; decision no earlier than 2026-07-20
+Revision — Steward decision recorded 2026-07-26 after
+[public review #5](https://github.com/FNB2026/fnb-open/discussions/5);
+portable permission snapshots and source-invalidation semantics require another
+reviewed revision before acceptance
 
 ## Summary
 
@@ -50,7 +52,14 @@ This formalizes fields already present in the v0.1 draft schemas.
 Embedding source text directly in every derived object was rejected because it
 duplicates sensitive data and weakens revocation.
 
-## Open Questions
+## Revision Requirements
 
-- How should a portable permission snapshot be represented?
-- When should source invalidation redact versus merely mark a derived object stale?
+- Define a portable permission snapshot that does not expose authentication or
+  storage internals.
+- Distinguish source redaction, deletion, staleness, and invalidation without
+  broadening access to retained provenance.
+- Define deterministic propagation into derived objects and add positive and
+  negative conformance fixtures.
+
+Private implementation status names and cascade behavior are non-normative
+until they are represented in the public schemas, fixtures, and validator.

@@ -2,8 +2,10 @@
 
 ## Status
 
-Discussion — [public review #5](https://github.com/FNB2026/fnb-open/discussions/5),
-opened 2026-07-13; decision no earlier than 2026-07-20
+Revision — Steward decision recorded 2026-07-26 after
+[public review #5](https://github.com/FNB2026/fnb-open/discussions/5);
+downstream invalidation and deletion-safe audit semantics require another
+reviewed revision before acceptance
 
 ## Summary
 
@@ -50,7 +52,13 @@ This is additive to the v0.1 draft schemas.
 A single free-text feedback field was rejected because it cannot express or
 audit precise state transitions.
 
-## Open Questions
+## Revision Requirements
 
-- How should corrections propagate to downstream derived objects?
-- Which redaction metadata may remain visible after deletion requests?
+- Define implementation-neutral propagation semantics for downstream derived
+  objects, including how invalidation is represented and audited.
+- Define the minimum deletion-safe audit metadata that may remain after a
+  redaction or deletion request.
+- Add positive and negative conformance fixtures for the selected semantics.
+
+Private implementation experiments are not normative until these requirements
+are represented in the public schemas, fixtures, and validator.

@@ -2,8 +2,9 @@
 
 ## Status
 
-Discussion — [public review #5](https://github.com/FNB2026/fnb-open/discussions/5),
-opened 2026-07-13; decision no earlier than 2026-07-20
+Accepted — Steward decision recorded 2026-07-26 after
+[public review #5](https://github.com/FNB2026/fnb-open/discussions/5),
+opened 2026-07-13 and completed 2026-07-26
 
 ## Summary
 
@@ -51,7 +52,11 @@ This is the first public draft and may change during v0.1 review.
 Automatic Block creation was rejected because it turns model output into fact
 without user agency.
 
-## Open Questions
+## Decision
 
-- Should low-risk local-only drafts support batched confirmation?
-- What minimum rejection record is required for conformance?
+- Batched confirmation is out of scope for v0.1. Each BlockDraft requires an
+  individually attributable confirm, reject, or replace decision.
+- The minimum conforming rejection record is a CorrectionPatch targeting the
+  BlockDraft with `operation: reject`, `actor_id`, a non-empty `reason`, and
+  `created_at`. The rejected Draft remains auditable and must not produce a
+  Block.
