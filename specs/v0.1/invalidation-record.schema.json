@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/invalidation-record.schema.json",
+  "title": "InvalidationRecord",
+  "description": "An append-only record that propagates a correction, source change, permission change, or upstream invalidation to one derived object.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "invalidation_id",
+    "trigger_type",
+    "trigger_id",
+    "target_type",
+    "target_id",
+    "resulting_state",
+    "reason_code",
+    "idempotency_key",
+    "created_at"
+  ],
+  "properties": {
+    "invalidation_id": {
+      "type": "string",
+      "pattern": "^fnb_inv_"
+    },
+    "trigger_type": {
+      "enum": [
+        "correction_patch",
+        "source_change",
+        "permission_change",
+        "parent_invalidation"
+      ]
+    },
+    "trigger_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_type": {
+      "enum": [
+        "node",
+        "block_draft",
+        "block",
+        "memory",
+        "relationship",
+        "ai_inference"
+      ]
+    },
+    "target_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resulting_state": {
+      "enum": [
+        "invalidated",
+        "review_required"
+      ]
+    },
+    "reason_code": {
+      "enum": [
+        "correction_rejected",
+        "correction_replaced",
+        "source_redacted",
+        "source_deleted",
+        "source_stale",
+        "permission_withdrawn",
+        "upstream_invalidated"
+      ]
+    },
+    "idempotency_key": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "actor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "trigger_type": {
+            "const": "correction_patch"
+          }
+        },
+        "required": [
+          "trigger_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "enum": [
+              "correction_rejected",
+              "correction_replaced"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "trigger_type": {
+            "const": "source_change"
+          }
+        },
+        "required": [
+          "trigger_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "enum": [
+              "source_redacted",
+              "source_deleted",
+              "source_stale"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "trigger_type": {
+            "const": "permission_change"
+          }
+        },
+        "required": [
+          "trigger_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "permission_withdrawn"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "trigger_type": {
+            "const": "parent_invalidation"
+          }
+        },
+        "required": [
+          "trigger_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trigger_id": {
+            "pattern": "^fnb_inv_"
+          },
+          "reason_code": {
+            "const": "upstream_invalidated"
+          }
+        }
+      }
+    }
+  ]
+}

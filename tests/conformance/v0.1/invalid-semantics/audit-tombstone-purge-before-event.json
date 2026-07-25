@@ -1,0 +1,12 @@
+{
+  "schema": "audit-tombstone.schema.json",
+  "instance": {
+    "audit_id": "fnb_audit_bad_retention_001",
+    "action": "redact",
+    "target_type": "ai_inference",
+    "outcome": "completed",
+    "occurred_on": "2026-07-26",
+    "retention_basis": "security_integrity",
+    "purge_after": "2026-07-25"
+  }
+}

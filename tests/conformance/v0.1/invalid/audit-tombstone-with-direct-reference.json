@@ -1,0 +1,13 @@
+{
+  "schema": "audit-tombstone.schema.json",
+  "instance": {
+    "audit_id": "fnb_audit_delete_002",
+    "action": "delete",
+    "target_type": "memory",
+    "target_id": "fnb_memory_private_001",
+    "outcome": "completed",
+    "occurred_on": "2026-07-26",
+    "retention_basis": "statutory_obligation",
+    "purge_after": "2026-08-25"
+  }
+}

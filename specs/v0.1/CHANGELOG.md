@@ -3,6 +3,19 @@
 The v0.1 protocol remains unstable. This changelog makes draft-breaking changes
 visible during public review.
 
+## Unreleased — RFC-0002 second-review proposal
+
+- Added `InvalidationRecord` for deterministic, append-only propagation from a
+  correction, source change, permission change, or parent invalidation.
+- Defined a reproducible SHA-256 idempotency key over the canonical trigger and
+  target tuple.
+- Added `AuditTombstone` as the maximum data-minimized audit shape that may
+  replace identifiable correction/deletion records when a valid retention
+  basis exists.
+- Added positive, schema-negative, and semantic-negative conformance fixtures
+  for reason/trigger compatibility, idempotency, direct-reference exclusion,
+  and bounded retention.
+
 ## 2026-07-26 — First review decision
 
 - Completed the first public v0.1 review window.

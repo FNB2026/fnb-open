@@ -1,0 +1,15 @@
+{
+  "records": [
+    {
+      "invalidation_id": "fnb_inv_orphan_001",
+      "trigger_type": "parent_invalidation",
+      "trigger_id": "fnb_inv_missing_001",
+      "target_type": "memory",
+      "target_id": "fnb_memory_trip_001",
+      "resulting_state": "invalidated",
+      "reason_code": "upstream_invalidated",
+      "idempotency_key": "sha256:77e3bda3a4c3d200f001852cc78dfbe4ef2760e092a0faf4586fa056d20789b7",
+      "created_at": "2026-07-26T10:00:01Z"
+    }
+  ]
+}
