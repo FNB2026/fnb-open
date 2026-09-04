@@ -42,6 +42,23 @@ the source or reusing a derived object.
 state, a constrained reason code, and its effective time. Its states are
 `active`, `stale`, `redacted`, `deleted`, and `permission_withdrawn`.
 
+The portable state machine is deliberately narrow. All state pairs not listed
+below are forbidden, including self-transitions and every transition from
+`deleted`.
+
+| Previous state | Allowed next state | Required reason code |
+| --- | --- | --- |
+| `active` | `stale`, `redacted`, `deleted`, `permission_withdrawn` | `source_stale`, `source_redacted`, `source_deleted`, `permission_withdrawn` |
+| `stale` | `active`, `redacted`, `deleted`, `permission_withdrawn` | `source_restored`, `source_redacted`, `source_deleted`, `permission_withdrawn` |
+| `redacted` | `deleted` | `source_deleted` |
+| `deleted` | none (terminal) | n/a |
+| `permission_withdrawn` | `active`, `redacted`, `deleted` | `permission_restored`, `source_redacted`, `source_deleted` |
+
+`source_restored` means a previously stale source became usable again.
+`permission_restored` means authority changed; it does not assert that source
+content itself was restored. A redacted source cannot become active again;
+deletion may still supersede redaction.
+
 RFC-0002 is the shared execution protocol; this RFC does not create a second
 invalidation mechanism. After provenance and current-permission evaluation:
 

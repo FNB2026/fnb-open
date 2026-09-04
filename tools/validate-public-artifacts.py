@@ -28,6 +28,27 @@ CHAIN_SCHEMA_MAP = {
     "block": "block.schema.json",
 }
 FORMAT_CHECKER = FormatChecker()
+SOURCE_STATES = (
+    "active",
+    "stale",
+    "redacted",
+    "deleted",
+    "permission_withdrawn",
+)
+ALLOWED_SOURCE_STATE_TRANSITIONS = {
+    ("active", "stale"): "source_stale",
+    ("active", "redacted"): "source_redacted",
+    ("active", "deleted"): "source_deleted",
+    ("active", "permission_withdrawn"): "permission_withdrawn",
+    ("stale", "active"): "source_restored",
+    ("stale", "redacted"): "source_redacted",
+    ("stale", "deleted"): "source_deleted",
+    ("stale", "permission_withdrawn"): "permission_withdrawn",
+    ("redacted", "deleted"): "source_deleted",
+    ("permission_withdrawn", "active"): "permission_restored",
+    ("permission_withdrawn", "redacted"): "source_redacted",
+    ("permission_withdrawn", "deleted"): "source_deleted",
+}
 CANONICAL_SCHEMA_PREFIX = (
     "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/"
 )
@@ -130,8 +151,29 @@ def validate_permission_snapshot_semantics(record: dict[str, Any], label: str) -
 
 
 def validate_source_state_change_semantics(record: dict[str, Any], label: str) -> None:
-    if record["previous_state"] == record["new_state"]:
-        raise AssertionError(f"{label}: source state change must change state")
+    transition = (record["previous_state"], record["new_state"])
+    expected_reason = ALLOWED_SOURCE_STATE_TRANSITIONS.get(transition)
+    if expected_reason is None:
+        raise AssertionError(f"{label}: forbidden source state transition {transition[0]} -> {transition[1]}")
+    if record["reason_code"] != expected_reason:
+        raise AssertionError(f"{label}: source state transition requires reason_code {expected_reason}")
+
+
+def validate_source_state_transition_matrix() -> None:
+    path = FIXTURE_DIR / "source-state-transition-matrix.json"
+    matrix = load_json(path)
+    if matrix.get("states") != list(SOURCE_STATES):
+        raise AssertionError(f"{path.relative_to(ROOT)}: states must be canonical")
+    declared = {
+        (item["previous_state"], item["new_state"]): item["reason_code"]
+        for item in matrix.get("allowed", [])
+    }
+    if declared != ALLOWED_SOURCE_STATE_TRANSITIONS:
+        raise AssertionError(f"{path.relative_to(ROOT)}: allowed transitions do not match the protocol matrix")
+    combinations = {(previous, new) for previous in SOURCE_STATES for new in SOURCE_STATES}
+    for transition in combinations:
+        if declared.get(transition) != ALLOWED_SOURCE_STATE_TRANSITIONS.get(transition):
+            raise AssertionError(f"{path.relative_to(ROOT)}: transition matrix must cover every state pair")
 
 
 def validate_object_semantics(schema_name: str, instance: dict[str, Any], label: str) -> None:
@@ -369,6 +411,8 @@ def validate_fixtures(schemas: dict[str, dict[str, Any]]) -> None:
         except AssertionError:
             continue
         raise AssertionError(f"{path.relative_to(ROOT)}: expected source-state chain semantics to fail")
+
+    validate_source_state_transition_matrix()
 
     covered = {load_json(path)["schema"] for path in valid_paths}
     covered.update(CHAIN_SCHEMA_MAP.values())

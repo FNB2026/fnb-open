@@ -46,7 +46,8 @@
         "source_deleted",
         "source_stale",
         "permission_withdrawn",
-        "source_restored"
+        "source_restored",
+        "permission_restored"
       ]
     },
     "effective_at": {
@@ -145,7 +146,10 @@
       "then": {
         "properties": {
           "reason_code": {
-            "const": "source_restored"
+            "enum": [
+              "source_restored",
+              "permission_restored"
+            ]
           }
         }
       }

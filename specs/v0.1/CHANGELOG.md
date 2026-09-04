@@ -10,7 +10,8 @@ visible during public review.
 - Defined source redaction, deletion, staleness, and withdrawn permission as
   triggers for RFC-0002 invalidation; `active` alone does not invalidate.
 - Added positive and object-semantic negative fixtures for snapshot expiry and
-  source-state transition invariants.
+  source-state transition invariants, including a validator-enforced 25-pair
+  portable transition matrix.
 
 ## 2026-09-04 — RFC-0002 accepted
 

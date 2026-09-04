@@ -1,0 +1,23 @@
+{
+  "states": [
+    "active",
+    "stale",
+    "redacted",
+    "deleted",
+    "permission_withdrawn"
+  ],
+  "allowed": [
+    {"previous_state": "active", "new_state": "stale", "reason_code": "source_stale"},
+    {"previous_state": "active", "new_state": "redacted", "reason_code": "source_redacted"},
+    {"previous_state": "active", "new_state": "deleted", "reason_code": "source_deleted"},
+    {"previous_state": "active", "new_state": "permission_withdrawn", "reason_code": "permission_withdrawn"},
+    {"previous_state": "stale", "new_state": "active", "reason_code": "source_restored"},
+    {"previous_state": "stale", "new_state": "redacted", "reason_code": "source_redacted"},
+    {"previous_state": "stale", "new_state": "deleted", "reason_code": "source_deleted"},
+    {"previous_state": "stale", "new_state": "permission_withdrawn", "reason_code": "permission_withdrawn"},
+    {"previous_state": "redacted", "new_state": "deleted", "reason_code": "source_deleted"},
+    {"previous_state": "permission_withdrawn", "new_state": "active", "reason_code": "permission_restored"},
+    {"previous_state": "permission_withdrawn", "new_state": "redacted", "reason_code": "source_redacted"},
+    {"previous_state": "permission_withdrawn", "new_state": "deleted", "reason_code": "source_deleted"}
+  ]
+}
