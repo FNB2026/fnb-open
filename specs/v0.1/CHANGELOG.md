@@ -3,6 +3,15 @@
 The v0.1 protocol remains unstable. This changelog makes draft-breaking changes
 visible during public review.
 
+## Unreleased — RFC-0003 second-review proposal
+
+- Added implementation-neutral `PermissionSnapshot` and `SourceStateChange`
+  objects without exposing ACLs, credentials, sessions, or storage topology.
+- Defined source redaction, deletion, staleness, and withdrawn permission as
+  triggers for RFC-0002 invalidation; `active` alone does not invalidate.
+- Added positive and object-semantic negative fixtures for snapshot expiry and
+  source-state transition invariants.
+
 ## 2026-09-04 — RFC-0002 accepted
 
 - Added `InvalidationRecord` for deterministic, append-only propagation from a

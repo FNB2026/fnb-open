@@ -1,0 +1,16 @@
+{
+  "schema": "permission-snapshot.schema.json",
+  "instance": {
+    "permission_snapshot_id": "fnb_permsnap_trip_001",
+    "source_ref": "fnb_evt_trip_001",
+    "subject_scope": "owner",
+    "allowed_actions": [
+      "view",
+      "infer"
+    ],
+    "visibility_scope": "private",
+    "basis": "user_consent",
+    "captured_at": "2026-09-04T10:00:00Z",
+    "expires_at": "2026-10-04T10:00:00Z"
+  }
+}

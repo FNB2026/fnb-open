@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/source-state-change.schema.json",
+  "title": "SourceStateChange",
+  "description": "A portable record that a source's usability or permission state changed. It contains no source content or authorization credential.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_change_id",
+    "source_ref",
+    "previous_state",
+    "new_state",
+    "reason_code",
+    "effective_at"
+  ],
+  "properties": {
+    "source_change_id": {
+      "type": "string",
+      "pattern": "^fnb_srcchg_"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "previous_state": {
+      "enum": [
+        "active",
+        "stale",
+        "redacted",
+        "deleted",
+        "permission_withdrawn"
+      ]
+    },
+    "new_state": {
+      "enum": [
+        "active",
+        "stale",
+        "redacted",
+        "deleted",
+        "permission_withdrawn"
+      ]
+    },
+    "reason_code": {
+      "enum": [
+        "source_redacted",
+        "source_deleted",
+        "source_stale",
+        "permission_withdrawn",
+        "source_restored"
+      ]
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "new_state": {
+            "const": "redacted"
+          }
+        },
+        "required": [
+          "new_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "source_redacted"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "new_state": {
+            "const": "deleted"
+          }
+        },
+        "required": [
+          "new_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "source_deleted"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "new_state": {
+            "const": "stale"
+          }
+        },
+        "required": [
+          "new_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "source_stale"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "new_state": {
+            "const": "permission_withdrawn"
+          }
+        },
+        "required": [
+          "new_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "permission_withdrawn"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "new_state": {
+            "const": "active"
+          }
+        },
+        "required": [
+          "new_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "source_restored"
+          }
+        }
+      }
+    }
+  ]
+}

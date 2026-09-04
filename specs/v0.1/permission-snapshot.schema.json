@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/permission-snapshot.schema.json",
+  "title": "PermissionSnapshot",
+  "description": "Portable permission facts captured when a source was used; this is not an authentication credential or ACL export.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "permission_snapshot_id",
+    "source_ref",
+    "subject_scope",
+    "allowed_actions",
+    "visibility_scope",
+    "basis",
+    "captured_at"
+  ],
+  "properties": {
+    "permission_snapshot_id": {
+      "type": "string",
+      "pattern": "^fnb_permsnap_"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject_scope": {
+      "enum": [
+        "owner",
+        "participant",
+        "authorized_recipient"
+      ]
+    },
+    "allowed_actions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "view",
+          "infer",
+          "train",
+          "export",
+          "share"
+        ]
+      }
+    },
+    "visibility_scope": {
+      "enum": [
+        "private",
+        "shared",
+        "public"
+      ]
+    },
+    "basis": {
+      "enum": [
+        "user_consent",
+        "delegated_authority",
+        "legal_obligation"
+      ]
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

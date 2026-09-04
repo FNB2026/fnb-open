@@ -10,8 +10,9 @@ API. A schema's presence does not promise endpoint availability or wire
 compatibility with private builds.
 
 The first draft covers Actor, Asset, Memory, FlowEvent, Node, BlockDraft, Block,
-Relationship, AIInference, Correction/Patch, downstream invalidation, and
-data-minimized audit tombstones. All examples are synthetic.
+Relationship, AIInference, Correction/Patch, PermissionSnapshot,
+SourceStateChange, downstream invalidation, and data-minimized audit tombstones.
+All examples are synthetic.
 
 Breaking changes are allowed while the version remains `v0.1`; proposed changes
 should use the public RFC process.
