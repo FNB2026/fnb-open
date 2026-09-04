@@ -6,7 +6,7 @@
     "target_type": "ai_inference",
     "outcome": "completed",
     "occurred_on": "2026-07-26",
-    "retention_basis": "security_integrity",
+    "retention_basis": "active_security_incident",
     "purge_after": "2026-07-25"
   }
 }

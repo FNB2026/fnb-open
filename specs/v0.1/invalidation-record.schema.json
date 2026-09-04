@@ -33,6 +33,11 @@
       "type": "string",
       "minLength": 1
     },
+    "parent_invalidation_id": {
+      "description": "Trace reference for a parent invalidation. This identifier is not used when computing the idempotency key.",
+      "type": "string",
+      "pattern": "^fnb_inv_"
+    },
     "target_type": {
       "enum": [
         "node",
@@ -57,6 +62,7 @@
       "enum": [
         "correction_rejected",
         "correction_replaced",
+        "correction_redacted",
         "source_redacted",
         "source_deleted",
         "source_stale",
@@ -94,7 +100,8 @@
           "reason_code": {
             "enum": [
               "correction_rejected",
-              "correction_replaced"
+              "correction_replaced",
+              "correction_redacted"
             ]
           }
         }
@@ -154,8 +161,14 @@
         ]
       },
       "then": {
+        "required": [
+          "parent_invalidation_id"
+        ],
         "properties": {
           "trigger_id": {
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "parent_invalidation_id": {
             "pattern": "^fnb_inv_"
           },
           "reason_code": {

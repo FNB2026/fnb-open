@@ -50,8 +50,8 @@
     "retention_basis": {
       "enum": [
         "statutory_obligation",
-        "security_integrity",
-        "dispute_resolution"
+        "active_security_incident",
+        "active_dispute"
       ]
     },
     "purge_after": {

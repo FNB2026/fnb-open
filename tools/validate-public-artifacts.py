@@ -206,7 +206,7 @@ def validate_invalidation_chain_instance(
     records = chain.get("records")
     if not isinstance(records, list) or not records:
         raise AssertionError(f"{label}: invalidation chain must contain records")
-    seen_ids: set[str] = set()
+    seen_records: dict[str, dict[str, Any]] = {}
     seen_targets: set[tuple[str, str]] = set()
     for index, record in enumerate(records):
         record_label = f"{label}#records[{index}]"
@@ -214,19 +214,23 @@ def validate_invalidation_chain_instance(
             schemas, "invalidation-record.schema.json", record, record_label
         )
         validate_invalidation_semantics(record, record_label)
-        if (
-            record["trigger_type"] == "parent_invalidation"
-            and record["trigger_id"] not in seen_ids
-        ):
-            raise AssertionError(
-                f"{record_label}: parent invalidation must reference an earlier record"
-            )
+        if record["trigger_type"] == "parent_invalidation":
+            parent_id = record["parent_invalidation_id"]
+            parent = seen_records.get(parent_id)
+            if parent is None:
+                raise AssertionError(
+                    f"{record_label}: parent invalidation must reference an earlier record"
+                )
+            if record["trigger_id"] != parent["idempotency_key"]:
+                raise AssertionError(
+                    f"{record_label}: parent invalidation trigger_id must equal the parent idempotency_key"
+                )
         target = (record["target_type"], record["target_id"])
         if target in seen_targets:
             raise AssertionError(
                 f"{record_label}: an invalidation chain must transition each target once"
             )
-        seen_ids.add(record["invalidation_id"])
+        seen_records[record["invalidation_id"]] = record
         seen_targets.add(target)
 
 
