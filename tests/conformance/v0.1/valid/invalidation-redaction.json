@@ -1,0 +1,14 @@
+{
+  "schema": "invalidation-record.schema.json",
+  "instance": {
+    "invalidation_id": "fnb_inv_trip_redact_001",
+    "trigger_type": "correction_patch",
+    "trigger_id": "fnb_corr_trip_redact_001",
+    "target_type": "memory",
+    "target_id": "fnb_memory_trip_001",
+    "resulting_state": "invalidated",
+    "reason_code": "correction_redacted",
+    "idempotency_key": "sha256:c2209d32a4e603dcc3a878ced0f017c523674aa4743d40f5e0245c7811f71200",
+    "created_at": "2026-09-04T10:00:00Z"
+  }
+}

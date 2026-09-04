@@ -1,0 +1,15 @@
+{
+  "schema": "invalidation-record.schema.json",
+  "instance": {
+    "invalidation_id": "fnb_inv_trip_001",
+    "trigger_type": "correction_patch",
+    "trigger_id": "fnb_corr_trip_001",
+    "target_type": "block",
+    "target_id": "fnb_block_trip_001",
+    "resulting_state": "invalidated",
+    "reason_code": "correction_replaced",
+    "idempotency_key": "sha256:504387c7de7b2edbb64d6ce2563cb8864ea5c620a6c58df57164880f219a73ae",
+    "actor_id": "fnb_actor_alex",
+    "created_at": "2026-07-26T10:00:00Z"
+  }
+}

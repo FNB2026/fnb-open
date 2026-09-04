@@ -18,19 +18,21 @@ implementation.
 - Real user data or examples derived from real conversations
 - Unimplemented research objects presented as stable protocol contracts
 
-## First review outcome
+## Review outcome
 
 The first review opened on 2026-07-13 and completed on 2026-07-26:
 
 - RFC-0001 is **Accepted** for individually attributable BlockDraft decisions.
-- RFC-0002 is in **Revision** pending downstream invalidation and deletion-safe
-  audit semantics.
+- RFC-0002 is **Accepted** after its second public review and a 2026-09-04
+  Steward decision. It defines deterministic invalidation and deletion-safe
+  audit retention without making product implementation normative.
 - RFC-0003 is in **Revision** pending portable permission snapshots and
   source-invalidation semantics.
 
-The absence of external comments does not turn unresolved questions into stable
-protocol contracts. The Steward decision records accepted scope explicitly and
-keeps unresolved semantics in Revision.
+The absence of external comments did not itself accept RFC-0002. The Steward
+decision records its final adversarial review and accepted scope explicitly;
+RFC-0003 remains in Revision until its unresolved semantics are represented in
+public artifacts.
 
 ## Next gates
 
