@@ -1,0 +1,19 @@
+# Local repository hygiene.
+#
+# Scope: files that are produced by a developer's operating system, editor, or
+# local tool runs. Nothing here describes the project's own structure, and no
+# project-internal directory name belongs in this file.
+
+# macOS local metadata
+.DS_Store
+.AppleDouble
+
+# Python bytecode produced by running the tools in tools/
+__pycache__/
+*.py[cod]
+
+# Editor and IDE local state
+.idea/
+.vscode/
+*.swp
+*.swo
