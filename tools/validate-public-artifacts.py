@@ -50,7 +50,7 @@ ALLOWED_SOURCE_STATE_TRANSITIONS = {
     ("permission_withdrawn", "deleted"): "source_deleted",
 }
 CANONICAL_SCHEMA_PREFIX = (
-    "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/"
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/"
 )
 
 
