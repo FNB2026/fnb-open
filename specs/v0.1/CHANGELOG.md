@@ -1,7 +1,19 @@
 # v0.1 Draft Changelog
 
-The v0.1 protocol remains unstable. This changelog makes draft-breaking changes
-visible during public review.
+The v0.1 protocol remains pre-release. This changelog records reviewed protocol
+changes and immutable preview publication boundaries.
+
+## 2026-09-19 — v0.1.0-preview.1 freeze candidate
+
+- Froze all 14 protocol schema `$id` values to the immutable
+  `v0.1.0-preview.1` tag namespace rather than mutable `main`.
+- Added a byte-exact SHA-256 schema digest manifest for the preview.
+- Added a machine-readable compatibility report format and an independent
+  `fnb-conformance` CLI that verifies release integrity before running the
+  public synthetic conformance suite.
+- Kept the release surface protocol-only: no private product commit mapping,
+  service endpoint, authentication implementation, storage, worker, IM, or
+  deployment behavior is included.
 
 ## 2026-09-19 — RFC-0003 accepted
 
