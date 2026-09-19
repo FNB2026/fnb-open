@@ -1,0 +1,136 @@
+{
+  "world_version": "1.0",
+  "protocol_release": "v0.1.0-preview.1",
+  "generator": "fnb-fixtures",
+  "scenario": "relationship-correction",
+  "seed": 42,
+  "object_schemas": {
+    "actor_first": "actor.schema.json",
+    "actor_second": "actor.schema.json",
+    "flow_event": "flow-event.schema.json",
+    "relationship": "relationship.schema.json",
+    "memory": "memory.schema.json",
+    "correction": "correction-patch.schema.json",
+    "invalidation_direct": "invalidation-record.schema.json",
+    "invalidation_transitive": "invalidation-record.schema.json"
+  },
+  "objects": {
+    "actor_first": {
+      "actor_id": "fnb_actor_28efe333",
+      "kind": "person",
+      "display_name": "Synthetic Actor A",
+      "status": "active"
+    },
+    "actor_second": {
+      "actor_id": "fnb_actor_47526757",
+      "kind": "person",
+      "display_name": "Synthetic Actor B",
+      "status": "active"
+    },
+    "flow_event": {
+      "event_id": "fnb_evt_581ce1ff",
+      "flow_id": "fnb_flow_09bc585a",
+      "event_type": "meeting",
+      "occurred_at": "2026-01-01T00:05:00Z",
+      "actor_id": "fnb_actor_28efe333",
+      "source_ref": "synthetic://calendar/relationship-correction",
+      "content_preview": "Synthetic working session."
+    },
+    "relationship": {
+      "relationship_id": "fnb_rel_de4431fa",
+      "participant_ids": [
+        "fnb_actor_28efe333",
+        "fnb_actor_47526757"
+      ],
+      "lifecycle_state": "contested",
+      "assertions": [
+        {
+          "actor_id": "fnb_actor_28efe333",
+          "relationship_kind": "colleague",
+          "confirmation_state": "confirmed",
+          "confirmed_at": "2026-01-01T00:10:00Z",
+          "confirmation_event_id": "fnb_evt_37e9671c",
+          "visibility_scope": "participants"
+        },
+        {
+          "actor_id": "fnb_actor_47526757",
+          "relationship_kind": "colleague",
+          "confirmation_state": "contested",
+          "visibility_scope": "participants"
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "fnb_evid_ccf635ee",
+          "source_type": "event",
+          "source_id": "fnb_evt_581ce1ff",
+          "stance": "supports"
+        },
+        {
+          "evidence_id": "fnb_evid_5705b877",
+          "source_type": "event",
+          "source_id": "fnb_evt_581ce1ff",
+          "stance": "contests"
+        }
+      ]
+    },
+    "memory": {
+      "memory_id": "fnb_mem_9e54d738",
+      "owner_id": "fnb_actor_28efe333",
+      "title": "Synthetic derived note",
+      "summary": "Derived from the contested synthetic relationship.",
+      "status": "confirmed",
+      "lifecycle_state": "active",
+      "confidence": 0.47,
+      "sources": [
+        {
+          "source_id": "fnb_src_7e348a0e",
+          "object_type": "event",
+          "object_id": "fnb_evt_836ded89",
+          "content_hash": "sha256:851f977347ed6db7"
+        }
+      ]
+    },
+    "correction": {
+      "correction_id": "fnb_corr_aa47e31c",
+      "actor_id": "fnb_actor_47526757",
+      "target_type": "relationship",
+      "target_id": "fnb_rel_de4431fa",
+      "operation": "reject",
+      "reason": "synthetic rejection of the asserted relationship",
+      "created_at": "2026-01-01T00:15:00Z"
+    },
+    "invalidation_direct": {
+      "invalidation_id": "fnb_inv_341452c5",
+      "trigger_type": "correction_patch",
+      "trigger_id": "fnb_corr_aa47e31c",
+      "target_type": "relationship",
+      "target_id": "fnb_rel_de4431fa",
+      "resulting_state": "invalidated",
+      "reason_code": "correction_rejected",
+      "created_at": "2026-01-01T00:20:00Z",
+      "idempotency_key": "sha256:50bc2d7679939f9d733054b10927bcaa11797a55d3fa3da9a048acb8b95bc422"
+    },
+    "invalidation_transitive": {
+      "invalidation_id": "fnb_inv_1a83d752",
+      "trigger_type": "parent_invalidation",
+      "trigger_id": "sha256:50bc2d7679939f9d733054b10927bcaa11797a55d3fa3da9a048acb8b95bc422",
+      "parent_invalidation_id": "fnb_inv_341452c5",
+      "target_type": "memory",
+      "target_id": "fnb_mem_9e54d738",
+      "resulting_state": "review_required",
+      "reason_code": "upstream_invalidated",
+      "created_at": "2026-01-01T00:25:00Z",
+      "idempotency_key": "sha256:134a54feeb383d502bb9ea8ad390e17ab7a48bde19f868420d4f5b056b433bfd"
+    }
+  },
+  "validation": [
+    {
+      "kind": "invalidation_chain",
+      "records": [
+        "invalidation_direct",
+        "invalidation_transitive"
+      ]
+    }
+  ]
+}

@@ -52,6 +52,11 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/generate-bindings.py --check
+      - name: Verify generated fixture worlds are current and reproducible
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/fnb-fixtures.py check
       - name: Guard the working tree against generator side effects
         shell: bash
         run: |

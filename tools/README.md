@@ -33,3 +33,25 @@ surface to the Python validation environment. It reads the frozen release
 manifest, verifies every schema byte length, SHA-256 digest, and `$id`
 namespace, and fails closed on any unsupported JSON Schema keyword. See
 [`bindings/README.md`](../bindings/README.md).
+
+## Synthetic fixture worlds
+
+```bash
+python3 tools/fnb-fixtures.py list
+python3 tools/fnb-fixtures.py generate basic-memory --seed 42
+python3 tools/fnb-fixtures.py check
+```
+
+`fnb-fixtures.py` builds complete synthetic protocol worlds so an implementation
+can be exercised without real user data. Output is a pure function of
+`(scenario, seed)`, uses an explicit SplitMix64 generator rather than the
+standard library's `random` module, and needs no network or product service.
+`check` re-renders the committed reference worlds and fails on any byte
+difference.
+
+Deliberate division of labour: the generator constructs objects, and
+`validate-public-artifacts.py` judges them. The validator now also validates
+every committed world — each object against its frozen schema and object-level
+semantics, and each declared chain with the same cross-object validators the
+conformance suite uses. Protocol semantics are implemented once, in the
+validator. See [`tests/fixtures/README.md`](../tests/fixtures/README.md).
