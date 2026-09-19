@@ -22,6 +22,7 @@ FIXTURE_WORLD_DIR = ROOT / "tests" / "fixtures" / "generated"
 
 # Envelope produced by tools/fnb-fixtures.py.
 WORLD_VERSION = "1.0"
+WORLD_PROTOCOL_RELEASE = "v0.1.0-preview.1"
 WORLD_GENERATOR = "fnb-fixtures"
 WORLD_CHAIN_KINDS = ("protocol_chain", "invalidation_chain", "source_state_chain")
 WORLD_REQUIRED = (
@@ -451,6 +452,10 @@ def validate_generated_world(schemas: dict[str, dict[str, Any]], world: Any, lab
             raise AssertionError(f"{label}: missing {key}")
     if world["world_version"] != WORLD_VERSION:
         raise AssertionError(f"{label}: unsupported world_version")
+    if world["protocol_release"] != WORLD_PROTOCOL_RELEASE:
+        raise AssertionError(
+            f"{label}: protocol_release must be {WORLD_PROTOCOL_RELEASE}"
+        )
     if world["generator"] != WORLD_GENERATOR:
         raise AssertionError(f"{label}: unexpected generator {world['generator']!r}")
     seed = world["seed"]
