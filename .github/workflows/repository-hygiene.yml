@@ -47,6 +47,16 @@ jobs:
           python3 tools/fnb-conformance.py verify-release \
             --root . \
             --manifest specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json
+      - name: Verify generated protocol bindings are current
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/generate-bindings.py --check
+      - name: Guard the working tree against generator side effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code
       - name: Require a changelog entry for schema changes
         if: github.event_name == 'pull_request'
         env:
@@ -84,3 +94,26 @@ jobs:
             --no-progress --accept 200,204,206,429 --timeout 20
             './**/*.md'
           fail: true
+
+  typescript-bindings:
+    name: Type-check generated protocol bindings
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.22.2"
+          cache: npm
+          cache-dependency-path: bindings/typescript/package-lock.json
+      - name: Install the pinned TypeScript toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --prefix bindings/typescript --no-audit --no-fund
+      - name: Type-check the generated declarations and the union expectations
+        shell: bash
+        run: |
+          set -euo pipefail
+          bindings/typescript/node_modules/.bin/tsc --noEmit \
+            --project bindings/typescript/tsconfig.json
