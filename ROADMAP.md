@@ -19,14 +19,18 @@
 - [x] Complete the first public v0.1 review window (2026-07-13 to 2026-07-26)
 - [x] Record the first decisions: accept RFC-0001; move RFC-0002 and RFC-0003
       to Revision
-- [ ] Complete reviewed revisions and accept RFC-0002 and RFC-0003
-- [ ] Publish an immutable v0.1 preview tag and versioned schema-digest manifest
+- [x] Complete reviewed revisions and accept RFC-0002 (2026-09-04) and RFC-0003
+      (2026-09-19)
+- [x] Publish an immutable v0.1 preview tag (`v0.1.0-preview.1`) and a versioned,
+      byte-exact SHA-256 schema-digest manifest
+- [x] Publish the repository-level conformance runner and the machine-readable
+      compatibility-report format
+- [ ] Publish a standalone third-party conformance package (the shipped runner
+      verifies the release bundle, not a third-party implementation)
 - [ ] Publish OpenAPI preview
 - [ ] Publish TypeScript SDK preview
 - [ ] Publish Go SDK preview
 - [ ] Publish mock server with synthetic data
-- [ ] Publish a standalone third-party conformance package, runner, and
-      compatibility-report format (the repository-level baseline already exists)
 
 ## Phase 3: Plugin Ecosystem Preview 📋
 

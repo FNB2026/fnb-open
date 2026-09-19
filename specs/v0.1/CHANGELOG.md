@@ -3,8 +3,13 @@
 The v0.1 protocol remains pre-release. This changelog records reviewed protocol
 changes and immutable preview publication boundaries.
 
-## 2026-09-19 — v0.1.0-preview.1 freeze candidate
+## 2026-09-19 — v0.1.0-preview.1 published (frozen)
 
+- Published the freeze as PR #17. Merge commit
+  `2f7226c1cba688aba3b130f901379cfe79488ae7` on `main` is tagged
+  `v0.1.0-preview.1` (annotated tag object
+  `f492754744d74ed3459c4ce361108ba8c8a04acc`), verified by GitHub as a valid
+  signed tag.
 - Froze all 14 protocol schema `$id` values to the immutable
   `v0.1.0-preview.1` tag namespace rather than mutable `main`.
 - Added a byte-exact SHA-256 schema digest manifest for the preview.

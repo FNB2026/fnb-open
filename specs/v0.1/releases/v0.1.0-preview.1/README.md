@@ -1,6 +1,6 @@
 # v0.1.0-preview.1 protocol freeze
 
-This directory describes the first tag-ready FNB public protocol preview. It
+This directory describes the first tagged FNB public protocol preview. It
 freezes the public protocol surface only; it is not an FNB product release.
 
 ## Included scope
@@ -21,10 +21,16 @@ implementation, storage topology, migration system, deployment, or real data.
 protocol schema in this preview. The manifest is exact-set checked: an added,
 removed, or modified schema causes verification to fail.
 
-After the freeze change is merged and repository CI is green, the merge commit
-is tagged exactly `v0.1.0-preview.1`. That tag is an immutable publication
-boundary and must never be moved or reused. Any later protocol change requires a
-new version/tag and manifest.
+## Publication record
+
+The freeze was published as PR #17 and landed on `main` as merge commit
+`2f7226c1cba688aba3b130f901379cfe79488ae7`. That commit is tagged exactly
+`v0.1.0-preview.1`, an annotated signed tag whose tag object is
+`f492754744d74ed3459c4ce361108ba8c8a04acc`; GitHub verification reports
+`verified` with reason `valid`.
+
+That tag is an immutable publication boundary and must never be moved or reused.
+Any later protocol change requires a new version, tag, and manifest.
 
 ## Independent verification
 

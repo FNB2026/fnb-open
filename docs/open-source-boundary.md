@@ -1,21 +1,24 @@
 # FNB Public Release Boundary
 
 This file defines what is public today, what may become public later, and what
-must never be published. The current `fnb-open` repository is a public
-documentation and protocol-draft repository; it is not the official product
-source-code release.
+must never be published. The current `fnb-open` repository is a public protocol
+and documentation repository; it is not the official product source-code
+release.
 
 ## Public Now
 
 - Manifesto (EN + ZH)
 - Domain model documentation
-- Protocol drafts
+- Protocol RFCs together with their public review and Steward decision record
+  (RFC-0001, RFC-0002, and RFC-0003 Accepted)
 - Synthetic examples (no real data)
 - Community governance (CoC, Contributing, Governance, Security)
 - Public roadmap
-- Draft JSON Schemas for implementation-neutral domain objects
+- Implementation-neutral JSON Schemas frozen at the immutable
+  `v0.1.0-preview.1` tag, plus their byte-exact SHA-256 digest manifest
 - Synthetic end-to-end protocol chains
-- Draft RFCs for public discussion
+- Public conformance fixtures, an independent conformance runner, and the
+  machine-readable compatibility-report format
 
 ## Planned Public Later (Phase 2+)
 

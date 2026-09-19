@@ -1,7 +1,7 @@
 # FNB Open
 
 [![Official site](https://img.shields.io/badge/site-fnbapp.net-0b6bcb)](https://www.fnbapp.net/)
-[![Protocol status](https://img.shields.io/badge/protocol-v0.1%20discussion-f59e0b)](./docs/protocol-preview-status.md)
+[![Protocol status](https://img.shields.io/badge/protocol-v0.1.0--preview.1-0b6bcb)](./docs/protocol-preview-status.md)
 [![Repository Hygiene](https://github.com/FNB2026/fnb-open/actions/workflows/repository-hygiene.yml/badge.svg)](https://github.com/FNB2026/fnb-open/actions/workflows/repository-hygiene.yml)
 
 <p align="center">
@@ -63,10 +63,12 @@ FNB is built on the belief that:
 ### Public Now
 - Manifesto
 - Domain model documentation
-- Protocol drafts
-- JSON Schema v0.1 drafts
+- Protocol RFCs (RFC-0001, RFC-0002, and RFC-0003 Accepted)
+- JSON Schema v0.1, frozen at the immutable `v0.1.0-preview.1` tag
+- Byte-exact SHA-256 schema digest manifest for that frozen release
 - End-to-end and additional synthetic protocol examples
 - Executable v0.1 conformance fixtures and CI validation
+- Independent conformance runner and compatibility-report format
 - Community governance
 
 ### Planned Public Later (Phase 2+)
@@ -184,10 +186,12 @@ FNB 相信：
 ### 现已公开
 - 宣言
 - 领域模型文档
-- 协议草案
-- JSON Schema v0.1 草案
+- 协议 RFC（RFC-0001、RFC-0002、RFC-0003 已接受）
+- JSON Schema v0.1，已冻结于不可变标签 `v0.1.0-preview.1`
+- 该冻结版本的逐字节 SHA-256 schema 摘要清单
 - 端到端及其他合成协议示例
 - 可执行的 v0.1 一致性夹具与 CI 校验
+- 独立一致性运行器与兼容性报告格式
 - 社区治理
 
 ### 计划后续公开（Phase 2+）
