@@ -1,6 +1,6 @@
 # FNB Protocol Schemas v0.1
 
-Status: **Draft**
+Status: **Pre-release — v0.1.0-preview.1 tag candidate**
 
 License: Apache-2.0. See [`LICENSE-CODE.md`](../../LICENSE-CODE.md).
 
@@ -14,32 +14,40 @@ Relationship, AIInference, Correction/Patch, PermissionSnapshot,
 SourceStateChange, downstream invalidation, and data-minimized audit tombstones.
 All examples are synthetic.
 
-Breaking changes are allowed while the version remains `v0.1`; proposed changes
-should use the public RFC process.
+The governing v0.1 RFCs are accepted. The `v0.1.0-preview.1` tag candidate is
+an immutable protocol preview, not a stability promise for later v0.1 previews.
+Any change to frozen content requires a new tag and digest manifest.
 
 ## Canonical identifiers and releases
 
-Draft schema identifiers resolve from the public `FNB2026/fnb-open` repository:
+The preview schema identifiers resolve through the immutable release tag:
 
 ```text
-https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/<schema-file>
+https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/<schema-file>
 ```
 
-The mutable `main` location is intentional while v0.1 is under review. Before an
-accepted release, the repository will create an immutable Git tag, publish a
-versioned manifest of schema digests, and freeze identifiers for that accepted
-version. Accepted schema content will never be replaced in place.
+The exact 14-file set, byte lengths, and SHA-256 digests are recorded in
+[`releases/v0.1.0-preview.1/schema-digests.json`](./releases/v0.1.0-preview.1/schema-digests.json).
+After the freeze PR is merged with green CI, the merge commit is tagged
+`v0.1.0-preview.1`; that tag must never be retargeted.
 
 ## Validation
 
-Install the pinned validation dependency and run the public conformance baseline:
+Install the pinned validation dependency and run the release verifier:
 
 ```bash
 python3 -m pip install --require-hashes --requirement tools/requirements-validation.lock
-python3 tools/validate-public-artifacts.py
+python3 tools/fnb-conformance.py verify-release \
+  --root . \
+  --manifest specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json
 ```
 
-The validator meta-validates every schema and canonical identifier, checks the
-end-to-end synthetic chain, enforces its cross-object references, and proves that
-both valid and invalid fixtures behave as expected. This is a reference-chain
-baseline, not yet a third-party compatibility certification suite.
+The CLI first proves that the checkout contains exactly the 14 manifest schemas
+with matching byte lengths and SHA-256 digests. It then runs the public reference
+validator over schema metadata, synthetic examples, cross-object semantics, and
+positive/negative fixtures. The resulting compatibility report follows
+[`tests/conformance/compatibility-report.schema.json`](../../tests/conformance/compatibility-report.schema.json).
+
+A pass is evidence for the checks reported. It is not product certification,
+security certification, legal compliance, or compatibility with a private FNB
+service.

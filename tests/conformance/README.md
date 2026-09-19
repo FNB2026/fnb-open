@@ -26,3 +26,25 @@ records have deterministic trigger/target semantics, and deletion-safe audit
 tombstones cannot retain direct object references beyond their purge bound.
 Permission snapshots must not expire at capture, and source-state changes must
 be actual transitions rather than no-op records.
+
+
+## Compatibility reports and release verification
+
+`compatibility-report.schema.json` defines the machine-readable result envelope
+for public conformance checks. The format can describe a frozen release bundle
+or, in later tooling, a third-party implementation. A `pass` applies only to
+the listed checks and is not a product, security, privacy, or legal
+certification.
+
+For `v0.1.0-preview.1`, run:
+
+```bash
+python3 tools/fnb-conformance.py verify-release \
+  --root . \
+  --manifest specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json \
+  --json
+```
+
+The runner has no network or product-service dependency. It verifies the exact
+public schema set and digests before invoking the repository's synthetic
+reference conformance suite.

@@ -40,6 +40,13 @@ jobs:
           set -euo pipefail
           python3 -m pip install --disable-pip-version-check --require-hashes --requirement tools/requirements-validation.lock
           python3 tools/validate-public-artifacts.py
+      - name: Verify v0.1.0-preview.1 release bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/fnb-conformance.py verify-release \
+            --root . \
+            --manifest specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json
       - name: Require a changelog entry for schema changes
         if: github.event_name == 'pull_request'
         env:

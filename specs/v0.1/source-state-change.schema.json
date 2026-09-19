@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/source-state-change.schema.json",
+  "$id": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/source-state-change.schema.json",
   "title": "SourceStateChange",
   "description": "A portable record that a source's usability or permission state changed. It contains no source content or authorization credential.",
   "type": "object",
