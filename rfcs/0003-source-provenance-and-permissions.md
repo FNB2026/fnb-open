@@ -2,11 +2,10 @@
 
 ## Status
 
-Revision — Steward decision recorded 2026-07-26 after
-[public review #5](https://github.com/FNB2026/fnb-open/discussions/5). This
-revision defines portable permission snapshots and source-state changes for a
-second public review; it is not Accepted until that review closes with a new
-Steward decision.
+Accepted — Steward decision recorded 2026-09-19 after the second public review
+through [PR #16](https://github.com/FNB2026/fnb-open/pull/16). The first
+Steward decision was recorded 2026-07-26 after
+[public review #5](https://github.com/FNB2026/fnb-open/discussions/5).
 
 ## Summary
 
@@ -36,6 +35,13 @@ The snapshot answers "why was this source usable then?" It does not grant
 current access. Implementations must evaluate current authority before resolving
 the source or reusing a derived object.
 
+The v0.1 `basis`, `allowed_actions`, and subject/visibility values are
+implementation-neutral preview vocabulary. They are not a legal determination,
+do not by themselves establish a lawful basis or authorization, and do not
+claim equivalence or conformance with DPV, DPV-AI, or another privacy vocabulary.
+A later mapping or vocabulary revision may replace or qualify these values
+without making private product policy normative.
+
 ### SourceStateChange and invalidation
 
 `SourceStateChange` records only a source reference, prior and new portable
@@ -57,7 +63,10 @@ below are forbidden, including self-transitions and every transition from
 `source_restored` means a previously stale source became usable again.
 `permission_restored` means authority changed; it does not assert that source
 content itself was restored. A redacted source cannot become active again;
-deletion may still supersede redaction.
+deletion may still supersede redaction. Restoration never reverses an existing
+`InvalidationRecord` or automatically reactivates a derived object. Reuse or
+re-derivation requires current authority evaluation and a new conforming state
+transition under the applicable RFCs.
 
 RFC-0002 is the shared execution protocol; this RFC does not create a second
 invalidation mechanism. After provenance and current-permission evaluation:
@@ -75,7 +84,10 @@ invalidation mechanism. After provenance and current-permission evaluation:
 - `active` MUST NOT by itself emit an invalidation record.
 
 The direct record's trigger identifier is the relevant source-state or
-permission-change event. All downstream traversal, target deduplication, parent
+permission-change event. When `new_state` is `permission_withdrawn`, the
+`SourceStateChange.source_change_id` is the event identifier carried as
+`InvalidationRecord.trigger_id` even though the trigger type is
+`permission_change`. All downstream traversal, target deduplication, parent
 linkage, and idempotency follow RFC-0002.
 
 This RFC defines semantics only; authentication internals and storage topology
@@ -113,7 +125,29 @@ duplicates sensitive data and weakens revocation.
   without broadening access to retained provenance.
 - [x] Reuse RFC-0002 deterministic propagation and add positive and negative
   object-level conformance fixtures.
-- [ ] Complete a second public review and record a Steward decision.
+- [x] Complete a second public review and record a Steward decision.
 
 Private implementation status names and cascade behavior are non-normative
 until they are represented in the public schemas, fixtures, and validator.
+
+
+## Steward Decision — 2026-09-19
+
+**Accepted.** The second public review was available through
+[PR #16](https://github.com/FNB2026/fnb-open/pull/16) for more than the minimum
+seven-day discussion period. No formal review or PR-local substantive feedback
+was recorded. That silence did not decide the RFC: the Steward completed a final
+adversarial review before acceptance.
+
+The final review resolved three ambiguity and safety concerns before this
+decision: the permission-withdrawal trigger identifier is now explicit;
+restoration cannot silently reactivate already-invalidated derived objects; and
+the v0.1 permission vocabulary is explicitly a preview vocabulary rather than a
+legal conclusion or a claim of DPV/DPV-AI equivalence. The existing conformance
+suite already enforces snapshot-expiry semantics, the complete source-state
+transition matrix, and source-state-to-RFC-0002 invalidation behavior.
+
+This decision accepts only the implementation-neutral RFC semantics, JSON
+Schemas, synthetic fixtures, and public validator behavior. It does not accept,
+publish, or make normative any private authentication, ACL, product API,
+storage, worker, IM/WebSocket, migration, deployment, or production behavior.
