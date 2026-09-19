@@ -1,0 +1,16 @@
+# macOS local metadata
+.DS_Store
+.AppleDouble
+
+# Python bytecode produced by running the tools in tools/
+__pycache__/
+*.py[cod]
+
+# Node.js packages installed for the validation toolchain in bindings/typescript/
+node_modules/
+
+# Editor and IDE local state
+.idea/
+.vscode/
+*.swp
+*.swo
