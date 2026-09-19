@@ -48,3 +48,30 @@ python3 tools/fnb-conformance.py verify-release \
 The runner has no network or product-service dependency. It verifies the exact
 public schema set and digests before invoking the repository's synthetic
 reference conformance suite.
+
+## Third-party implementation conformance
+
+[`implementation-adapter-contract.md`](./implementation-adapter-contract.md)
+defines adapter contract v1.0: a language-neutral executable that reads one JSON
+request from stdin and writes one JSON response to stdout, one process per
+request, with `describe` and `validate` operations only. The runner owns the
+expected answers and never sends them, so an adapter cannot echo a supplied
+verdict. Contract v1.0 deliberately does not ask an adapter to *generate* final
+user-owned objects, because the public protocol does not define a single
+normative answer for those.
+
+```bash
+python3 tools/fnb-conformance.py test-implementation --adapter ./my-fnb-adapter
+```
+
+The cases are the assets already in this directory, plus
+`examples/synthetic-protocol-chain.json` and the generated worlds under
+`tests/fixtures/generated/`. The output is a compatibility report format 1.0 with
+`subject.kind: "implementation"`; that format is frozen at the
+`v0.1.0-preview.1` tag and this contract reuses it unchanged.
+
+Under `adapters/`, two helpers exist for CI only, not as deliverables:
+`reference-adapter.py` is a contract test double that answers through the
+repository validator (it is not an FNB implementation and not a conformance
+authority), and `faulty-adapter.py` accepts everything so the suite can prove the
+runner detects an incorrect implementation.

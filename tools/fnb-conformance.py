@@ -274,6 +274,333 @@ def verify_release(args: argparse.Namespace) -> int:
     return 0 if status == "pass" else 1
 
 
+# --- implementation conformance (adapter contract 1.0) ---------------------
+
+CONTRACT_VERSION = "1.0"
+ADAPTER_TIMEOUT_SECONDS = 10
+ADAPTER_VALIDATE_KEYS = {"contract_version", "request_id", "status", "accepted"}
+ADAPTER_DESCRIBE_KEYS = {
+    "contract_version",
+    "request_id",
+    "status",
+    "implementation",
+    "supported_protocol_releases",
+}
+WORLD_DIR = Path("tests/fixtures/generated")
+
+# (directory, case kind, expected verdict, check bucket)
+CASE_SOURCES = (
+    ("tests/conformance/v0.1/valid", "object", True, "valid-objects"),
+    ("tests/conformance/v0.1/invalid", "object", False, "invalid-objects"),
+    ("tests/conformance/v0.1/invalid-semantics", "object", False, "semantic-negatives"),
+    ("tests/conformance/v0.1/invalid-chains", "protocol_chain", False, "cross-object-chains"),
+    (
+        "tests/conformance/v0.1/valid-invalidation-chains",
+        "invalidation_chain",
+        True,
+        "cross-object-chains",
+    ),
+    (
+        "tests/conformance/v0.1/invalid-invalidation-chains",
+        "invalidation_chain",
+        False,
+        "cross-object-chains",
+    ),
+    (
+        "tests/conformance/v0.1/valid-source-state-chains",
+        "source_state_chain",
+        True,
+        "cross-object-chains",
+    ),
+    (
+        "tests/conformance/v0.1/invalid-source-state-chains",
+        "source_state_chain",
+        False,
+        "cross-object-chains",
+    ),
+)
+CHECK_ORDER = (
+    "adapter-contract",
+    "valid-objects",
+    "invalid-objects",
+    "semantic-negatives",
+    "cross-object-chains",
+)
+
+
+def collect_cases(root: Path) -> list[dict[str, Any]]:
+    """Build cases from the existing public test assets.
+
+    Expected outcomes stay on this side: they are never put in the request, so an
+    adapter cannot echo an answer it was handed.
+    """
+    cases: list[dict[str, Any]] = []
+    for relative, kind, expected, bucket in CASE_SOURCES:
+        for path in sorted((root / relative).glob("*.json")):
+            payload = load_json(path)
+            if kind == "object":
+                case = {
+                    "kind": "object",
+                    "schema": payload["schema"],
+                    "instance": payload["instance"],
+                }
+            else:
+                case = {"kind": kind, "instance": payload}
+            cases.append(
+                {
+                    "id": path.relative_to(root).as_posix(),
+                    "case": case,
+                    "expected": expected,
+                    "bucket": bucket,
+                }
+            )
+
+    example = root / "examples" / "synthetic-protocol-chain.json"
+    if not example.is_file():
+        raise AssertionError("examples/synthetic-protocol-chain.json is required as a case source")
+    cases.append(
+        {
+            "id": "examples/synthetic-protocol-chain.json",
+            "case": {"kind": "protocol_chain", "instance": load_json(example)},
+            "expected": True,
+            "bucket": "cross-object-chains",
+        }
+    )
+
+    for path in sorted((root / WORLD_DIR).glob("*.json")):
+        world = load_json(path)
+        objects = world["objects"]
+        for index, descriptor in enumerate(world["validation"]):
+            kind = descriptor["kind"]
+            if kind == "invalidation_chain":
+                instance: dict[str, Any] = {
+                    "records": [objects[name] for name in descriptor["records"]]
+                }
+            else:
+                instance = {role: objects[name] for role, name in descriptor["members"].items()}
+            cases.append(
+                {
+                    "id": f"{path.relative_to(root).as_posix()}#{kind}[{index}]",
+                    "case": {"kind": kind, "instance": instance},
+                    "expected": True,
+                    "bucket": "cross-object-chains",
+                }
+            )
+    return cases
+
+
+def invoke_adapter(
+    adapter: Path, request: dict[str, Any], expected_keys: set[str]
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Run the adapter once and return (response, error).
+
+    Every deviation from the contract is an adapter failure, never a verdict.
+    """
+    try:
+        completed = subprocess.run(
+            [str(adapter)],
+            input=json.dumps(request, ensure_ascii=False),
+            capture_output=True,
+            text=True,
+            timeout=ADAPTER_TIMEOUT_SECONDS,
+            shell=False,
+        )
+    except subprocess.TimeoutExpired:
+        return None, f"adapter exceeded the {ADAPTER_TIMEOUT_SECONDS}s timeout"
+    except UnicodeDecodeError:
+        return None, "stdout was not valid UTF-8"
+    except OSError as error:
+        return None, f"adapter could not be started: {error}"
+
+    if completed.returncode != 0:
+        return None, f"adapter exited with code {completed.returncode}"
+    try:
+        response = json.loads(completed.stdout)
+    except json.JSONDecodeError as error:
+        return None, f"stdout must be exactly one JSON object: {error}"
+    if not isinstance(response, dict):
+        return None, "stdout must contain one JSON object"
+    if set(response) != expected_keys:
+        return None, f"response keys must be exactly {sorted(expected_keys)}"
+    if response["contract_version"] != CONTRACT_VERSION:
+        return None, f"contract_version must be {CONTRACT_VERSION}"
+    if response["request_id"] != request["request_id"]:
+        return None, "request_id does not match the request"
+    if response["status"] != "ok":
+        return None, f'status must be "ok", got {response["status"]!r}'
+    return response, None
+
+
+def describe_or_fail(
+    adapter: Path, protocol_release: str
+) -> tuple[dict[str, Any] | None, str | None]:
+    request = {
+        "contract_version": CONTRACT_VERSION,
+        "operation": "describe",
+        "protocol_release": protocol_release,
+        "request_id": "describe",
+    }
+    response, error = invoke_adapter(adapter, request, ADAPTER_DESCRIBE_KEYS)
+    if error:
+        return None, error
+    implementation = response["implementation"]
+    if not isinstance(implementation, dict) or set(implementation) != {"name", "version"}:
+        return None, "implementation must contain exactly name and version"
+    for field in ("name", "version"):
+        value = implementation[field]
+        if not isinstance(value, str) or not value:
+            return None, f"implementation.{field} must be a non-empty string"
+    supported = response["supported_protocol_releases"]
+    if not isinstance(supported, list) or protocol_release not in supported:
+        return None, f"adapter does not declare support for {protocol_release}"
+    return implementation, None
+
+
+def build_implementation_report(
+    protocol_release: str,
+    implementation: dict[str, Any] | None,
+    results: list[dict[str, Any]],
+    handshake_error: str | None,
+) -> dict[str, Any]:
+    subject: dict[str, Any] = {"kind": "implementation"}
+    if implementation is not None:
+        subject["name"] = implementation["name"]
+        subject["version"] = implementation["version"]
+
+    checks: list[dict[str, str]] = []
+    if handshake_error is not None:
+        checks.append(
+            {
+                "id": "adapter-contract",
+                "status": "fail",
+                "summary": f"adapter contract {CONTRACT_VERSION} handshake failed: {handshake_error}",
+            }
+        )
+        for check_id in CHECK_ORDER[1:]:
+            checks.append(
+                {
+                    "id": check_id,
+                    "status": "skip",
+                    "summary": "not run because the adapter contract handshake failed",
+                }
+            )
+    else:
+        checks.append(
+            {
+                "id": "adapter-contract",
+                "status": "pass",
+                "summary": f"adapter contract {CONTRACT_VERSION} handshake passed",
+            }
+        )
+        for check_id in CHECK_ORDER[1:]:
+            bucket = [item for item in results if item["bucket"] == check_id]
+            if not bucket:
+                raise AssertionError(f"no cases collected for check {check_id!r}")
+            failures = [item for item in bucket if not item["ok"]]
+            total = len(bucket)
+            if failures:
+                first = failures[0]
+                reason = first["error"] or "verdict did not match the protocol"
+                checks.append(
+                    {
+                        "id": check_id,
+                        "status": "fail",
+                        "summary": (
+                            f"{total - len(failures)}/{total} cases classified correctly; "
+                            f"first mismatch: {first['id']} "
+                            f"(expected {'accept' if first['expected'] else 'reject'})"
+                            f" — {reason}"
+                        ),
+                    }
+                )
+            else:
+                checks.append(
+                    {
+                        "id": check_id,
+                        "status": "pass",
+                        "summary": f"{total} cases classified correctly",
+                    }
+                )
+
+    status = "pass" if all(item["status"] == "pass" for item in checks) else "fail"
+    if status == "pass" and ("name" not in subject or "version" not in subject):
+        raise AssertionError("a passing implementation report must record name and version")
+    return {
+        "format_version": "1.0",
+        "protocol_release": protocol_release,
+        "runner": {"name": RUNNER_NAME, "version": RUNNER_VERSION},
+        "subject": subject,
+        "status": status,
+        "checks": checks,
+    }
+
+
+def test_implementation(args: argparse.Namespace) -> int:
+    root = Path(args.root).resolve()
+    manifest_path = Path(args.manifest)
+    if not manifest_path.is_absolute():
+        manifest_path = root / manifest_path
+    manifest = load_json(manifest_path)
+    protocol_release = manifest["protocol_release"]
+    if not isinstance(protocol_release, str) or not protocol_release:
+        print("conformance runner error: manifest has no protocol_release", file=sys.stderr)
+        return 1
+
+    adapter = Path(args.adapter)
+    if not adapter.is_absolute():
+        adapter = Path.cwd() / adapter
+    if not adapter.is_file():
+        print(f"conformance runner error: adapter not found: {adapter}", file=sys.stderr)
+        return 1
+
+    implementation, handshake_error = describe_or_fail(adapter, protocol_release)
+    results: list[dict[str, Any]] = []
+    if handshake_error is None:
+        for item in collect_cases(root):
+            request = {
+                "contract_version": CONTRACT_VERSION,
+                "operation": "validate",
+                "protocol_release": protocol_release,
+                "request_id": item["id"],
+                "case": item["case"],
+            }
+            response, error = invoke_adapter(adapter, request, ADAPTER_VALIDATE_KEYS)
+            if error is None and not isinstance(response["accepted"], bool):
+                error = "accepted must be a boolean"
+            results.append(
+                {
+                    "id": item["id"],
+                    "bucket": item["bucket"],
+                    "expected": item["expected"],
+                    "error": error,
+                    "ok": error is None and response["accepted"] == item["expected"],
+                }
+            )
+
+    report = build_implementation_report(
+        protocol_release, implementation, results, handshake_error
+    )
+    try:
+        validate_report(root, report)
+    except (OSError, json.JSONDecodeError, AssertionError) as exc:
+        print(f"conformance runner error: {exc}", file=sys.stderr)
+        return 1
+
+    if args.report:
+        report_path = Path(args.report)
+        if not report_path.is_absolute():
+            report_path = Path.cwd() / report_path
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(
+            json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+
+    render_report(report, args.json)
+    if report["status"] != "pass" and handshake_error is not None:
+        print(f"adapter failure: {handshake_error}", file=sys.stderr)
+    return 0 if report["status"] == "pass" else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog=RUNNER_NAME,
@@ -305,6 +632,35 @@ def build_parser() -> argparse.ArgumentParser:
         help="write the compatibility report JSON to this path",
     )
     verify.set_defaults(func=verify_release)
+
+    implementation = subparsers.add_parser(
+        "test-implementation",
+        help=(
+            "test a third-party implementation through the adapter contract and "
+            "emit an implementation compatibility report"
+        ),
+    )
+    implementation.add_argument(
+        "--adapter",
+        required=True,
+        help="path to an executable adapter implementing contract 1.0",
+    )
+    implementation.add_argument("--root", default=".", help="repository checkout root")
+    implementation.add_argument(
+        "--manifest",
+        default=str(DEFAULT_MANIFEST),
+        help="release manifest used to select the protocol release under test",
+    )
+    implementation.add_argument(
+        "--json",
+        action="store_true",
+        help="print the compatibility report as JSON",
+    )
+    implementation.add_argument(
+        "--report",
+        help="write the compatibility report JSON to this path",
+    )
+    implementation.set_defaults(func=test_implementation)
     return parser
 
 
