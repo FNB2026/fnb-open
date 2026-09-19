@@ -18,6 +18,22 @@ ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = ROOT / "specs" / "v0.1"
 EXAMPLE_DIR = ROOT / "examples"
 FIXTURE_DIR = ROOT / "tests" / "conformance" / "v0.1"
+FIXTURE_WORLD_DIR = ROOT / "tests" / "fixtures" / "generated"
+
+# Envelope produced by tools/fnb-fixtures.py.
+WORLD_VERSION = "1.0"
+WORLD_GENERATOR = "fnb-fixtures"
+WORLD_CHAIN_KINDS = ("protocol_chain", "invalidation_chain", "source_state_chain")
+WORLD_REQUIRED = (
+    "world_version",
+    "protocol_release",
+    "generator",
+    "scenario",
+    "seed",
+    "object_schemas",
+    "objects",
+    "validation",
+)
 
 CHAIN_SCHEMA_MAP = {
     "flow_event": "flow-event.schema.json",
@@ -421,8 +437,90 @@ def validate_fixtures(schemas: dict[str, dict[str, Any]]) -> None:
         raise AssertionError(f"schemas without a valid instance: {', '.join(missing)}")
 
 
+def validate_generated_world(schemas: dict[str, dict[str, Any]], world: Any, label: str) -> None:
+    """Validate one synthetic fixture world produced by tools/fnb-fixtures.py.
+
+    Every object must satisfy its declared schema and its object-level semantics,
+    and every declared chain must pass the same cross-object validators the public
+    conformance suite uses.
+    """
+    if not isinstance(world, dict):
+        raise AssertionError(f"{label}: world must be an object")
+    for key in WORLD_REQUIRED:
+        if key not in world:
+            raise AssertionError(f"{label}: missing {key}")
+    if world["world_version"] != WORLD_VERSION:
+        raise AssertionError(f"{label}: unsupported world_version")
+    if world["generator"] != WORLD_GENERATOR:
+        raise AssertionError(f"{label}: unexpected generator {world['generator']!r}")
+    seed = world["seed"]
+    if not isinstance(seed, int) or isinstance(seed, bool) or seed < 0:
+        raise AssertionError(f"{label}: seed must be a non-negative integer")
+
+    objects = world["objects"]
+    declared = world["object_schemas"]
+    if not isinstance(objects, dict) or not objects:
+        raise AssertionError(f"{label}: world must contain at least one object")
+    if not isinstance(declared, dict) or set(declared) != set(objects):
+        raise AssertionError(f"{label}: object_schemas must describe every object exactly once")
+
+    for name in sorted(objects):
+        object_label = f"{label}#{name}"
+        validate_instance(schemas, declared[name], objects[name], object_label)
+        validate_object_semantics(declared[name], objects[name], object_label)
+
+    seen_kinds: set[str] = set()
+    descriptors = world["validation"]
+    if not isinstance(descriptors, list) or not descriptors:
+        raise AssertionError(f"{label}: world must declare at least one chain validation")
+    for descriptor in descriptors:
+        if not isinstance(descriptor, dict) or "kind" not in descriptor:
+            raise AssertionError(f"{label}: every validation entry needs a kind")
+        kind = descriptor["kind"]
+        if kind not in WORLD_CHAIN_KINDS:
+            raise AssertionError(f"{label}: unknown validation kind {kind!r}")
+        if kind in seen_kinds:
+            raise AssertionError(f"{label}: duplicate validation kind {kind!r}")
+        seen_kinds.add(kind)
+        chain_label = f"{label}:{kind}"
+
+        if kind == "invalidation_chain":
+            names = descriptor.get("records")
+            if not isinstance(names, list) or not names:
+                raise AssertionError(f"{chain_label}: records must be a non-empty list")
+            records = []
+            for name in names:
+                if name not in objects:
+                    raise AssertionError(f"{chain_label}: unknown object {name!r}")
+                records.append(objects[name])
+            validate_invalidation_chain_instance(schemas, {"records": records}, chain_label)
+            continue
+
+        members = descriptor.get("members")
+        if not isinstance(members, dict) or not members:
+            raise AssertionError(f"{chain_label}: members must be a non-empty object")
+        chain: dict[str, Any] = {}
+        for key, name in members.items():
+            if name not in objects:
+                raise AssertionError(f"{chain_label}: unknown object {name!r}")
+            chain[key] = objects[name]
+        if kind == "protocol_chain":
+            validate_protocol_chain_instance(schemas, chain, chain_label)
+        else:
+            validate_source_state_chain_instance(schemas, chain, chain_label)
+
+
+def validate_generated_worlds(schemas: dict[str, dict[str, Any]]) -> int:
+    paths = sorted(FIXTURE_WORLD_DIR.glob("*.json"))
+    if not paths:
+        raise AssertionError("generated synthetic fixture worlds are missing")
+    for path in paths:
+        validate_generated_world(schemas, load_json(path), str(path.relative_to(ROOT)))
+    return len(paths)
+
+
 def validate_all_json() -> None:
-    for directory in (EXAMPLE_DIR, FIXTURE_DIR):
+    for directory in (EXAMPLE_DIR, FIXTURE_DIR, FIXTURE_WORLD_DIR):
         for path in sorted(directory.rglob("*.json")):
             load_json(path)
 
@@ -433,13 +531,14 @@ def main() -> int:
         validate_all_json()
         validate_protocol_chain(schemas)
         validate_fixtures(schemas)
+        worlds = validate_generated_worlds(schemas)
     except (AssertionError, KeyError) as exc:
         print(f"validation failed: {exc}", file=sys.stderr)
         return 1
     print(
         f"validation passed: {len(schemas)} schemas, "
         f"{len(CHAIN_SCHEMA_MAP)} protocol-chain objects, full valid-instance coverage, "
-        "negative fixtures"
+        f"negative fixtures, {worlds} generated synthetic worlds"
     )
     return 0
 

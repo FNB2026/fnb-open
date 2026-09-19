@@ -1,0 +1,90 @@
+{
+  "world_version": "1.0",
+  "protocol_release": "v0.1.0-preview.1",
+  "generator": "fnb-fixtures",
+  "scenario": "source-redaction",
+  "seed": 42,
+  "object_schemas": {
+    "owner": "actor.schema.json",
+    "permission_snapshot": "permission-snapshot.schema.json",
+    "source_state_change": "source-state-change.schema.json",
+    "memory": "memory.schema.json",
+    "invalidation": "invalidation-record.schema.json",
+    "audit_tombstone": "audit-tombstone.schema.json"
+  },
+  "objects": {
+    "owner": {
+      "actor_id": "fnb_actor_28efe333",
+      "kind": "person",
+      "display_name": "Synthetic Owner",
+      "status": "active"
+    },
+    "permission_snapshot": {
+      "permission_snapshot_id": "fnb_permsnap_47526757",
+      "source_ref": "synthetic://chat/redacted-thread",
+      "subject_scope": "participant",
+      "allowed_actions": [
+        "view"
+      ],
+      "visibility_scope": "private",
+      "basis": "user_consent",
+      "captured_at": "2026-01-01T00:05:00Z",
+      "expires_at": "2026-04-01T00:00:00Z"
+    },
+    "source_state_change": {
+      "source_change_id": "fnb_srcchg_581ce1ff",
+      "source_ref": "synthetic://chat/redacted-thread",
+      "previous_state": "active",
+      "new_state": "redacted",
+      "reason_code": "source_redacted",
+      "effective_at": "2026-01-01T00:10:00Z"
+    },
+    "memory": {
+      "memory_id": "fnb_mem_09bc585a",
+      "owner_id": "fnb_actor_28efe333",
+      "title": "Synthetic derived memory",
+      "summary": "Derived from synthetic://chat/redacted-thread.",
+      "status": "candidate",
+      "lifecycle_state": "redacted",
+      "confidence": 0.62,
+      "sources": [
+        {
+          "source_id": "fnb_src_37e9671c",
+          "object_type": "event",
+          "object_id": "fnb_evt_ccf635ee",
+          "content_hash": "sha256:5705b8770b3d7dd5"
+        }
+      ]
+    },
+    "invalidation": {
+      "invalidation_id": "fnb_inv_9e54d738",
+      "trigger_type": "source_change",
+      "trigger_id": "fnb_srcchg_581ce1ff",
+      "target_type": "memory",
+      "target_id": "fnb_mem_09bc585a",
+      "resulting_state": "invalidated",
+      "reason_code": "source_redacted",
+      "created_at": "2026-01-01T00:15:00Z",
+      "idempotency_key": "sha256:436d23fb1377427baa82dc8c836bd4062b1c0c3f2b675527d90a3103bedcf0d5"
+    },
+    "audit_tombstone": {
+      "audit_id": "fnb_audit_3474724a",
+      "action": "redact",
+      "target_type": "source",
+      "outcome": "completed",
+      "occurred_on": "2026-01-01",
+      "retention_basis": "statutory_obligation",
+      "purge_after": "2027-01-01"
+    }
+  },
+  "validation": [
+    {
+      "kind": "source_state_chain",
+      "members": {
+        "permission_snapshot": "permission_snapshot",
+        "source_state_change": "source_state_change",
+        "invalidation": "invalidation"
+      }
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "world_version": "1.0",
+  "protocol_release": "v0.1.0-preview.1",
+  "generator": "fnb-fixtures",
+  "scenario": "basic-memory",
+  "seed": 42,
+  "object_schemas": {
+    "owner": "actor.schema.json",
+    "flow_event": "flow-event.schema.json",
+    "node": "node.schema.json",
+    "ai_inference": "ai-inference.schema.json",
+    "block_draft": "block-draft.schema.json",
+    "correction": "correction-patch.schema.json",
+    "block": "block.schema.json",
+    "memory": "memory.schema.json"
+  },
+  "objects": {
+    "owner": {
+      "actor_id": "fnb_actor_28efe333",
+      "kind": "person",
+      "display_name": "Synthetic Owner",
+      "status": "active"
+    },
+    "flow_event": {
+      "event_id": "fnb_evt_47526757",
+      "flow_id": "fnb_flow_581ce1ff",
+      "event_type": "message",
+      "occurred_at": "2026-01-01T00:05:00Z",
+      "actor_id": "fnb_actor_28efe333",
+      "source_ref": "synthetic://chat/basic-memory",
+      "content_preview": "Coffee tomorrow at nine."
+    },
+    "node": {
+      "node_id": "fnb_node_de4431fa",
+      "node_type": "memory",
+      "source_event_ids": [
+        "fnb_evt_47526757"
+      ],
+      "status": "confirmed",
+      "label": "Synthetic appointment"
+    },
+    "ai_inference": {
+      "inference_id": "fnb_inf_ccf635ee",
+      "purpose": "propose a memory for user confirmation",
+      "model": {
+        "provider": "synthetic-provider",
+        "name": "synthetic-summarizer",
+        "version": "0.1.0",
+        "configuration_fingerprint": "sha256:5705b8770b3d7dd5"
+      },
+      "input_refs": [
+        "fnb_evt_47526757",
+        "fnb_node_de4431fa"
+      ],
+      "output_summary": "Draft memory about a review commitment.",
+      "confidence": 0.64,
+      "inference_status": "completed",
+      "confirmation_status": "confirmed",
+      "explanation": {
+        "explanation_id": "fnb_exp_3474724a",
+        "rationale": "Derived only from the synthetic event and node it references.",
+        "evidence_refs": [
+          "fnb_evt_47526757",
+          "fnb_node_de4431fa"
+        ],
+        "limitations": [
+          "synthetic fixture; not a product judgement"
+        ]
+      }
+    },
+    "block_draft": {
+      "draft_id": "fnb_draft_7e348a0e",
+      "owner_id": "fnb_actor_28efe333",
+      "block_type": "memory",
+      "source_node_ids": [
+        "fnb_node_de4431fa"
+      ],
+      "inference_id": "fnb_inf_ccf635ee",
+      "proposed_title": "Synthetic review commitment",
+      "proposed_summary": "Review the draft next week.",
+      "status": "confirmed"
+    },
+    "correction": {
+      "correction_id": "fnb_corr_836ded89",
+      "actor_id": "fnb_actor_28efe333",
+      "target_type": "block_draft",
+      "target_id": "fnb_draft_7e348a0e",
+      "operation": "confirm",
+      "reason": "synthetic confirmation",
+      "created_at": "2026-01-01T00:10:00Z"
+    },
+    "block": {
+      "block_id": "fnb_block_851f9773",
+      "owner_id": "fnb_actor_28efe333",
+      "block_type": "memory",
+      "creation_mode": "ai_derived",
+      "source_node_ids": [
+        "fnb_node_de4431fa"
+      ],
+      "draft_id": "fnb_draft_7e348a0e",
+      "title": "Synthetic review commitment",
+      "summary": "Review the draft next week.",
+      "confirmed_by_actor_id": "fnb_actor_28efe333",
+      "confirmation_event_id": "fnb_evt_aa47e31c",
+      "confirmation_operation": "confirm",
+      "confirmed_at": "2026-01-01T00:15:00Z"
+    },
+    "memory": {
+      "memory_id": "fnb_mem_341452c5",
+      "owner_id": "fnb_actor_28efe333",
+      "title": "Synthetic review commitment",
+      "summary": "Review the draft next week.",
+      "status": "confirmed",
+      "lifecycle_state": "active",
+      "confidence": 0.69,
+      "sources": [
+        {
+          "source_id": "fnb_src_7ed90003",
+          "object_type": "event",
+          "object_id": "fnb_evt_17eadff4",
+          "content_hash": "sha256:b05eca1a2972b860"
+        }
+      ]
+    }
+  },
+  "validation": [
+    {
+      "kind": "protocol_chain",
+      "members": {
+        "flow_event": "flow_event",
+        "node": "node",
+        "ai_inference": "ai_inference",
+        "block_draft": "block_draft",
+        "correction": "correction",
+        "block": "block"
+      }
+    }
+  ]
+}
