@@ -2,80 +2,80 @@
   "manifest_version": "1.0",
   "protocol_release": "v0.1.0-preview.1",
   "protocol_status": "preview",
+  "release_tag": "v0.1.0-preview.1",
   "algorithm": "sha256",
   "schema_root": "specs/v0.1",
   "schema_count": 14,
-  "prepared_from_public_commit": "8c9c69217be8f2ae4c6ddea43a24414a9d65974f",
   "schemas": [
     {
       "path": "specs/v0.1/actor.schema.json",
-      "bytes": 694,
-      "sha256": "4afe4ae43b58e5c856b4a75c8d7449fcf1c2bdd82222edccb8064478bd6f41c4"
+      "bytes": 706,
+      "sha256": "55775a488ffc58d876e5ddc290eb20141b2cca08e9345d5f8ff8995e8aa3c2b7"
     },
     {
       "path": "specs/v0.1/ai-inference.schema.json",
-      "bytes": 2451,
-      "sha256": "8bfce6036111004396ddd1841e65fb5a4c0e2467ae7e835029540782c2c9f3c9"
+      "bytes": 2463,
+      "sha256": "d531deb174976fbcae6800d4104028cb442fb88f62f09dc055c56a31b53b1365"
     },
     {
       "path": "specs/v0.1/asset.schema.json",
-      "bytes": 1253,
-      "sha256": "eb539a34f43319a29a7606eac51b4c64135c7f5965739836b38b67b5f5ffc553"
+      "bytes": 1265,
+      "sha256": "93c8051452758384c9c470d1ee4a26070375aded08f2f94755edb6438988b23b"
     },
     {
       "path": "specs/v0.1/audit-tombstone.schema.json",
-      "bytes": 1323,
-      "sha256": "2dac4536a19446f7383b01443d05b334b795cff7ddf40e269daca7b6168c2b5c"
+      "bytes": 1335,
+      "sha256": "a3dea4e9d9c7c2ca31a41300adc25de016920cb7ef0df554751a2b0d34f37dd4"
     },
     {
       "path": "specs/v0.1/block-draft.schema.json",
-      "bytes": 1097,
-      "sha256": "ee18fe75b2a788272c9e064a50581efdc87380cb7e46d1a0c832fc51589cd85e"
+      "bytes": 1109,
+      "sha256": "2fe16e4c37fdaf8e30f057bf4845cb7b083f18ff9bea0a631721b9152eed77b0"
     },
     {
       "path": "specs/v0.1/block.schema.json",
-      "bytes": 2452,
-      "sha256": "ee4633484087c1b8609775286372e0f3eb7c0bcc4342bd5c703ef7b5047e02e6"
+      "bytes": 2464,
+      "sha256": "f90b4877b5975341cea3eac12e4e17bc6936e565dfb656f542b7bec90fdeef2f"
     },
     {
       "path": "specs/v0.1/correction-patch.schema.json",
-      "bytes": 1390,
-      "sha256": "2f006f9bd6215a665803bbc69d41cf92b437485a20d53d8e9a2002700a716c60"
+      "bytes": 1402,
+      "sha256": "3fc57c14a1b255cfa38b241fda8ea19134d7428862415eaf3866afccb5d53d60"
     },
     {
       "path": "specs/v0.1/flow-event.schema.json",
-      "bytes": 879,
-      "sha256": "68fa4b0778f798914ca1c48fe2f171ae57571c844f3dc30abda9f7f63ceb78a0"
+      "bytes": 891,
+      "sha256": "46dd93f1adb6452f7a33373d7807f2515a9a7c38926ffd1e3a2d803639352b74"
     },
     {
       "path": "specs/v0.1/invalidation-record.schema.json",
-      "bytes": 3904,
-      "sha256": "ad01081721d89d21eaa4368072277d23a5f9fd3eab09f74a4e8b80901e5528da"
+      "bytes": 3916,
+      "sha256": "bc71b84d31763e26d4553f0cf62755840634394a7e855c1f152764e735e8a786"
     },
     {
       "path": "specs/v0.1/memory.schema.json",
-      "bytes": 1783,
-      "sha256": "2006ffb230261a2238698be7e24be63d1b92af1c316214ddb2e87b1b8987181c"
+      "bytes": 1795,
+      "sha256": "940e9a3347f370d83cdf554ebe86582b31c463e37ad18eafcdb97fbed68a9b32"
     },
     {
       "path": "specs/v0.1/node.schema.json",
-      "bytes": 905,
-      "sha256": "765cde4f795d87102f92045721123341492c2194de68e496be08338251fc4200"
+      "bytes": 917,
+      "sha256": "5c750dd4d2d7a567e6f1be1d8e775d2ee54b2ed05c860102d1a7e2c40baca9c6"
     },
     {
       "path": "specs/v0.1/permission-snapshot.schema.json",
-      "bytes": 1528,
-      "sha256": "60853e6670c23713ef094e89801f7df45caf2470ceef09b201250662f8a88872"
+      "bytes": 1540,
+      "sha256": "1db31d60b3c26b035c9c5882e653276d839ebb990cd7ae54895505eec1eea302"
     },
     {
       "path": "specs/v0.1/relationship.schema.json",
-      "bytes": 3265,
-      "sha256": "ef4f722ce437fbf812f6018b9943f0031309ad5f098970e64f2616d347ffdc56"
+      "bytes": 3277,
+      "sha256": "bf372f3dc3caa237061b25ba912cc18695696670251a8d67ad5c4fe5c4c6d6b1"
     },
     {
       "path": "specs/v0.1/source-state-change.schema.json",
-      "bytes": 3089,
-      "sha256": "ad1f29b92d62520bd145ef42b14439e8629c984f1016e5c480da372461e99ab7"
+      "bytes": 3101,
+      "sha256": "13b7d6af687eb3d4dd9fddb449e0cc957762e6d45f7f4351c228e5f548a6dba7"
     }
   ]
 }
