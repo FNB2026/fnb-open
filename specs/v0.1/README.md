@@ -1,6 +1,6 @@
 # FNB Protocol Schemas v0.1
 
-Status: **Pre-release — v0.1.0-preview.1 tag candidate**
+Status: **Pre-release — frozen at the immutable `v0.1.0-preview.1` tag**
 
 License: Apache-2.0. See [`LICENSE-CODE.md`](../../LICENSE-CODE.md).
 
@@ -14,9 +14,9 @@ Relationship, AIInference, Correction/Patch, PermissionSnapshot,
 SourceStateChange, downstream invalidation, and data-minimized audit tombstones.
 All examples are synthetic.
 
-The governing v0.1 RFCs are accepted. The `v0.1.0-preview.1` tag candidate is
-an immutable protocol preview, not a stability promise for later v0.1 previews.
-Any change to frozen content requires a new tag and digest manifest.
+The governing v0.1 RFCs are accepted. `v0.1.0-preview.1` is an immutable protocol
+preview, not a stability promise for later v0.1 previews. Any change to frozen
+content requires a new tag and digest manifest.
 
 ## Canonical identifiers and releases
 
@@ -28,8 +28,10 @@ https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/<
 
 The exact 14-file set, byte lengths, and SHA-256 digests are recorded in
 [`releases/v0.1.0-preview.1/schema-digests.json`](./releases/v0.1.0-preview.1/schema-digests.json).
-After the freeze PR is merged with green CI, the merge commit is tagged
-`v0.1.0-preview.1`; that tag must never be retargeted.
+The freeze was published as [PR #17](https://github.com/FNB2026/fnb-open/pull/17):
+merge commit `2f7226c1cba688aba3b130f901379cfe79488ae7` on `main` is tagged
+`v0.1.0-preview.1` (annotated tag object
+`f492754744d74ed3459c4ce361108ba8c8a04acc`). That tag must never be retargeted.
 
 ## Validation
 
