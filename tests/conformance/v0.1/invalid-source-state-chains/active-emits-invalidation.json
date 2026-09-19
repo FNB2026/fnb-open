@@ -1,0 +1,32 @@
+{
+  "permission_snapshot": {
+    "permission_snapshot_id": "fnb_permsnap_active_001",
+    "source_ref": "fnb_evt_trip_001",
+    "subject_scope": "owner",
+    "allowed_actions": [
+      "view"
+    ],
+    "visibility_scope": "private",
+    "basis": "user_consent",
+    "captured_at": "2026-09-04T10:00:00Z"
+  },
+  "source_state_change": {
+    "source_change_id": "fnb_srcchg_active_001",
+    "source_ref": "fnb_evt_trip_001",
+    "previous_state": "stale",
+    "new_state": "active",
+    "reason_code": "source_restored",
+    "effective_at": "2026-09-04T11:00:00Z"
+  },
+  "invalidation": {
+    "invalidation_id": "fnb_inv_source_active_001",
+    "trigger_type": "source_change",
+    "trigger_id": "fnb_srcchg_active_001",
+    "target_type": "memory",
+    "target_id": "fnb_memory_trip_001",
+    "resulting_state": "invalidated",
+    "reason_code": "source_stale",
+    "idempotency_key": "sha256:fbf37d5adf7e9ea9b1ce3cfbd5cec439b91ddd6f30cc5bab9b8adad03cffc928",
+    "created_at": "2026-09-04T11:00:01Z"
+  }
+}

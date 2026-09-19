@@ -1,8 +1,8 @@
 # Protocol Preview Status
 
-FNB's public protocol preview remains a **v0.1 Draft**, with its first review
-window completed. It is intentionally smaller than the private product
-implementation.
+FNB's public protocol remains a **v0.1 pre-release**. Its governing RFC review
+is complete, but no immutable preview tag has been cut yet. It is intentionally
+smaller than the private product implementation.
 
 ## Published in this preview
 
@@ -26,27 +26,30 @@ The first review opened on 2026-07-13 and completed on 2026-07-26:
 - RFC-0002 is **Accepted** after its second public review and a 2026-09-04
   Steward decision. It defines deterministic invalidation and deletion-safe
   audit retention without making product implementation normative.
-- RFC-0003 is in **Revision** pending portable permission snapshots and
-  source-invalidation semantics.
+- RFC-0003 is **Accepted** after its second public review and a 2026-09-19
+  Steward decision. It defines portable permission snapshots and source-state
+  invalidation semantics without making authentication or product policy
+  normative.
 
-The absence of external comments did not itself accept RFC-0002. The Steward
-decision records its final adversarial review and accepted scope explicitly;
-RFC-0003 remains in Revision until its unresolved semantics are represented in
-public artifacts.
+The absence of external comments did not itself accept RFC-0002 or RFC-0003.
+Each Steward decision records a final adversarial review and the accepted public
+scope explicitly.
 
 ## Next gates
 
 1. Keep schema, example, cross-reference, and negative-fixture validation green
-2. Complete reviewed revisions of RFC-0002 and RFC-0003
-3. Freeze accepted schema identifiers with an immutable Git tag and publish a
-   versioned digest manifest
-4. Publish a deliberately narrow, schema-first OpenAPI preview
-5. Generate a TypeScript SDK preview from the reviewed OpenAPI and public schemas
+2. Freeze the accepted v0.1 artifact set with an immutable preview Git tag and a
+   versioned schema-digest manifest
+3. Publish an independently runnable conformance CLI over synthetic fixtures
+4. Publish a deliberately narrow protocol-object exchange OpenAPI preview and
+   local mock server
+5. Generate type definitions or SDK surfaces only from public protocol
+   artifacts, without connecting them to private product services
 
 Private product changes are not copied into this preview while they remain
 uncommitted, unreviewed, or implementation-specific. Authentication, workers,
 ledger, storage, IM/WebSocket, administration, and deployment remain outside the
 first OpenAPI preview.
 
-Draft schemas may change incompatibly until their governing RFCs are Accepted
-and an immutable release freezes their identifiers and digests.
+The governing RFCs are Accepted, but the schemas remain pre-release until an
+immutable preview tag freezes the exact artifact set and digests.

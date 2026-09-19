@@ -1,0 +1,11 @@
+{
+  "schema": "source-state-change.schema.json",
+  "instance": {
+    "source_change_id": "fnb_srcchg_noop_001",
+    "source_ref": "fnb_evt_trip_001",
+    "previous_state": "active",
+    "new_state": "active",
+    "reason_code": "source_restored",
+    "effective_at": "2026-09-04T11:00:00Z"
+  }
+}

@@ -28,6 +28,27 @@ CHAIN_SCHEMA_MAP = {
     "block": "block.schema.json",
 }
 FORMAT_CHECKER = FormatChecker()
+SOURCE_STATES = (
+    "active",
+    "stale",
+    "redacted",
+    "deleted",
+    "permission_withdrawn",
+)
+ALLOWED_SOURCE_STATE_TRANSITIONS = {
+    ("active", "stale"): "source_stale",
+    ("active", "redacted"): "source_redacted",
+    ("active", "deleted"): "source_deleted",
+    ("active", "permission_withdrawn"): "permission_withdrawn",
+    ("stale", "active"): "source_restored",
+    ("stale", "redacted"): "source_redacted",
+    ("stale", "deleted"): "source_deleted",
+    ("stale", "permission_withdrawn"): "permission_withdrawn",
+    ("redacted", "deleted"): "source_deleted",
+    ("permission_withdrawn", "active"): "permission_restored",
+    ("permission_withdrawn", "redacted"): "source_redacted",
+    ("permission_withdrawn", "deleted"): "source_deleted",
+}
 CANONICAL_SCHEMA_PREFIX = (
     "https://raw.githubusercontent.com/FNB2026/fnb-open/main/specs/v0.1/"
 )
@@ -123,6 +144,38 @@ def validate_audit_tombstone_semantics(record: dict[str, Any], label: str) -> No
         raise AssertionError(f"{label}: audit tombstone purge_after must not predate occurred_on")
 
 
+def validate_permission_snapshot_semantics(record: dict[str, Any], label: str) -> None:
+    expires_at = record.get("expires_at")
+    if expires_at and parse_datetime(expires_at) <= parse_datetime(record["captured_at"]):
+        raise AssertionError(f"{label}: permission snapshot expires_at must follow captured_at")
+
+
+def validate_source_state_change_semantics(record: dict[str, Any], label: str) -> None:
+    transition = (record["previous_state"], record["new_state"])
+    expected_reason = ALLOWED_SOURCE_STATE_TRANSITIONS.get(transition)
+    if expected_reason is None:
+        raise AssertionError(f"{label}: forbidden source state transition {transition[0]} -> {transition[1]}")
+    if record["reason_code"] != expected_reason:
+        raise AssertionError(f"{label}: source state transition requires reason_code {expected_reason}")
+
+
+def validate_source_state_transition_matrix() -> None:
+    path = FIXTURE_DIR / "source-state-transition-matrix.json"
+    matrix = load_json(path)
+    if matrix.get("states") != list(SOURCE_STATES):
+        raise AssertionError(f"{path.relative_to(ROOT)}: states must be canonical")
+    declared = {
+        (item["previous_state"], item["new_state"]): item["reason_code"]
+        for item in matrix.get("allowed", [])
+    }
+    if declared != ALLOWED_SOURCE_STATE_TRANSITIONS:
+        raise AssertionError(f"{path.relative_to(ROOT)}: allowed transitions do not match the protocol matrix")
+    combinations = {(previous, new) for previous in SOURCE_STATES for new in SOURCE_STATES}
+    for transition in combinations:
+        if declared.get(transition) != ALLOWED_SOURCE_STATE_TRANSITIONS.get(transition):
+            raise AssertionError(f"{path.relative_to(ROOT)}: transition matrix must cover every state pair")
+
+
 def validate_object_semantics(schema_name: str, instance: dict[str, Any], label: str) -> None:
     if schema_name == "relationship.schema.json":
         validate_relationship_semantics(instance, label)
@@ -132,6 +185,10 @@ def validate_object_semantics(schema_name: str, instance: dict[str, Any], label:
         validate_invalidation_semantics(instance, label)
     elif schema_name == "audit-tombstone.schema.json":
         validate_audit_tombstone_semantics(instance, label)
+    elif schema_name == "permission-snapshot.schema.json":
+        validate_permission_snapshot_semantics(instance, label)
+    elif schema_name == "source-state-change.schema.json":
+        validate_source_state_change_semantics(instance, label)
 
 
 def validate_protocol_chain_instance(
@@ -234,6 +291,43 @@ def validate_invalidation_chain_instance(
         seen_targets.add(target)
 
 
+def validate_source_state_chain_instance(
+    schemas: dict[str, dict[str, Any]], chain: dict[str, Any], label: str
+) -> None:
+    snapshot = chain.get("permission_snapshot")
+    change = chain.get("source_state_change")
+    invalidation = chain.get("invalidation")
+    if not all(isinstance(value, dict) for value in (snapshot, change, invalidation)):
+        raise AssertionError(f"{label}: source-state chain must include snapshot, change, and invalidation")
+    validate_instance(schemas, "permission-snapshot.schema.json", snapshot, f"{label}#permission_snapshot")
+    validate_permission_snapshot_semantics(snapshot, f"{label}#permission_snapshot")
+    validate_instance(schemas, "source-state-change.schema.json", change, f"{label}#source_state_change")
+    validate_source_state_change_semantics(change, f"{label}#source_state_change")
+    validate_instance(schemas, "invalidation-record.schema.json", invalidation, f"{label}#invalidation")
+    validate_invalidation_semantics(invalidation, f"{label}#invalidation")
+    if snapshot["source_ref"] != change["source_ref"]:
+        raise AssertionError(f"{label}: permission snapshot and source change must reference the same source")
+    if change["new_state"] == "active":
+        raise AssertionError(f"{label}: an active source state must not emit an invalidation")
+    expected = {
+        "redacted": ("source_change", "source_redacted", "invalidated"),
+        "deleted": ("source_change", "source_deleted", "invalidated"),
+        "permission_withdrawn": ("permission_change", "permission_withdrawn", "invalidated"),
+    }.get(change["new_state"])
+    if change["new_state"] == "stale":
+        expected = ("source_change", "source_stale", invalidation["resulting_state"])
+        if invalidation["resulting_state"] not in {"invalidated", "review_required"}:
+            raise AssertionError(f"{label}: stale source must invalidate or require review")
+    if expected is None or (
+        invalidation["trigger_type"],
+        invalidation["reason_code"],
+        invalidation["resulting_state"],
+    ) != expected:
+        raise AssertionError(f"{label}: invalidation does not match the source-state transition")
+    if invalidation["trigger_id"] != change["source_change_id"]:
+        raise AssertionError(f"{label}: direct invalidation must use the source change as its trigger")
+
+
 def validate_fixtures(schemas: dict[str, dict[str, Any]]) -> None:
     valid_paths = sorted((FIXTURE_DIR / "valid").glob("*.json"))
     invalid_paths = sorted((FIXTURE_DIR / "invalid").glob("*.json"))
@@ -245,6 +339,12 @@ def validate_fixtures(schemas: dict[str, dict[str, Any]]) -> None:
     invalid_invalidation_chain_paths = sorted(
         (FIXTURE_DIR / "invalid-invalidation-chains").glob("*.json")
     )
+    valid_source_state_chain_paths = sorted(
+        (FIXTURE_DIR / "valid-source-state-chains").glob("*.json")
+    )
+    invalid_source_state_chain_paths = sorted(
+        (FIXTURE_DIR / "invalid-source-state-chains").glob("*.json")
+    )
     if (
         not valid_paths
         or not invalid_paths
@@ -252,6 +352,8 @@ def validate_fixtures(schemas: dict[str, dict[str, Any]]) -> None:
         or not invalid_semantic_paths
         or not valid_invalidation_chain_paths
         or not invalid_invalidation_chain_paths
+        or not valid_source_state_chain_paths
+        or not invalid_source_state_chain_paths
     ):
         raise AssertionError("conformance suite requires both valid and invalid fixtures")
 
@@ -299,6 +401,18 @@ def validate_fixtures(schemas: dict[str, dict[str, Any]]) -> None:
         raise AssertionError(
             f"{path.relative_to(ROOT)}: expected invalidation-chain semantics to fail"
         )
+
+    for path in valid_source_state_chain_paths:
+        validate_source_state_chain_instance(schemas, load_json(path), str(path.relative_to(ROOT)))
+
+    for path in invalid_source_state_chain_paths:
+        try:
+            validate_source_state_chain_instance(schemas, load_json(path), str(path.relative_to(ROOT)))
+        except AssertionError:
+            continue
+        raise AssertionError(f"{path.relative_to(ROOT)}: expected source-state chain semantics to fail")
+
+    validate_source_state_transition_matrix()
 
     covered = {load_json(path)["schema"] for path in valid_paths}
     covered.update(CHAIN_SCHEMA_MAP.values())
