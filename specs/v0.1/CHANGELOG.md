@@ -3,7 +3,7 @@
 The v0.1 protocol remains unstable. This changelog makes draft-breaking changes
 visible during public review.
 
-## Unreleased — RFC-0003 second-review proposal
+## 2026-09-19 — RFC-0003 accepted
 
 - Added implementation-neutral `PermissionSnapshot` and `SourceStateChange`
   objects without exposing ACLs, credentials, sessions, or storage topology.
@@ -12,6 +12,11 @@ visible during public review.
 - Added positive and object-semantic negative fixtures for snapshot expiry and
   source-state transition invariants, including a validator-enforced 25-pair
   portable transition matrix.
+- Clarified that permission restoration does not reactivate invalidated derived
+  objects and that a permission-withdrawal SourceStateChange supplies the
+  `permission_change` trigger identifier.
+- Marked the v0.1 permission values as preview vocabulary rather than a legal
+  conclusion or a claim of DPV/DPV-AI equivalence.
 
 ## 2026-09-04 — RFC-0002 accepted
 
