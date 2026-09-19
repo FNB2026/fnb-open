@@ -1,0 +1,81 @@
+{
+  "manifest_version": "1.0",
+  "protocol_release": "v0.1.0-preview.1",
+  "protocol_status": "preview",
+  "algorithm": "sha256",
+  "schema_root": "specs/v0.1",
+  "schema_count": 14,
+  "prepared_from_public_commit": "8c9c69217be8f2ae4c6ddea43a24414a9d65974f",
+  "schemas": [
+    {
+      "path": "specs/v0.1/actor.schema.json",
+      "bytes": 694,
+      "sha256": "4afe4ae43b58e5c856b4a75c8d7449fcf1c2bdd82222edccb8064478bd6f41c4"
+    },
+    {
+      "path": "specs/v0.1/ai-inference.schema.json",
+      "bytes": 2451,
+      "sha256": "8bfce6036111004396ddd1841e65fb5a4c0e2467ae7e835029540782c2c9f3c9"
+    },
+    {
+      "path": "specs/v0.1/asset.schema.json",
+      "bytes": 1253,
+      "sha256": "eb539a34f43319a29a7606eac51b4c64135c7f5965739836b38b67b5f5ffc553"
+    },
+    {
+      "path": "specs/v0.1/audit-tombstone.schema.json",
+      "bytes": 1323,
+      "sha256": "2dac4536a19446f7383b01443d05b334b795cff7ddf40e269daca7b6168c2b5c"
+    },
+    {
+      "path": "specs/v0.1/block-draft.schema.json",
+      "bytes": 1097,
+      "sha256": "ee18fe75b2a788272c9e064a50581efdc87380cb7e46d1a0c832fc51589cd85e"
+    },
+    {
+      "path": "specs/v0.1/block.schema.json",
+      "bytes": 2452,
+      "sha256": "ee4633484087c1b8609775286372e0f3eb7c0bcc4342bd5c703ef7b5047e02e6"
+    },
+    {
+      "path": "specs/v0.1/correction-patch.schema.json",
+      "bytes": 1390,
+      "sha256": "2f006f9bd6215a665803bbc69d41cf92b437485a20d53d8e9a2002700a716c60"
+    },
+    {
+      "path": "specs/v0.1/flow-event.schema.json",
+      "bytes": 879,
+      "sha256": "68fa4b0778f798914ca1c48fe2f171ae57571c844f3dc30abda9f7f63ceb78a0"
+    },
+    {
+      "path": "specs/v0.1/invalidation-record.schema.json",
+      "bytes": 3904,
+      "sha256": "ad01081721d89d21eaa4368072277d23a5f9fd3eab09f74a4e8b80901e5528da"
+    },
+    {
+      "path": "specs/v0.1/memory.schema.json",
+      "bytes": 1783,
+      "sha256": "2006ffb230261a2238698be7e24be63d1b92af1c316214ddb2e87b1b8987181c"
+    },
+    {
+      "path": "specs/v0.1/node.schema.json",
+      "bytes": 905,
+      "sha256": "765cde4f795d87102f92045721123341492c2194de68e496be08338251fc4200"
+    },
+    {
+      "path": "specs/v0.1/permission-snapshot.schema.json",
+      "bytes": 1528,
+      "sha256": "60853e6670c23713ef094e89801f7df45caf2470ceef09b201250662f8a88872"
+    },
+    {
+      "path": "specs/v0.1/relationship.schema.json",
+      "bytes": 3265,
+      "sha256": "ef4f722ce437fbf812f6018b9943f0031309ad5f098970e64f2616d347ffdc56"
+    },
+    {
+      "path": "specs/v0.1/source-state-change.schema.json",
+      "bytes": 3089,
+      "sha256": "ad1f29b92d62520bd145ef42b14439e8629c984f1016e5c480da372461e99ab7"
+    }
+  ]
+}
