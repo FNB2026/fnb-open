@@ -16,7 +16,10 @@ from jsonschema import Draft202012Validator
 
 
 RUNNER_NAME = "fnb-conformance"
-RUNNER_VERSION = "0.1.0-preview.1"
+# The runner is versioned independently of the protocol release it verifies: a
+# tooling change must not be reported as a protocol change, and vice versa. The
+# release under test is carried separately, as protocol_release in the report.
+RUNNER_VERSION = "0.2.0"
 DEFAULT_MANIFEST = Path(
     "specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json"
 )
@@ -386,6 +389,17 @@ def collect_cases(root: Path) -> list[dict[str, Any]]:
                     "bucket": "cross-object-chains",
                 }
             )
+
+    # An opaque request id derived from the case origin. A source path would hand
+    # the expected verdict to the adapter, since the fixture directories are
+    # named valid/ and invalid/. Lowercase hex cannot contain those words, so the
+    # check below is a structural guarantee rather than a convention.
+    for item in cases:
+        digest = hashlib.sha256(item["id"].encode("utf-8")).hexdigest()[:16]
+        item["request_id"] = f"case-{digest}"
+        token = item["request_id"][len("case-") :]
+        if len(token) != 16 or any(ch not in "0123456789abcdef" for ch in token):
+            raise AssertionError(f"case request id must be opaque: {item['request_id']!r}")
     return cases
 
 
@@ -561,7 +575,7 @@ def test_implementation(args: argparse.Namespace) -> int:
                 "contract_version": CONTRACT_VERSION,
                 "operation": "validate",
                 "protocol_release": protocol_release,
-                "request_id": item["id"],
+                "request_id": item["request_id"],
                 "case": item["case"],
             }
             response, error = invoke_adapter(adapter, request, ADAPTER_VALIDATE_KEYS)

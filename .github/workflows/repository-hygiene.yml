@@ -63,7 +63,7 @@ jobs:
           set -euo pipefail
           # A contract-conforming adapter must pass.
           python3 tools/fnb-conformance.py test-implementation \
-            --adapter tests/conformance/adapters/reference-adapter.py
+            --adapter tests/conformance/adapters/contract-probe-adapter.py
           # A deliberately incorrect adapter must fail, otherwise the runner
           # has stopped testing anything.
           if python3 tools/fnb-conformance.py test-implementation \

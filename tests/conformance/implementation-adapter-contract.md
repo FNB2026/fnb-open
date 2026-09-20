@@ -107,7 +107,7 @@ Object case:
   "contract_version": "1.0",
   "operation": "validate",
   "protocol_release": "v0.1.0-preview.1",
-  "request_id": "valid-actor",
+  "request_id": "case-6f1a0d3c9b47e582",
   "case": {
     "kind": "object",
     "schema": "actor.schema.json",
@@ -123,7 +123,7 @@ Chain case:
   "contract_version": "1.0",
   "operation": "validate",
   "protocol_release": "v0.1.0-preview.1",
-  "request_id": "source-state-invalid-03",
+  "request_id": "case-2b8e77c41a90fd63",
   "case": { "kind": "source_state_chain", "instance": { "...": "..." } }
 }
 ```
@@ -133,11 +133,23 @@ Response:
 ```json
 {
   "contract_version": "1.0",
-  "request_id": "source-state-invalid-03",
+  "request_id": "case-2b8e77c41a90fd63",
   "status": "ok",
   "accepted": false
 }
 ```
+
+### `request_id` is opaque and carries no verdict
+
+A `request_id` is `case-` followed by 16 lowercase hex characters, derived from
+the case's origin. It never contains a source path, a case name, or any word that
+hints at the expected outcome.
+
+This matters: an identifier like `tests/conformance/v0.1/invalid/foo.json` would
+hand the answer to the adapter, and `valid` / `invalid` cannot appear inside a
+hex string, so the shape is a structural guarantee rather than a convention. The
+runner asserts the shape before sending anything. The human-readable source of a
+case appears only in the runner-side report, never on the wire.
 
 ### Case kinds in v1.0
 
@@ -183,7 +195,10 @@ python3 tools/fnb-conformance.py test-implementation --adapter ./my-fnb-adapter 
 ```
 
 The output is a **compatibility report format 1.0** document with
-`subject.kind: "implementation"`. That format is unchanged by this contract and
+`subject.kind: "implementation"`. In that report, `runner.version` versions the
+**tooling** independently of the protocol it verifies, while `protocol_release`
+names the release under test; a runner change is never reported as a protocol
+change. That format is unchanged by this contract and
 its schema is frozen at the `v0.1.0-preview.1` tag: this contract reuses it and
 must not modify it. Tightening of which `subject` fields are required for a
 given `kind` (for example requiring `name` and `version` for `implementation`, or

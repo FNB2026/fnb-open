@@ -71,7 +71,7 @@ The cases are the assets already in this directory, plus
 `v0.1.0-preview.1` tag and this contract reuses it unchanged.
 
 Under `adapters/`, two helpers exist for CI only, not as deliverables:
-`reference-adapter.py` is a contract test double that answers through the
+`contract-probe-adapter.py` is a contract test double that answers through the
 repository validator (it is not an FNB implementation and not a conformance
 authority), and `faulty-adapter.py` accepts everything so the suite can prove the
 runner detects an incorrect implementation.
