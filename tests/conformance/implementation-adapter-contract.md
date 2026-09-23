@@ -66,6 +66,36 @@ classification:
 Logs, banners, and progress output belong on **stderr**. Anything on stdout
 other than the single response object is a failure.
 
+### Runner errors are not verdicts
+
+Before the adapter is contacted at all, the runner establishes that the claim it
+is about to make is well formed:
+
+```text
+verify_manifest → verify_schema_digests → case suite supports this release
+→ public conformance preflight → describe → validate × N → implementation report
+```
+
+Each of these is a **runner error**: the run stops, nothing is written to
+`--report`, and no statement about the implementation is made. They are not
+implementation failures.
+
+- **Release identity.** The manifest is verified as a release manifest and its
+  schema bytes and digests are checked before its `protocol_release` is trusted.
+  A hand-written manifest cannot have one release's cases reported under another
+  release's name.
+- **Case suite release.** The case suite is written against exactly one release,
+  declared as `IMPLEMENTATION_CASE_RELEASE` in the runner. A mismatch is an
+  error, so a future preview must add its own case suite rather than letting this
+  one stand in for it.
+- **Public conformance preflight.** The official judge must be self-consistent
+  about its own schemas, fixtures, and worlds before it certifies anyone else.
+  An unsound judge has no standing to issue a compatibility report.
+
+Only after all of that does an adapter interaction failure become an
+**adapter failure**, which *does* produce a report with `status: "fail"` and a
+failed `adapter-contract` check.
+
 ## Operation: describe
 
 Request:

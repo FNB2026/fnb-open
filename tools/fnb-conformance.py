@@ -39,6 +39,18 @@ def check(check_id: str, passed: bool, summary: str) -> dict[str, str]:
     }
 
 
+def runner_error(message: str) -> int:
+    """Report a runner-side failure and return an exit code.
+
+    This is deliberately distinct from an adapter failure: no report is written,
+    because nothing was established about the implementation under test. A
+    mis-specified release, a failed identity check, or an unsound official judge
+    are all runner errors.
+    """
+    print(f"conformance runner error: {message}", file=sys.stderr)
+    return 1
+
+
 def verify_manifest(root: Path, manifest_path: Path) -> tuple[dict[str, Any], dict[str, str]]:
     try:
         manifest = load_json(manifest_path)
@@ -281,6 +293,11 @@ def verify_release(args: argparse.Namespace) -> int:
 
 CONTRACT_VERSION = "1.0"
 ADAPTER_TIMEOUT_SECONDS = 10
+# The implementation conformance case suite is written against exactly one
+# protocol release. A newer release must ship its own case suite, and an older
+# suite must never stand in for it, so a mismatch is a runner error rather than a
+# verdict about the adapter.
+IMPLEMENTATION_CASE_RELEASE = "v0.1.0-preview.1"
 ADAPTER_VALIDATE_KEYS = {"contract_version", "request_id", "status", "accepted"}
 ADAPTER_DESCRIBE_KEYS = {
     "contract_version",
@@ -554,11 +571,31 @@ def test_implementation(args: argparse.Namespace) -> int:
     manifest_path = Path(args.manifest)
     if not manifest_path.is_absolute():
         manifest_path = root / manifest_path
-    manifest = load_json(manifest_path)
-    protocol_release = manifest["protocol_release"]
-    if not isinstance(protocol_release, str) or not protocol_release:
-        print("conformance runner error: manifest has no protocol_release", file=sys.stderr)
-        return 1
+
+    # Release identity first. The case suite below is a fixed set of frozen
+    # artifacts, so the release named in the report must be proven, not merely
+    # read out of an unverified file: otherwise a hand-written manifest could
+    # have v0.1.0-preview.1 cases reported under an arbitrary release name.
+    manifest, manifest_check = verify_manifest(root, manifest_path)
+    if manifest_check["status"] != "pass":
+        return runner_error(f"manifest is not a valid release manifest: {manifest_check['summary']}")
+    digest_check = verify_schema_digests(root, manifest)
+    if digest_check["status"] != "pass":
+        return runner_error(f"release integrity check failed: {digest_check['summary']}")
+
+    protocol_release = manifest.get("protocol_release")
+    if protocol_release != IMPLEMENTATION_CASE_RELEASE:
+        return runner_error(
+            f"the implementation case suite covers {IMPLEMENTATION_CASE_RELEASE}, "
+            f"not {protocol_release!r}. Add a case suite for the new release instead of "
+            "letting this one stand in for it."
+        )
+
+    # The official judge must be self-consistent before it certifies anyone else.
+    # This is a runner error, not an implementation verdict.
+    preflight = run_public_conformance(root)
+    if preflight["status"] != "pass":
+        return runner_error(f"public conformance preflight failed: {preflight['summary']}")
 
     adapter = Path(args.adapter)
     if not adapter.is_absolute():
