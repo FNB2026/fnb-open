@@ -57,6 +57,20 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/fnb-fixtures.py check
+      - name: Verify the implementation conformance runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          # A contract-conforming adapter must pass.
+          python3 tools/fnb-conformance.py test-implementation \
+            --adapter tests/conformance/adapters/contract-probe-adapter.py
+          # A deliberately incorrect adapter must fail, otherwise the runner
+          # has stopped testing anything.
+          if python3 tools/fnb-conformance.py test-implementation \
+               --adapter tests/conformance/adapters/faulty-adapter.py; then
+            echo 'the implementation runner accepted a deliberately incorrect adapter' >&2
+            exit 1
+          fi
       - name: Guard the working tree against generator side effects
         shell: bash
         run: |

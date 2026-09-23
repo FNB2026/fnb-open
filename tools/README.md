@@ -55,3 +55,28 @@ every committed world — each object against its frozen schema and object-level
 semantics, and each declared chain with the same cross-object validators the
 conformance suite uses. Protocol semantics are implemented once, in the
 validator. See [`tests/fixtures/README.md`](../tests/fixtures/README.md).
+
+## Implementation conformance
+
+```bash
+python3 tools/fnb-conformance.py test-implementation --adapter ./my-fnb-adapter \
+  [--json] [--report path]
+```
+
+`test-implementation` drives a third-party implementation through adapter
+contract v1.0 (see
+[`tests/conformance/implementation-adapter-contract.md`](../tests/conformance/implementation-adapter-contract.md))
+and emits a compatibility report with `subject.kind: "implementation"`. It reuses
+compatibility report format 1.0 unchanged: that format's schema is frozen at the
+`v0.1.0-preview.1` tag and is deliberately not modified here. Which `subject`
+fields a given `kind` requires is enforced in the runner, not in the schema.
+
+The adapter is started as a black box: `argv` only, never a shell, one process
+per request, request on stdin, exactly one JSON object on stdout. A non-zero exit
+code, a timeout, malformed or multi-object stdout, a `contract_version` or
+`request_id` mismatch, a non-`ok` status, a missing boolean `accepted`, or an
+undeclared protocol release are all **adapter failures**, never verdicts.
+
+The runner keeps no network or product-service dependency of its own. Network
+isolation of the tested implementation is outside the certification scope: an
+arbitrary third-party executable cannot be reliably confined by this runner.
