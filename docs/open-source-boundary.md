@@ -19,6 +19,10 @@ release.
 - Synthetic end-to-end protocol chains
 - Public conformance fixtures, an independent conformance runner, and the
   machine-readable compatibility-report format
+- Declaration-only TypeScript protocol bindings generated from the frozen
+  schemas, and an implementation adapter contract for testing third-party
+  implementations in any language
+- Deterministic synthetic fixture worlds reproducible from a scenario and a seed
 
 ## Planned Public Later (Phase 2+)
 

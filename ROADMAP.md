@@ -25,8 +25,12 @@
       byte-exact SHA-256 schema-digest manifest
 - [x] Publish the repository-level conformance runner and the machine-readable
       compatibility-report format
-- [ ] Publish a standalone third-party conformance package (the shipped runner
-      verifies the release bundle, not a third-party implementation)
+- [x] Publish declaration-only TypeScript protocol bindings generated from the
+      frozen schemas (a binding layer, deliberately not an SDK runtime)
+- [x] Publish deterministic synthetic fixture worlds reproducible from a scenario
+      and a seed, using no real user data
+- [x] Publish an implementation adapter contract and a runner command that tests
+      a third-party implementation in any language
 - [ ] Publish OpenAPI preview
 - [ ] Publish TypeScript SDK preview
 - [ ] Publish Go SDK preview

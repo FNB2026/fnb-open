@@ -31,7 +31,14 @@ tag, and a new digest manifest.
 - Positive, schema-negative, object-semantic-negative, and cross-object negative
   conformance fixtures under `tests/conformance/`
 - An independent conformance runner (`tools/fnb-conformance.py`) and the
-  machine-readable compatibility-report format it emits
+  machine-readable compatibility-report format it emits, now covering
+  third-party implementations as well as the release bundle
+- Declaration-only TypeScript protocol bindings under `bindings/`, generated from
+  the frozen schemas by `tools/generate-bindings.py` (not an SDK runtime)
+- Deterministic synthetic fixture worlds under `tests/fixtures/generated/`,
+  produced by `tools/fnb-fixtures.py` from a scenario and a seed alone
+- An implementation adapter contract (v1.0) that lets an implementation in any
+  language be classified by the official runner
 - Public validation tooling with hash-pinned dependencies
 
 ## Deliberately excluded
@@ -68,19 +75,37 @@ Met by the `v0.1.0-preview.1` freeze on 2026-09-19:
 - Publish a conformance runner that completes over synthetic fixtures with no
   product-service or network dependency
 
+Met since, without changing any frozen byte:
+
+- Generate type definitions from the public protocol artifacts only
+  (declaration-only TypeScript bindings, regenerated and diff-checked in CI)
+- Publish synthetic fixture worlds that a third party can reproduce from a
+  scenario and a seed, instead of needing real data
+- Let a third party's implementation, in any language, be judged by the official
+  runner through adapter contract 1.0
+
 Still open:
 
 1. Keep schema, example, cross-reference, and negative-fixture validation green
    (a continuing gate rather than a one-time milestone)
 2. Publish a deliberately narrow protocol-object exchange OpenAPI preview and
    local mock server
-3. Generate type definitions or SDK surfaces only from public protocol
-   artifacts, without connecting them to private product services
+3. Generate transport SDK surfaces only from public protocol artifacts, once the
+   object-exchange binding is frozen, without connecting them to private product
+   services
 
-The shipped runner verifies the published release bundle. It does not yet
-evaluate a third-party implementation, so `subject.kind: implementation` in the
-compatibility-report format is permitted by the schema but is not yet produced
-by any shipped command.
+The shipped runner now evaluates third-party implementations as well as the
+published release bundle: `fnb-conformance test-implementation --adapter <path>`
+drives an executable adapter through contract 1.0 and emits a compatibility
+report with `subject.kind: implementation`. Expected verdicts live only in the
+runner and are never sent to the adapter, and the runner verifies the release
+identity of its own case suite before it certifies anyone else.
+
+What the runner still does not do: it defines no HTTP surface, no transport
+binding, and no client. The public protocol states what is valid, invalid, and
+which relationships must hold; it does not define how private product features
+work, and no shipped command asks an implementation to generate final user-owned
+objects.
 
 Private product changes are not copied into this preview while they remain
 uncommitted, unreviewed, or implementation-specific. Authentication, workers,

@@ -15,7 +15,7 @@ post-platform AI era**.
 
 It turns flows of life, digital assets, conversations, events, and relationships into user-owned, auditable, explainable, permissioned domain objects.
 
-This repository contains the public manifesto, domain model, protocol drafts, synthetic examples, and community governance documents.
+This repository contains the public manifesto, domain model, protocol artifacts, synthetic examples, and community governance documents.
 
 **The official product implementation remains private** until the security, privacy, and beta readiness gates are complete.
 
@@ -69,6 +69,9 @@ FNB is built on the belief that:
 - End-to-end and additional synthetic protocol examples
 - Executable v0.1 conformance fixtures and CI validation
 - Independent conformance runner and compatibility-report format
+- Generated declaration-only TypeScript protocol bindings
+- Deterministic synthetic fixture worlds reproducible from a scenario and a seed
+- Third-party implementation conformance through adapter contract 1.0
 - Community governance
 
 ### Planned Public Later (Phase 2+)
@@ -138,7 +141,7 @@ FNB 是一个**面向后平台 AI 时代的本地优先关系与记忆操作系�
 
 它将人生流、数字资产、对话、事件和关系，转化为用户拥有的、可审计、可解释、有权限控制的领域对象。
 
-本仓库包含公开发布的宣言、领域模型、协议草案、合成样本和社区治理文档。
+本仓库包含公开发布的宣言、领域模型、协议制品、合成样本和社区治理文档。
 
 **官方产品实现保持私有**，直到安全、隐私和 Beta 就绪门禁全部通过。
 
@@ -192,6 +195,9 @@ FNB 相信：
 - 端到端及其他合成协议示例
 - 可执行的 v0.1 一致性夹具与 CI 校验
 - 独立一致性运行器与兼容性报告格式
+- 由协议生成的、仅含声明的 TypeScript 类型绑定
+- 可由「场景 + seed」复现的确定性合成测试世界
+- 通过 adapter contract 1.0 验证第三方实现的一致性
 - 社区治理
 
 ### 计划后续公开（Phase 2+）
