@@ -2,8 +2,9 @@
 
 ## Status
 
-Draft — open for public discussion. Not accepted. The RFC process requires a
-minimum 7-day comment window before a Steward decision
+Draft — revised during the public comment window after review on
+[PR #25](https://github.com/FNB2026/fnb-open/pull/25). Not accepted. The RFC
+process requires a minimum 7-day comment window before a Steward decision
 (see [RFC-0000](./0000-rfc-process.md)).
 
 ## Summary
@@ -26,7 +27,7 @@ meaning for the outcome.
 
 That step needs normative content, not just a document format:
 
-- an exchange envelope — a new protocol-level object;
+- an exchange envelope — a new protocol-level artifact;
 - a receipt — a second one;
 - and a definition of what accepting or rejecting a bundle *means*.
 
@@ -55,7 +56,10 @@ binding describes how FNB products work.
 
 ### Transport
 
-- HTTP over TLS, `Content-Type: application/json`.
+- HTTP, `Content-Type: application/json`.
+- Network deployments MUST use HTTPS/TLS. Local loopback and mock use MAY use
+  plain HTTP, so that a local mock server is not born in violation of this
+  binding.
 - One endpoint for the first version: `POST /exchange`.
 - The request body is an `ObjectExchangeEnvelope`; the response body is an
   `ObjectExchangeReceipt`.
@@ -70,7 +74,10 @@ binding describes how FNB products work.
   "protocol_release": "v0.1.0-preview.1",
   "exchange_id": "fnb_exchange_...",
   "objects": [
-    { "schema": "memory.schema.json", "object": { } }
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/memory.schema.json",
+      "object": { }
+    }
   ]
 }
 ```
@@ -79,12 +86,27 @@ binding describes how FNB products work.
 - `protocol_release` names the frozen protocol release the objects are written
   against.
 - `exchange_id` correlates a request with its receipt. It carries no user
-  identity and no credential.
-- `objects` is a non-empty list. Each entry names a frozen schema by its
-  canonical file name and carries one object.
-- Object references inside the objects must use the frozen canonical schema
-  identifiers under the release's tag namespace. A sender must not inline a
-  copied or variant schema.
+  identity, no credential, and no idempotency meaning.
+- `objects` is a non-empty list. Each entry carries one object and the identity
+  of the schema it claims to satisfy.
+
+### Identity of exchanged material
+
+Two different kinds of reference appear in an exchange, and they must not be
+conflated:
+
+- **Schema identity.** Each envelope item MUST identify its schema by the exact
+  canonical `$id` of the declared protocol release — for example
+  `https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/memory.schema.json`.
+  A sender MUST NOT inline a copied, trimmed, or variant schema, and MUST NOT
+  invent a local schema name that only the sender understands.
+- **Object identity.** Object-to-object references inside protocol objects
+  (`node_id`, `event_id`, `memory_id`, `source_ref`, and the like) retain their
+  normal protocol identifiers and semantics. They are not schema identifiers, and
+  this binding does not reinterpret them.
+
+Pointing at the canonical `$id` is what makes "the same protocol release" a
+verifiable claim rather than a label: the release tag pins the bytes.
 
 ### Receipt
 
@@ -98,7 +120,11 @@ binding describes how FNB products work.
 ```
 
 `status` is `accepted` or `rejected`. The first version defines no partial
-outcome: a bundle is accepted or rejected as a whole.
+outcome and no reason field: a bundle is accepted or rejected as a whole, and
+nothing more. A machine-readable rejection reason is deliberately excluded,
+because a receipt that explained which object failed would quickly become a
+second conformance report, competing with the official runner for authority over
+what "invalid" means.
 
 ### What `accepted` means, and what it does not
 
@@ -107,14 +133,60 @@ frozen schemas, and the cross-object protocol semantics that apply to the bundle
 hold.
 
 `accepted` does **not** mean that anything was stored, persisted, applied,
-durably retained, or made visible to anyone. It says nothing about correctness of
-an AI inference, nothing about permission policy in a product, and nothing about
-a user's intent.
+durably retained, or made visible to anyone. It says nothing about the
+correctness of an AI inference, nothing about permission policy in a product, and
+nothing about a user's intent.
 
-The reason partial acceptance is excluded from the first version is that it
-immediately implies product transaction semantics — which objects were written,
-which were not, whether a rollback happened, what a retry does. Those are product
-decisions, and the protocol has no business specifying them.
+Two consequences follow directly:
+
+- **No partial acceptance in the first version.** Partial acceptance immediately
+  implies product transaction semantics — which objects were written, which were
+  not, whether a rollback happened, what a retry does. Those are product
+  decisions, and the protocol has no business specifying them.
+- **No idempotency key in the first version.** Because `accepted` carries no write
+  and no side effect, there is no protocol-level transaction to deduplicate.
+  `exchange_id` exists to correlate a request with its receipt, not to make
+  delivery exactly-once.
+
+### Transport-level failures
+
+A transport-level failure is reported as an HTTP error with a Problem Details
+(`application/problem+json`) body. A receipt MUST NOT be returned for it: a
+receipt is a statement about objects, and the receiver cannot make a statement
+about material it could not read or does not claim to support. Keeping the two
+channels separate is the point.
+
+Proposed first-version mapping:
+
+| Condition | Status |
+| --- | --- |
+| Malformed JSON, or an envelope that does not match this binding | `400` |
+| Unsupported `Content-Type` | `415` |
+| Payload larger than the receiver accepts | `413` |
+| `transport_version` not implemented by the receiver | `4xx` (see Open Questions) |
+| `protocol_release` not implemented by the receiver | `4xx` (see Open Questions) |
+
+Unsupported `transport_version` and unsupported `protocol_release` are both
+transport-level failures: in neither case can the receiver judge the objects.
+
+A receiver that declares support for a `protocol_release` declares support for
+**every** schema frozen in that release. There is therefore no "supported release
+but unsupported object kind" state, and no separate status for it: an unknown or
+unexpected schema in a declared release is simply **protocol-invalid**, that is, a
+`rejected` receipt. Only a whole unsupported release is a transport failure.
+
+This binding sets no fixed bundle size or object-count limit. A receiver MAY
+impose its own limit and report it as a transport-level failure; fixed limits are
+deployment capacity, not FNB object semantics.
+
+### No required closure over object references
+
+This binding does **not** require a bundle to be closed under object-to-object
+references. A receiver judges the material it is given, and co-presence is
+required only where a normative cross-object invariant itself requires two
+objects to appear together. Requiring general closure would make single-object
+exchange nearly impossible and would move bundle-composition policy into the
+protocol.
 
 ### One implementation of the judgement
 
@@ -124,17 +196,26 @@ cross-object invariants, using the same frozen schemas from the same release.
 Protocol semantics are implemented once, in the public suite; the transport
 carries the material and reports the outcome.
 
-### Versioning
+### Versioning and the publication boundary
 
 `transport_version` and `protocol_release` are versioned independently. A change
 to the transport must not be reported as a change to the protocol, and a new
 protocol release must not silently change the transport.
 
-A request whose `protocol_release` the receiver does not implement, or whose
-`transport_version` the receiver does not implement, is a **transport-level
-failure**, not a protocol rejection: the receiver cannot make a statement about
-objects it cannot read. Such a request fails before any object is judged, and the
-receipt shape above is not the right way to report it (see Open Questions).
+A `transport_version` must be as durable as a protocol release. This repository
+already treats the protocol release as an immutable publication boundary — tag,
+canonical `$id`s, and a byte-exact digest manifest. A transport binding must not
+fall back to a weaker standard:
+
+> Once a transport binding version is published, its normative transport
+> artifacts MUST NOT be replaced in place. Any normative change requires a new
+> transport version and a new immutable publication boundary.
+
+The mechanism for that boundary is deliberately not fixed by this RFC: a
+dedicated transport tag, a digest manifest over transport artifacts, or reuse of
+the protocol release machinery are all acceptable. What is fixed here is the
+requirement, so that a later OpenAPI preview cannot land on mutable `main` while
+calling itself `1.0`.
 
 ### Where the OpenAPI will live
 
@@ -147,7 +228,8 @@ specs/openapi/object-exchange/v1/openapi.yaml
 
 `specs/` is already covered by the authoritative license matrix as Apache-2.0, so
 a new path under it does not raise a fresh licensing question of the kind an
-unlisted new directory would.
+unlisted new directory would. Publishing the file is not the same as publishing
+the version: the publication boundary in the previous section still applies.
 
 ## Data Sovereignty Impact
 
@@ -159,6 +241,9 @@ Positive, and deliberately limited:
   transported bundle cannot by itself be attributed to a person.
 - Because `accepted` explicitly excludes persistence, a receipt cannot be
   mistaken for evidence that user data was stored anywhere.
+- The absence of an idempotency key and of partial acceptance keeps the protocol
+  out of decisions about what a receiver retains; those remain product decisions
+  under the receiver's own data-sovereignty obligations.
 - Objects remain governed by the provenance and permission objects already in the
   protocol; the transport does not weaken or reinterpret them.
 
@@ -166,8 +251,10 @@ Positive, and deliberately limited:
 
 - No accounts, no authentication, and no session concept are in scope, so the
   binding defines no place to accumulate identifying state.
-- The receipt contains no object content and no per-object detail in the first
-  version, so it is not a side channel for data the sender did not already have.
+- The receipt contains no object content and no per-object detail, so it is not a
+  side channel for data the sender did not already have. Problem Details bodies
+  must likewise not echo object content — a failure message about a malformed
+  envelope must not quote the envelope.
 - This RFC does not require or forbid request logging. Whether a receiver keeps
   transport logs is a product decision, outside this binding.
 
@@ -183,7 +270,7 @@ user confirmation of an AI proposal.
 
 - Additive. No frozen schema changes, no change to any accepted RFC, and no
   change to the release bundle or its digest manifest.
-- The envelope and receipt are transport-level objects, not domain objects, and
+- The envelope and receipt are transport-level artifacts, not domain objects, and
   are deliberately not added to `specs/v0.1/`.
 - If accepted, the OpenAPI preview is expected to implement this RFC exactly. It
   must not introduce new semantics; anything it needs beyond this text requires a
@@ -201,31 +288,38 @@ user confirmation of an AI proposal.
    no correlation, and no place to record the protocol release being used.
 3. **Partial acceptance in v1.** Rejected. It drags product transaction semantics
    into the protocol.
-4. **One endpoint per object type.** Rejected. That describes a product API
+4. **A per-object status list in the receipt.** Rejected for v1, for the same
+   reason as partial acceptance: it is a conformance report in disguise.
+5. **A machine-readable rejection reason in v1.** Rejected. It would compete with
+   the official runner for authority over what "invalid" means.
+6. **An idempotency key in v1.** Rejected. `accepted` implies no write, so there is
+   no protocol-level transaction to deduplicate.
+7. **Requiring bundle closure over object references.** Rejected. It would make
+   single-object exchange nearly impossible and move composition policy into the
+   protocol.
+8. **A separate status for unsupported object kinds.** Rejected. A receiver that
+   declares a release declares all of it; partial implementation is an incomplete
+   implementation, and an unknown schema is protocol-invalid.
+9. **One endpoint per object type.** Rejected. That describes a product API
    surface and invites endpoint design to drift into the protocol.
-5. **Realtime or streaming first.** Rejected as premature; messaging is a product
-   concern.
-6. **Reuse the implementation adapter contract as the transport.** Rejected. That
-   contract is a process-local black-box interface for testing, not a network
-   binding; conflating them would make the test harness a protocol dependency.
+10. **A fixed protocol-level bundle limit.** Rejected. Capacity belongs to
+    deployments; a receiver that must limit reports it as a transport failure.
+11. **Realtime or streaming first.** Rejected as premature; messaging is a product
+    concern.
+12. **Reuse the implementation adapter contract as the transport.** Rejected. That
+    contract is a process-local black-box interface for testing, not a network
+    binding; conflating them would make the test harness a protocol dependency.
 
 ## Open Questions
 
-1. **How is a transport-level failure reported?** The proposal above is that an
-   unsupported `transport_version` or `protocol_release`, or a malformed
-   envelope, fails at the transport layer rather than producing a receipt. Should
-   that be an HTTP status, a documented error body, or both?
-2. **Should a receipt ever carry a reason?** The first version carries only a
-   status. A machine-readable rejection reason would help senders, but it risks
-   becoming a de facto conformance report; if it is added, which vocabulary?
-3. **Is an idempotency key needed on the envelope?** Retries are a transport
-   concern, but a duplicate delivery could be judged twice.
-4. **Bundle size and object count limits.** Should the binding state limits, or
-   leave them to implementations?
-5. **Must object references resolve within the same bundle?** For example, does a
-   `Memory` that cites a `Node` require that `Node` in the same exchange?
-6. **Does `rejected` need to distinguish "protocol-invalid" from "unsupported
-   content"?** These are different failures and may deserve different handling.
-7. **Naming.** `ObjectExchangeEnvelope` and `ObjectExchangeReceipt` follow the
-   repository's object naming style; confirm before they become frozen in a
-   schema.
+1. **Problem Details vocabulary.** Which `type` URIs identify the transport-level
+   failures above, and should unsupported `transport_version` and unsupported
+   `protocol_release` be distinguishable by `type`? The status codes for those
+   two are still to be pinned.
+2. **The mechanism for the transport publication boundary.** A dedicated
+   transport tag, a digest manifest over transport artifacts, or reuse of the
+   protocol release machinery? This RFC fixes the requirement and leaves the
+   mechanism to the OpenAPI preview.
+3. **What a future transport version may add.** Partial acceptance or a
+   per-object status, if ever, would need a demonstrated need and a fresh RFC.
+   Confirm that deferring them is acceptable rather than leaving them unstated.
