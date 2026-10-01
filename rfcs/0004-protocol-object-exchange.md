@@ -2,10 +2,11 @@
 
 ## Status
 
-Draft — revised during the public comment window after review on
-[PR #25](https://github.com/FNB2026/fnb-open/pull/25). Not accepted. The RFC
-process requires a minimum 7-day comment window before a Steward decision
-(see [RFC-0000](./0000-rfc-process.md)).
+Revision — the first public comment window on
+[PR #25](https://github.com/FNB2026/fnb-open/pull/25) has completed. The
+2026-10-01 final review requires further revision before acceptance; see the
+Steward Decision and Revision Requirements below. This RFC is not Accepted.
+The review follows [RFC-0000](./0000-rfc-process.md).
 
 ## Summary
 
@@ -143,8 +144,9 @@ Two consequences follow directly:
   implies product transaction semantics — which objects were written, which were
   not, whether a rollback happened, what a retry does. Those are product
   decisions, and the protocol has no business specifying them.
-- **No idempotency key in the first version.** Because `accepted` carries no write
-  and no side effect, there is no protocol-level transaction to deduplicate.
+- **No idempotency key in the first version.** Because `accepted` makes no
+  statement about writes or side effects, this binding defines no
+  protocol-level transaction to deduplicate.
   `exchange_id` exists to correlate a request with its receipt, not to make
   delivery exactly-once.
 
@@ -190,11 +192,13 @@ protocol.
 
 ### One implementation of the judgement
 
-A receiver's acceptance judgement must be the same judgement the public
-conformance suite already codifies: schema validity plus the object-level and
+A receiver's acceptance judgement must follow the same rules the public
+conformance suite codifies: schema validity plus the object-level and
 cross-object invariants, using the same frozen schemas from the same release.
-Protocol semantics are implemented once, in the public suite; the transport
-carries the material and reports the outcome.
+Independent implementations may implement these rules in their own languages;
+the public suite supplies conformance evidence, not a required runtime
+dependency. How a flat exchange bundle selects the applicable cross-object
+checks remains an acceptance blocker described in the Revision Requirements.
 
 ### Versioning and the publication boundary
 
@@ -237,8 +241,11 @@ Positive, and deliberately limited:
 
 - The binding is receiver-side and opt-in. It defines no client, no discovery, no
   service registry, and no implicit sharing.
-- The envelope carries no identity, no credential, and no account reference, so a
-  transported bundle cannot by itself be attributed to a person.
+- The envelope introduces no authenticated sender identity, credential, or
+  account-system reference. The objects inside it can still carry actor and
+  owner identifiers, identifying content, and sensitive provenance. A bundle
+  can therefore be attributable to a person; the transport provides no
+  anonymity guarantee.
 - Because `accepted` explicitly excludes persistence, a receipt cannot be
   mistaken for evidence that user data was stored anywhere.
 - The absence of an idempotency key and of partial acceptance keeps the protocol
@@ -249,8 +256,11 @@ Positive, and deliberately limited:
 
 ## Privacy Impact
 
-- No accounts, no authentication, and no session concept are in scope, so the
-  binding defines no place to accumulate identifying state.
+- No account, authentication, or session mechanism is defined by this binding.
+  Exchanged objects and transport logs can nevertheless contain identifying
+  state. Protocol validity and an `accepted` receipt provide no authorization
+  to disclose the material. A PermissionSnapshot remains point-in-time evidence
+  under RFC-0003, not a credential or current-access grant.
 - The receipt contains no object content and no per-object detail, so it is not a
   side channel for data the sender did not already have. Problem Details bodies
   must likewise not echo object content — a failure message about a malformed
@@ -292,8 +302,9 @@ user confirmation of an AI proposal.
    reason as partial acceptance: it is a conformance report in disguise.
 5. **A machine-readable rejection reason in v1.** Rejected. It would compete with
    the official runner for authority over what "invalid" means.
-6. **An idempotency key in v1.** Rejected. `accepted` implies no write, so there is
-   no protocol-level transaction to deduplicate.
+6. **An idempotency key in v1.** Rejected. `accepted` specifies no write or
+   side-effect guarantee, so this binding defines no protocol-level transaction
+   to deduplicate.
 7. **Requiring bundle closure over object references.** Rejected. It would make
    single-object exchange nearly impossible and move composition policy into the
    protocol.
@@ -323,3 +334,84 @@ user confirmation of an AI proposal.
 3. **What a future transport version may add.** Partial acceptance or a
    per-object status, if ever, would need a demonstrated need and a fresh RFC.
    Confirm that deferring them is acceptable rather than leaving them unstated.
+
+## Revision Requirements
+
+The following requirements must be resolved in the RFC before an OpenAPI
+document can faithfully encode the binding. They are review requirements, not
+newly accepted wire semantics.
+
+- [ ] **Complete the wire response contract.** Specify the HTTP status and media
+      type for both receipt outcomes, require the receipt to correlate with the
+      request's exchange and versions, and resolve the status codes and `type`
+      vocabulary for unsupported transport and protocol versions. Specify the
+      envelope's required field types and treatment of unknown fields so that
+      an OpenAPI schema does not choose those rules itself. Problem Details
+      must follow [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457.html), including
+      consistency between its `status` and the HTTP status. HTTP status choices
+      must respect [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html).
+- [ ] **Define deterministic bundle judgement.** Specify how schema identities
+      and object references select the applicable checks from a flat `objects`
+      list, including multiple independent chains, repeated or conflicting
+      object identities, and ordering of invalidation records. Resolve the
+      boundary between allowed external references and checks that require
+      co-present objects. The result must not depend on a receiver's private
+      storage, arbitrary object pairing, or network resolution of references.
+      Alternatively, narrow the promised acceptance semantics explicitly and
+      review that scope change before acceptance.
+- [x] **Correct identity and side-effect claims.** Objects can identify people;
+      the absence of authentication fields supplies no anonymity or transfer
+      authorization. A receipt supplies no persistence guarantee, which does
+      not prohibit a product from having side effects outside this binding.
+- [ ] **Expose the substantive revision for public review.** The above wire
+      choices and bundle judgement rules must be available for review before
+      the next Steward decision. Record the revision commit and review window
+      rather than treating the initial comment period as review of choices
+      that had not yet been specified.
+
+The publication mechanism may remain an implementation-stage choice only if
+it fulfils the immutable boundary requirement already stated here. Deferring
+partial outcomes and per-object statuses to a future RFC is acceptable for this
+scope and is not an acceptance blocker.
+
+### Adversarial review cases
+
+These cases document the unresolved questions; they add no semantic fixtures or
+validator behavior:
+
+1. Two individually schema-valid related objects disagree on an invariant, such
+   as a BlockDraft and its Block having different owners. They occur without
+   the rest of the six-object reference chain. Which co-presence check applies?
+2. Two complete protocol chains are interleaved in one bundle. An implementation
+   must have a specified way to assemble the roles by references rather than
+   choosing the first object of each schema type.
+3. Two entries have the same schema identity and object identity but different
+   values. The RFC currently does not decide whether to reject, deduplicate, or
+   select one; the receiver must not invent that rule.
+4. A parent invalidation appears after its child in the envelope. The existing
+   chain checker requires a parent to occur earlier in its named `records`
+   array; the RFC must decide how envelope order relates to that array.
+
+## Steward Decision — 2026-10-01
+
+**Revision required; not Accepted.** The first comment window began when
+[PR #25](https://github.com/FNB2026/fnb-open/pull/25) opened at
+2026-09-23 05:05:54 UTC and met the seven-day minimum at
+2026-09-30 05:05:54 UTC. No PR-local comments or formal reviews were recorded at
+the final review. That absence is not acceptance. The reviewed proposal was
+commit `d31703f1514c7f3fa985333bbf5988f6ec6f4989`.
+
+The final adversarial review found two blocking gaps: an incomplete HTTP/error
+contract, and an unspecified projection from arbitrary exchange bundles to
+cross-object checks. The current public validator accepts named, structured
+protocol, source-state, and invalidation chains; it does not define that
+projection for an arbitrary flat exchange list. Green repository CI therefore
+does not establish that independent receivers can produce the same receipt for
+every bundle allowed by this proposal.
+
+The identity and side-effect claims have been corrected in this revision. The
+scope and immutable publication requirement remain suitable, but acceptance
+requires completion and review of the outstanding Revision Requirements. The
+next step is a revised normative proposal on this PR, followed by a recorded
+Steward decision. OpenAPI implementation and transport publication remain
+gated on acceptance.
