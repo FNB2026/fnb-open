@@ -2,11 +2,13 @@
 
 ## Status
 
-Revision — the first public comment window on
-[PR #25](https://github.com/FNB2026/fnb-open/pull/25) has completed. The
-2026-10-01 final review requires further revision before acceptance; see the
-Steward Decision and Revision Requirements below. This RFC is not Accepted.
-The review follows [RFC-0000](./0000-rfc-process.md).
+Accepted — Steward Decision dated 2026-10-09, following the renewed public
+review and final adversarial review of proposal commit
+`befc51b6506c580d5f39d3215fe9c7084828f5de` on
+[PR #25](https://github.com/FNB2026/fnb-open/pull/25). This accepts the exchange
+contract, not an implemented transport or published transport release.
+The review follows [RFC-0000](./0000-rfc-process.md); both historical decisions
+are retained below.
 
 ## Summary
 
@@ -573,7 +575,7 @@ newly accepted wire semantics.
       the absence of authentication fields supplies no anonymity or transfer
       authorization. A receipt supplies no persistence guarantee, which does
       not prohibit a product from having side effects outside this binding.
-- [ ] **Expose the substantive revision for public review.** The above wire
+- [x] **Expose the substantive revision for public review.** The above wire
       choices and bundle judgement rules must be available for review before
       the next Steward decision. Record the revision commit and review window
       rather than treating the initial comment period as review of choices
@@ -652,3 +654,50 @@ requires completion and review of the outstanding Revision Requirements. The
 next step is a revised normative proposal on this PR, followed by a recorded
 Steward decision. OpenAPI implementation and transport publication remain
 gated on acceptance.
+
+## Steward Decision — 2026-10-09
+
+**Accepted.** The reviewed normative proposal is commit
+`befc51b6506c580d5f39d3215fe9c7084828f5de`. Its
+[publication record](https://github.com/FNB2026/fnb-open/pull/25#issuecomment-5923422273)
+opened the renewed review at 2026-10-01 02:19:50 UTC; the seven-day minimum ended
+at 2026-10-08 02:19:50 UTC (10:19:50 Asia/Shanghai). At the 2026-10-09 decision,
+the PR head still matched that proposal, with no later substantive revisions,
+external comments, or formal reviews. Silence is not approval: acceptance rests
+on the recorded final review and the Steward's decision, authorised in this
+conversation, not an inferred maintainer vote.
+
+The final adversarial review found no remaining acceptance blocker:
+
+- The HTTP contract defines strict envelope grammar, both receipt outcomes and
+  exact correlation, distinct version failures, fixed Problem Details types,
+  and fail-closed handling of unreliable evaluation.
+- The exchange profile uses typed identities, rejects duplicates, applies
+  mandatory direct co-presence checks even without contexts, and selects full
+  chains by explicit roles rather than array position or private history.
+  Missing context roles reject; external standalone references do not imply
+  closure; invalidation parents precede children without receiver-side sorting.
+- The five-member envelope and the bounded acceptance claim were explicitly
+  exposed during renewed review. Acceptance covers object rules, enumerated
+  direct checks, and declared contexts only, not exhaustive lineage or history.
+- Private product code, authentication, storage and deployment remain outside
+  scope. No frozen protocol artifacts or accepted domain RFCs are changed.
+
+Evidence: the proposal's CI run
+[36805276363](https://github.com/FNB2026/fnb-open/actions/runs/36805276363)
+passed both jobs on that exact SHA. On 2026-10-09, local release verification
+again passed the 14-schema manifest, byte-exact schema digests, and public
+conformance, including the existing positive/negative cases and four synthetic
+worlds. The PR diff contains only this RFC. These checks protect existing public
+artifacts; they do not establish an implemented HTTP receiver's conformance.
+
+The publication-boundary mechanism may be selected during OpenAPI work, provided
+it meets the immutable requirement above. Partial outcomes and per-object status
+remain excluded; adding them requires a fresh RFC. The October 1 decision is
+retained as historical evidence and is superseded by this decision.
+
+This decision changes governance status only; it adds no normative wire rule.
+Before any transport publication, implementation work must provide transport-
+specific positive and negative tests for the HTTP contract and exchange profile,
+plus an immutable publication boundary. Acceptance does not itself merge PR #25,
+publish a transport version, or certify compatibility with private Alpha APIs.
