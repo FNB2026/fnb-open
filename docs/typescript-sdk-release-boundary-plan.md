@@ -56,7 +56,11 @@ rewrite package bytes. Existing exports remain `.` (ESM/types) and `./protocol`
 **B — npm Public Preview later.** Separately approve the official name/scope,
 ownership/trademark rights, maintainers, public access, initial package bootstrap,
 OIDC trust mapping and protected release workflow/environment, registry provenance,
-and a preview dist-tag (not `latest`). Removing `private: true` is not a gate.
+and a preview dist-tag (not `latest`). In the separately reviewed npm release
+candidate, remove `private: true` or set it to `false`: this is a technical
+prerequisite because [npm refuses to publish private packages](https://docs.npmjs.com/cli/configuring-npm/package-json/).
+It is not sufficient publication authorization; all B-path review, identity,
+permissions and explicit approval gates still apply. A retains `private: true`.
 Changing package identity requires a newly reviewed package, SBOM/provenance,
 consumer tests and distinct SDK artifact version/tag; never relabel or replace A.
 The registry version and dist-tag mapping need their own approved decision.
@@ -178,12 +182,34 @@ separate explicit exception approval with the reduced authenticity guarantee
 recorded; no automatic downgrade. A checksum detects byte drift, not publisher
 identity. GitHub hosted/source-generated archives are not the approved SDK tarball.
 
+Preparation must verify and record that GitHub Immutable Releases is enabled for
+the actual repository; do not infer it from tag signing or no-overwrite policy.
+See [enforcement settings](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/establish-provenance-and-integrity/prevent-release-changes).
+This is a future preparation gate, not permission to change settings now.
+If unavailable, stop for a justified, separately approved reduced-guarantee
+exception; voluntary restrictions are not equivalent platform protection.
+
 Only after publication-specific authorization: recheck candidate CI/protection,
 absent/unoccupied candidate tag/release, expected parent/dependency tags, then
-create the approved tag and GitHub prerelease. No force/repoint/overwrite. Re-read
+create the approved signed tag and a Draft Release. Verify that all **seven**
+intended uploads (six evidence assets plus `artifact-digests.json`) match the
+approved names/bytes/hashes before publishing the Draft as a prerelease. Recheck
+immutability settings immediately before publication. No force/repoint/overwrite. Re-read
 remote tag object, peeled target and signature, download every published asset
 and compare exact set/length/hashes; verify tag-bound manifest and package member
-hashes before consumer use. Failure leaves publication unestablished and requires
+hashes before consumer use. Independently confirm published `immutable: true`
+and verify GitHub's release attestation against the expected tag, source commit
+and uploaded assets, retaining verification evidence. Missing/false immutability
+or unverifiable attestation blocks establishment unless the exact reduced
+guarantee was explicitly approved beforehand; never silently downgrade.
+
+GitHub's [immutable-release attestation](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)
+is platform-generated metadata, separate from the six authored assets and
+self-excluding manifest. Do not add it to that manifest or feed it back into
+provenance/tag hashes. It complements, not replaces, signed-tag and digest checks.
+Release title/body and prerelease/latest flags are not frozen by this protection;
+the uploaded `RELEASE-NOTES.md` remains the digest-bound notes of record.
+Failure leaves publication unestablished and requires
 an incident/withdrawal decision; correction uses a new artifact version/tag, not
 replacement of published bytes. No automatic deletion of evidence.
 

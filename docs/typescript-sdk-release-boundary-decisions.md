@@ -22,9 +22,9 @@ credentials, workflow changes or SDK code are delivered by this PR.
 | R10 | External manifest and provenance after source commit | Six assets + 28-member inventory; manifest excludes itself; no hash cycles |
 | R11 | Signed annotated SDK tag binds manifest digest | Approved key/fingerprint; no automatic unsigned fallback; no tag replacement |
 | R12 | Two isolated declared-environment builds match bytes | Pin toolchain and dependency locks; offline consumer, no lifecycle scripts |
-| R13 | Public upload read-back is required | Remote target/signature, exact downloads and per-member hashes; never just local success |
+| R13 | Immutable Releases and public read-back required | Verify repository setting; Draft with all seven uploads, publish then verify immutable state/attestation, tag/signature and digests; unavailable protection needs separate reduced-guarantee approval |
 | R14 | Failures/corrections use incident decision and new version | No force, silently replaced assets or assumed reversible npm publication |
-| R15 | npm scope/ownership/OIDC/provenance/dist-tag independently approved | Name/version/package identity changes get new reviewed artifact; no `latest` preview |
+| R15 | npm scope/ownership/OIDC/provenance/dist-tag independently approved | Separately reviewed B candidate must remove `private: true` or set false (necessary, not sufficient authority); A retains true; identity changes get new reviewed artifact; no `latest` preview |
 | R16 | New LTS support requires separate tests/decision | No automatic widening engines or Node/browser/CJS claims |
 
 ## Future executable acceptance matrix
@@ -50,10 +50,10 @@ results are baseline evidence only, not completion of release gates.
 | G14 | External provenance binds final commit/toolchain/locks/build run and upstream sources; no private data/local paths; independent review | A/B | NOT RUN |
 | G15 | Signing identity verified independently; manifest digest/tag target approved; unsigned exception separately approved if needed | A | UNDECIDED key / BLOCKED |
 | G16 | Explicit authority binds version, candidate SHA, tag, manifest hash, evidence set and prerelease action | A | NOT AUTHORIZED |
-| G17 | Remote tag absent before create; read-back object/target/signature and all asset downloads match; protected main CI verified | A | NOT RUN / NOT AUTHORIZED |
+| G17 | Verify repository Immutable Releases setting; absent candidate tag; all seven approved uploads verified in Draft before publish; published immutable flag and GitHub attestation verified independently alongside tag/signature/digests/main CI; unavailable protection requires prior explicit reduced-guarantee exception | A | NOT RUN / NOT AUTHORIZED |
 | G18 | Official npm identity/ownership/access and initial setup approved; credential/OIDC permissions scoped, reviewer-protected job | B | UNDECIDED / NOT AUTHORIZED |
 | G19 | Registry provenance eligibility/verification and trust configuration rechecked; failure blocks, no token fallback by inference | B | NOT RUN / NOT AUTHORIZED |
-| G20 | Package identity/version reviewed as distinct artifact; preview dist-tag and irreversible-publication/incident policy approved | B | UNDECIDED / NOT AUTHORIZED |
+| G20 | Distinct npm candidate identity/version reviewed and `private: true` removed or false; required technical prerequisite never grants authority; preview dist-tag and irreversible-publication/incident policy approved | B | UNDECIDED / NOT AUTHORIZED |
 | G21 | Explicit npm publish authority and downloaded registry tarball/provenance checks | B | NOT AUTHORIZED |
 | G22 | New-LTS migration proposal before Node 22 EOL, full matrix on new runtime before support claim | Later | PLANNING REQUIRED |
 
@@ -65,6 +65,8 @@ identity, verified security/toolchain state or publication authority. Those
 values are intentionally absent, not fabricated. Path B's package scope,
 ownership, bootstrap/OIDC/provenance configuration and preview dist-tag must
 remain separate decisions; `private: true` remains untouched here.
+Platform release attestation is separate verification metadata, never an input
+to the six-asset/self-excluding manifest. No immutability setting is changed here.
 
 Deliver exact planning HEAD, complete diff, docs check and all three CI results
 in the independent Draft PR. Do not merge before independent planning review.
