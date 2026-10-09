@@ -1,0 +1,40 @@
+{
+  "schema_release": "v0.1.0-preview.1",
+  "transport_tag": "object-exchange-v1.0.0-preview.1",
+  "binding_snapshot_commit": "0728b46a6db55a272bcad6e05745d86628632c96",
+  "planning_merge": "ff5d8906fb24b513bb641fdbd2f087c327bc101e",
+  "binding_sha256": {
+    "bindings/typescript/v0.1.0-preview.1/actor.d.ts": "7d397ab90da0f92e5f9b92d02ee9872161a0ed7e780c125bddd8ba2f23c70d75",
+    "bindings/typescript/v0.1.0-preview.1/ai-inference.d.ts": "246d1a5ad735de1095da0c1207f82700da5e0aa1577db524269af4750b3cd8d6",
+    "bindings/typescript/v0.1.0-preview.1/asset.d.ts": "4d05449b2a851cab77361a8d18069dbec9d864ad215a944130217e85b53bae51",
+    "bindings/typescript/v0.1.0-preview.1/audit-tombstone.d.ts": "5d4e7b81d4f0303603774d394092a72b95c44c91e4420bf5200a9bdcac4301c8",
+    "bindings/typescript/v0.1.0-preview.1/block-draft.d.ts": "203d59655aea8f827fa6bc9f3fa4e6f20727576c4c456a8321849e34474c8036",
+    "bindings/typescript/v0.1.0-preview.1/block.d.ts": "b481c633fd75ac90d1e527b4d8252211f98d72bd753b709fdf92e7730422ff36",
+    "bindings/typescript/v0.1.0-preview.1/correction-patch.d.ts": "def0b8c6de08b671a718265b714b46d0b5f43aaeb5ca1d593332d582792871e6",
+    "bindings/typescript/v0.1.0-preview.1/flow-event.d.ts": "cbbb31ae2b950b40797d81789643586d6409584b1a3f2f2e9f8b5b13181396eb",
+    "bindings/typescript/v0.1.0-preview.1/index.d.ts": "bcdb2f226d6b287bcf755d38c65366c35a71c5abd9a677be938632cc08dee484",
+    "bindings/typescript/v0.1.0-preview.1/invalidation-record.d.ts": "cccf9b57a799dfcbf132da43f9b7ac167bbdc193e60372f25f664de6f04aa235",
+    "bindings/typescript/v0.1.0-preview.1/memory.d.ts": "0eec420cf279500d695ea8c5335c93226b96a019f4773b66aa0380e8468e8aab",
+    "bindings/typescript/v0.1.0-preview.1/node.d.ts": "8a2f35762ba50ce97ab7eb281eff34a722222a90df4e86fe5e2f5351a2ba8a12",
+    "bindings/typescript/v0.1.0-preview.1/permission-snapshot.d.ts": "71da737808074d66b369d95f469736d17c8e9441f8a1676d0572be5ff97c1636",
+    "bindings/typescript/v0.1.0-preview.1/relationship.d.ts": "4d62d8689cbdbfef06224b37cd0bb51adbe31c48ced097af2c182be1611bb29e",
+    "bindings/typescript/v0.1.0-preview.1/source-state-change.d.ts": "ddccf1e72e7c687df7bc3684177fcb9993c49ebcb7743dcc28a2dd0b79c27a78"
+  },
+  "canonical_schema_ids": [
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/actor.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/ai-inference.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/asset.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/audit-tombstone.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/block-draft.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/block.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/correction-patch.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/flow-event.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/invalidation-record.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/memory.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/node.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/permission-snapshot.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/relationship.schema.json",
+    "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/source-state-change.schema.json"
+  ],
+  "transport_manifest_sha256": "2a809f322dc17af6e75e9d76bb8c9418e844e0f6e19be371503b6a8b55af6b91"
+}

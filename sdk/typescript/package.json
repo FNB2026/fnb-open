@@ -1,0 +1,19 @@
+{
+  "name": "fnb-object-exchange-sdk-workspace",
+  "version": "0.1.0-preview.1",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": { "node": ">=22 <23" },
+  "files": ["dist", "README.md", "LICENSE-APACHE-2.0.txt", "NOTICE.md", "provenance.json", "sbom.spdx.json"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./protocol": { "types": "./dist/protocol.d.ts" }
+  },
+  "scripts": {
+    "build": "node scripts/clean-build.mjs && tsc -p tsconfig.json && node scripts/finalize.mjs",
+    "typecheck": "tsc -p tsconfig.types.json",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs"
+  },
+  "devDependencies": { "typescript": "7.0.2" }
+}
