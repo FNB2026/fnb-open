@@ -51,6 +51,7 @@ BOUNDARY_PATHS = (
     "tests/conformance/transport/test_object_exchange.py",
     "tests/conformance/transport/openapi-3.1.schema.json",
     "tools/validate-public-artifacts.py", "tools/fnb-conformance.py", PUBLIC_MANIFEST,
+    "tools/requirements-validation.lock",
 )
 
 

@@ -58,7 +58,7 @@ The selected publication mechanism is a **separate annotated or signed tag**,
 lists the exact byte lengths and SHA-256 digests of the OpenAPI document,
 this guide, the accepted RFC, the contract probe, its tests, and the vendored
 OpenAPI structural schema, together with both imported public rule/release
-helpers and the protocol digest manifest. This pins the probe's judgement
+helpers, the hashed validation dependency lock, and the protocol digest manifest. This pins the probe's judgement
 dependencies, not just its entry point. The manifest is pinned by the same tag and does not
 hash itself. Protocol schemas remain pinned by their existing, unchanged tag
 and digest manifest. Normative changes after publication require a new transport

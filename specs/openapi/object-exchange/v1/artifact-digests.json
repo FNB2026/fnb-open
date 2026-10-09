@@ -13,8 +13,8 @@
     },
     {
       "path": "specs/openapi/object-exchange/v1/README.md",
-      "bytes": 4628,
-      "sha256": "0d779fc7e243bd7e21b7f81abdc8744bed7339b9f2bd707b1ade579dca21984c"
+      "bytes": 4668,
+      "sha256": "dbf275196f652c2f77147aed6b7076360993fc02ea452b3e3fbd633db9f0aebb"
     },
     {
       "path": "rfcs/0004-protocol-object-exchange.md",
@@ -23,8 +23,8 @@
     },
     {
       "path": "tools/object-exchange-contract.py",
-      "bytes": 14005,
-      "sha256": "6b65df139df974611d5b10379ae3e4512aa6cb7df22b495ba254bdbb6b07a5d4"
+      "bytes": 14047,
+      "sha256": "7cc27a2f8bf620e838102c2f06e287359a219468c7f3b4c61bb4131d6168ed56"
     },
     {
       "path": "tests/conformance/transport/test_object_exchange.py",
@@ -50,6 +50,11 @@
       "path": "specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json",
       "bytes": 2607,
       "sha256": "9581a10668e3acc68453b44e2158bd715e9d88a1d3b7956ea5cf14ead6db5e96"
+    },
+    {
+      "path": "tools/requirements-validation.lock",
+      "bytes": 11305,
+      "sha256": "105767850666d711cf1ffe4d7910617c565c102707647ce34c1064028564b56e"
     }
   ]
 }
