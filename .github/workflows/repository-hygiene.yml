@@ -52,6 +52,13 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/generate-bindings.py --check
+      - name: Verify RFC-0004 OpenAPI and offline exchange contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/object-exchange-contract.py
+          python3 -m unittest discover -s tests/conformance/transport -p 'test_*.py' -v
+          python3 -O -m unittest discover -s tests/conformance/transport -p 'test_*.py'
       - name: Verify generated fixture worlds are current and reproducible
         shell: bash
         run: |

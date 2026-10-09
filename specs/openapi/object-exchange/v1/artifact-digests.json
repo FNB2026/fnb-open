@@ -1,0 +1,60 @@
+{
+  "manifest_version": "1.0",
+  "transport_version": "1.0",
+  "artifact_version": "1.0.0-preview.1",
+  "protocol_release": "v0.1.0-preview.1",
+  "release_tag": "object-exchange-v1.0.0-preview.1",
+  "algorithm": "sha256",
+  "artifacts": [
+    {
+      "path": "specs/openapi/object-exchange/v1/openapi.yaml",
+      "bytes": 20516,
+      "sha256": "20abf1344e2c0f5bbe067cca11e8e215d5c9f97ff930f9ad9bbb4c6762ad3c77"
+    },
+    {
+      "path": "specs/openapi/object-exchange/v1/README.md",
+      "bytes": 4974,
+      "sha256": "c9985c1ca77886069952a8f3c12ad4aadcca72ef30eb9c20ce83a36b7a2e1d7c"
+    },
+    {
+      "path": "rfcs/0004-protocol-object-exchange.md",
+      "bytes": 41300,
+      "sha256": "a8ac33b2bec6178d24df1bfb89d742f2520da59fb1a6a4f024a58ca2e3764ee0"
+    },
+    {
+      "path": "tools/object-exchange-contract.py",
+      "bytes": 14132,
+      "sha256": "69923bdecf56b35231ba5bc4c0cac6084988a2f279c542d08d81129dc7887a3d"
+    },
+    {
+      "path": "tests/conformance/transport/test_object_exchange.py",
+      "bytes": 25727,
+      "sha256": "6d8b46b54e2d61cf029a00e2160c0d414cd43afad18e63fe422712e41607888a"
+    },
+    {
+      "path": "tests/conformance/transport/openapi-3.1.schema.json",
+      "bytes": 33992,
+      "sha256": "da01ba28852cac0de53893797cb8d1942bc3b05084f526dcc216717dec314ed0"
+    },
+    {
+      "path": "tools/validate-public-artifacts.py",
+      "bytes": 26112,
+      "sha256": "c69afc27693df779ac0a8e2fb9943c1ed04f24412e6c8ff159669f60f1780b08"
+    },
+    {
+      "path": "tools/fnb-conformance.py",
+      "bytes": 27368,
+      "sha256": "89c32a985e0c0df232089f82009424726058353cb2726a8869cf923f60a99a63"
+    },
+    {
+      "path": "specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json",
+      "bytes": 2607,
+      "sha256": "9581a10668e3acc68453b44e2158bd715e9d88a1d3b7956ea5cf14ead6db5e96"
+    },
+    {
+      "path": "tools/requirements-validation.lock",
+      "bytes": 12089,
+      "sha256": "9e5924af4b95ce67b8e3f5568d25be9ebc2efa601fb9861d562bf2d4cf588cb6"
+    }
+  ]
+}

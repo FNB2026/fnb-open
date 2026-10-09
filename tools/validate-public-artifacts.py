@@ -6,8 +6,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -106,6 +107,19 @@ def load_schemas() -> dict[str, dict[str, Any]]:
     return schemas
 
 
+def ensure_format_support(schema: Any) -> None:
+    """Never treat an unavailable schema format checker as successful validation."""
+    if isinstance(schema, dict):
+        name = schema.get("format")
+        if isinstance(name, str) and name not in FORMAT_CHECKER.checkers:
+            raise RuntimeError(f"required schema format checker unavailable: {name}")
+        for value in schema.values():
+            ensure_format_support(value)
+    elif isinstance(schema, list):
+        for value in schema:
+            ensure_format_support(value)
+
+
 def validate_instance(
     schemas: dict[str, dict[str, Any]], schema_name: str, instance: Any, label: str
 ) -> None:
@@ -113,6 +127,7 @@ def validate_instance(
         schema = schemas[schema_name]
     except KeyError as exc:
         raise AssertionError(f"{label}: unknown schema {schema_name}") from exc
+    ensure_format_support(schema)
     validator = Draft202012Validator(schema, format_checker=FORMAT_CHECKER)
     errors = sorted(validator.iter_errors(instance), key=lambda error: list(error.path))
     if errors:
@@ -121,7 +136,20 @@ def validate_instance(
 
 
 def parse_datetime(value: str) -> datetime:
-    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    return datetime.fromisoformat(value.upper().replace("Z", "+00:00"))
+
+
+def datetime_key(value: str) -> tuple[datetime, str]:
+    """Compare RFC-3339 instants without truncating sub-microsecond precision."""
+    parsed = parse_datetime(value)
+    if parsed.tzinfo is None:
+        raise RuntimeError("timestamp comparison requires an explicit offset")
+    fractional = re.search(r"\.(\d+)(?:Z|[+-]\d{2}:\d{2})$", value, re.IGNORECASE)
+    digits = fractional.group(1).rstrip("0") if fractional else ""
+    # With trailing zeros removed, lexicographic fractional-digit ordering is
+    # exact (including equal values with differing precision). Offset conversion
+    # acts on whole seconds; no float or Decimal context rounding is involved.
+    return parsed.astimezone(timezone.utc).replace(microsecond=0), digits
 
 
 def validate_relationship_semantics(relationship: dict[str, Any], label: str) -> None:
@@ -163,7 +191,7 @@ def validate_audit_tombstone_semantics(record: dict[str, Any], label: str) -> No
 
 def validate_permission_snapshot_semantics(record: dict[str, Any], label: str) -> None:
     expires_at = record.get("expires_at")
-    if expires_at and parse_datetime(expires_at) <= parse_datetime(record["captured_at"]):
+    if expires_at and datetime_key(expires_at) <= datetime_key(record["captured_at"]):
         raise AssertionError(f"{label}: permission snapshot expires_at must follow captured_at")
 
 
@@ -255,11 +283,11 @@ def validate_protocol_chain_instance(
     checks.extend(
         [
             (
-                parse_datetime(block["confirmed_at"]) >= parse_datetime(correction["created_at"]),
+                datetime_key(block["confirmed_at"]) >= datetime_key(correction["created_at"]),
                 "Block confirmation must not predate its Correction",
             ),
             (
-                parse_datetime(correction["created_at"]) >= parse_datetime(event["occurred_at"]),
+                datetime_key(correction["created_at"]) >= datetime_key(event["occurred_at"]),
                 "Correction must not predate its source event",
             ),
         ]
@@ -537,7 +565,7 @@ def main() -> int:
         validate_protocol_chain(schemas)
         validate_fixtures(schemas)
         worlds = validate_generated_worlds(schemas)
-    except (AssertionError, KeyError) as exc:
+    except (AssertionError, KeyError, RuntimeError) as exc:
         print(f"validation failed: {exc}", file=sys.stderr)
         return 1
     print(
