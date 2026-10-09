@@ -98,3 +98,10 @@ implementation, or third-party certification entry point. It uses no network,
 private state, or product service; it does not publish a tag or alter the frozen
 compatibility report. See the
 [OpenAPI preview guide](../specs/openapi/object-exchange/v1/README.md).
+
+## Local object exchange mock
+
+`python3 tools/object-exchange-mock.py` starts a non-persistent loopback-only
+HTTP wrapper over the unchanged frozen contract evaluator. It is a development
+mock, not a production service or third-party certification entry point. See
+the [startup, tests, limits, and safety guide](object-exchange-mock.md).
