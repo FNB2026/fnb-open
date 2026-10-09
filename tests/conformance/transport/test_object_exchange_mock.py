@@ -123,8 +123,16 @@ class MockHTTPTests(unittest.TestCase):
         self.problem(self.send(), "unsupported-transport-version")
 
     def test_supported_media_and_identity_encoding(self):
-        self.receipt(self.send(headers={"Content-Type": "Application/JSON; Charset=UTF-8",
-                                       "Content-Encoding": "identity"}), "accepted")
+        for encoding in ("identity", "Identity", "IDENTITY", "iDeNtItY"):
+            with self.subTest(encoding=encoding):
+                self.receipt(self.send(headers={"Content-Type": "Application/JSON; Charset=UTF-8",
+                                               "Content-Encoding": encoding}), "accepted")
+
+    def test_unsupported_encoding_case_does_not_enable_compression_or_lists(self):
+        for encoding in ("gzip", "GZIP", "Gzip", "identity, identity", "identity; x=1"):
+            with self.subTest(encoding=encoding):
+                self.problem(self.send(headers={"Content-Type": "application/json",
+                                                "Content-Encoding": encoding}), "unsupported-media-type")
 
     def test_byte_and_object_capacity(self):
         self.server.max_bytes = 3

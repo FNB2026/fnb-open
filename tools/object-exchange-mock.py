@@ -134,11 +134,15 @@ class ExchangeHandler(BaseHTTPRequestHandler):
         if len(types) != 1 or len(encodings) > 1:
             self.respond(evaluator.problem("unsupported-media-type"))
             return
+        # HTTP content-coding tokens are case-insensitive. Canonicalize only at
+        # this adapter boundary, for both preflight and full evaluation; do not
+        # change the frozen evaluator or accept coding lists/parameters.
+        encoding = encodings[0].lower() if encodings else None
         # Reuse the frozen probe's representation stage before blocking on a
         # body. Empty input intentionally cannot advance beyond JSON parsing.
         representation = evaluator.evaluate(
             b"", content_type=types[0],
-            content_encoding=encodings[0] if encodings else None)
+            content_encoding=encoding)
         if representation[0] in (415, 500):
             self.respond(representation)
             return
@@ -155,7 +159,7 @@ class ExchangeHandler(BaseHTTPRequestHandler):
             return
         self.respond(evaluator.evaluate(
             raw, content_type=types[0],
-            content_encoding=encodings[0] if encodings else None,
+            content_encoding=encoding,
             max_bytes=self.server.max_bytes, max_objects=self.server.max_objects))
 
 
