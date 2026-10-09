@@ -80,3 +80,17 @@ undeclared protocol release are all **adapter failures**, never verdicts.
 The runner keeps no network or product-service dependency of its own. Network
 isolation of the tested implementation is outside the certification scope: an
 arbitrary third-party executable cannot be reliably confined by this runner.
+
+## Object exchange contract preview
+
+```bash
+python3 tools/object-exchange-contract.py
+python3 -m unittest discover -s tests/conformance/transport -p 'test_*.py' -v
+```
+
+This verifies the transport artifact digest manifest and runs offline RFC-0004
+wire/profile contract tests. The probe is not an HTTP server, reference FNB
+implementation, or third-party certification entry point. It uses no network,
+private state, or product service; it does not publish a tag or alter the frozen
+compatibility report. See the
+[OpenAPI preview guide](../specs/openapi/object-exchange/v1/README.md).

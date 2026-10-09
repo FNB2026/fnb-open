@@ -1,0 +1,55 @@
+{
+  "manifest_version": "1.0",
+  "transport_version": "1.0",
+  "artifact_version": "1.0.0-preview.1",
+  "protocol_release": "v0.1.0-preview.1",
+  "release_tag": "object-exchange-v1.0.0-preview.1",
+  "algorithm": "sha256",
+  "artifacts": [
+    {
+      "path": "specs/openapi/object-exchange/v1/openapi.yaml",
+      "bytes": 20516,
+      "sha256": "20abf1344e2c0f5bbe067cca11e8e215d5c9f97ff930f9ad9bbb4c6762ad3c77"
+    },
+    {
+      "path": "specs/openapi/object-exchange/v1/README.md",
+      "bytes": 4628,
+      "sha256": "0d779fc7e243bd7e21b7f81abdc8744bed7339b9f2bd707b1ade579dca21984c"
+    },
+    {
+      "path": "rfcs/0004-protocol-object-exchange.md",
+      "bytes": 41300,
+      "sha256": "a8ac33b2bec6178d24df1bfb89d742f2520da59fb1a6a4f024a58ca2e3764ee0"
+    },
+    {
+      "path": "tools/object-exchange-contract.py",
+      "bytes": 14005,
+      "sha256": "6b65df139df974611d5b10379ae3e4512aa6cb7df22b495ba254bdbb6b07a5d4"
+    },
+    {
+      "path": "tests/conformance/transport/test_object_exchange.py",
+      "bytes": 22696,
+      "sha256": "7b19d752037ae4d70829ef4b8159e93c29a11ad79e154a601093daf3b658c30c"
+    },
+    {
+      "path": "tests/conformance/transport/openapi-3.1.schema.json",
+      "bytes": 33992,
+      "sha256": "da01ba28852cac0de53893797cb8d1942bc3b05084f526dcc216717dec314ed0"
+    },
+    {
+      "path": "tools/validate-public-artifacts.py",
+      "bytes": 24756,
+      "sha256": "769f8a31b30fda80e6983d2f357b8407eb7f020fd3fd47642dc513a311c33758"
+    },
+    {
+      "path": "tools/fnb-conformance.py",
+      "bytes": 27368,
+      "sha256": "a7e19ba649ba421e29a0029e50d241b38b45c21a809e53c221912a86864fb182"
+    },
+    {
+      "path": "specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json",
+      "bytes": 2607,
+      "sha256": "9581a10668e3acc68453b44e2158bd715e9d88a1d3b7956ea5cf14ead6db5e96"
+    }
+  ]
+}

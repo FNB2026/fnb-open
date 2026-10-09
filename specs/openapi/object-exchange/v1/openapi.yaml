@@ -1,0 +1,609 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "FNB Protocol Object Exchange",
+    "version": "1.0.0-preview.1",
+    "description": "RFC-0004 narrow HTTP binding. Contract preview only; not a private FNB Alpha API. No product service or reference implementation is supplied.",
+    "license": {
+      "name": "Apache-2.0",
+      "identifier": "Apache-2.0"
+    }
+  },
+  "externalDocs": {
+    "description": "Accepted RFC-0004 (immutable merge commit)",
+    "url": "https://github.com/FNB2026/fnb-open/blob/81a71b1aae3747b84ccb73785b70bed78146f23a/rfcs/0004-protocol-object-exchange.md"
+  },
+  "x-fnb-transport-version": "1.0",
+  "x-fnb-protocol-release": "v0.1.0-preview.1",
+  "x-fnb-publication": {
+    "release_tag": "object-exchange-v1.0.0-preview.1",
+    "manifest": "artifact-digests.json",
+    "state": "unpublished-until-tagged",
+    "policy": "No published normative bytes may be replaced in place. This declaration and a digest file alone do not establish publication."
+  },
+  "x-fnb-protocol-schemas": [
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/actor.schema.json",
+      "identity_field": "actor_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/ai-inference.schema.json",
+      "identity_field": "inference_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/asset.schema.json",
+      "identity_field": "asset_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/audit-tombstone.schema.json",
+      "identity_field": "audit_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/block-draft.schema.json",
+      "identity_field": "draft_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/block.schema.json",
+      "identity_field": "block_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/correction-patch.schema.json",
+      "identity_field": "correction_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/flow-event.schema.json",
+      "identity_field": "event_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/invalidation-record.schema.json",
+      "identity_field": "invalidation_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/memory.schema.json",
+      "identity_field": "memory_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/node.schema.json",
+      "identity_field": "node_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/permission-snapshot.schema.json",
+      "identity_field": "permission_snapshot_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/relationship.schema.json",
+      "identity_field": "relationship_id"
+    },
+    {
+      "schema": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/source-state-change.schema.json",
+      "identity_field": "source_change_id"
+    }
+  ],
+  "x-fnb-wire-requirements": {
+    "representation": "UTF-8 strict JSON, reject duplicate keys at all depths and NaN/Infinity. application/json or application/json;charset=utf-8 (case-insensitive); identity encoding only.",
+    "stages": [
+      "representation",
+      "JSON parsing",
+      "envelope grammar",
+      "transport support",
+      "protocol release support",
+      "local immutable release integrity",
+      "object and exchange profile judgement"
+    ],
+    "capacity": "Deployment byte/object limits may abort with 413; no fixed protocol limit.",
+    "evaluation": "Unreliable evaluation returns 500 evaluation-failure; never false accepted/rejected.",
+    "references": "Resolve only local verified schema set. No network or private state resolution.",
+    "profile": "Mandatory direct co-presence checks plus explicit contexts as defined by accepted RFC-0004. Cannot be expressed completely by JSON Schema."
+  },
+  "paths": {
+    "/exchange": {
+      "post": {
+        "operationId": "exchangeProtocolObjects",
+        "summary": "Judge one envelope of public protocol objects",
+        "description": "Network deployments MUST use HTTPS/TLS; local loopback/mock MAY use HTTP. The origin is deployment-specific; no production server URL is declared. Domain validity is separate from envelope validity. This operation specifies no persistence, authorization, partial outcome, or idempotency guarantee.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjectExchangeEnvelope"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Completed judgement. accepted/rejected both use 200; verify exact echo of all three correlation strings. Acceptance covers only objects, listed direct checks, and declared contexts; not persistence, authority, or exhaustive lineage.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectExchangeReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed exchange envelope; Unsupported transport version; Unsupported protocol release. Never a receipt. Problem status equals HTTP status.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MalformedEnvelope"
+                    },
+                    {
+                      "$ref": "#/components/schemas/UnsupportedTransportVersion"
+                    },
+                    {
+                      "$ref": "#/components/schemas/UnsupportedProtocolRelease"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Exchange payload too large. Never a receipt. Problem status equals HTTP status.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PayloadTooLarge"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported exchange representation. Never a receipt. Problem status equals HTTP status.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/UnsupportedMediaType"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Exchange evaluation unavailable. Never a receipt. Problem status equals HTTP status.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/EvaluationFailure"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ObjectExchangeEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transport_version",
+          "protocol_release",
+          "exchange_id",
+          "objects",
+          "validation_contexts"
+        ],
+        "properties": {
+          "transport_version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Supported value: 1.0. Unsupported non-empty values are a distinct transport error, not protocol rejection."
+          },
+          "protocol_release": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Supported release: v0.1.0-preview.1. No inference of future release profiles."
+          },
+          "exchange_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Exact receipt correlation; no authentication or idempotency."
+          },
+          "objects": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/ExchangeItem"
+            }
+          },
+          "validation_contexts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationContext"
+            }
+          }
+        }
+      },
+      "ExchangeItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "object"
+        ],
+        "properties": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Exact frozen canonical $id. Unknown non-empty identifiers are protocol-invalid (200 rejected), never fetched."
+          },
+          "object": {
+            "type": "object",
+            "description": "Envelope grammar only. Frozen domain schema and semantic validity are evaluated separately; failures return 200 rejected."
+          }
+        }
+      },
+      "ValidationContext": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProtocolChainContext"
+          },
+          {
+            "$ref": "#/components/schemas/SourceStateChainContext"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidationChainContext"
+          }
+        ]
+      },
+      "ProtocolChainContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "roles"
+        ],
+        "properties": {
+          "kind": {
+            "const": "protocol_chain"
+          },
+          "roles": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "flow_event",
+              "node",
+              "ai_inference",
+              "block_draft",
+              "correction",
+              "block"
+            ],
+            "properties": {
+              "flow_event": {
+                "type": "string",
+                "minLength": 1
+              },
+              "node": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ai_inference": {
+                "type": "string",
+                "minLength": 1
+              },
+              "block_draft": {
+                "type": "string",
+                "minLength": 1
+              },
+              "correction": {
+                "type": "string",
+                "minLength": 1
+              },
+              "block": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      },
+      "SourceStateChainContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "roles"
+        ],
+        "properties": {
+          "kind": {
+            "const": "source_state_chain"
+          },
+          "roles": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "permission_snapshot",
+              "source_state_change",
+              "invalidation"
+            ],
+            "properties": {
+              "permission_snapshot": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_state_change": {
+                "type": "string",
+                "minLength": 1
+              },
+              "invalidation": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      },
+      "InvalidationChainContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "roles"
+        ],
+        "properties": {
+          "kind": {
+            "const": "invalidation_chain"
+          },
+          "roles": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "records"
+            ],
+            "properties": {
+              "records": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "ObjectExchangeReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transport_version",
+          "protocol_release",
+          "exchange_id",
+          "status"
+        ],
+        "properties": {
+          "transport_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "protocol_release": {
+            "type": "string",
+            "minLength": 1
+          },
+          "exchange_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "accepted",
+              "rejected"
+            ]
+          }
+        }
+      },
+      "MalformedEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "const": "https://www.fnbapp.net/problems/object-exchange/1.0/malformed-envelope"
+          },
+          "title": {
+            "const": "Malformed exchange envelope"
+          },
+          "status": {
+            "type": "integer",
+            "const": 400
+          },
+          "detail": {
+            "type": "string",
+            "description": "Generic explanation only. Do not echo identifiers, contents, paths, secrets, or traces."
+          }
+        }
+      },
+      "UnsupportedMediaType": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "const": "https://www.fnbapp.net/problems/object-exchange/1.0/unsupported-media-type"
+          },
+          "title": {
+            "const": "Unsupported exchange representation"
+          },
+          "status": {
+            "type": "integer",
+            "const": 415
+          },
+          "detail": {
+            "type": "string",
+            "description": "Generic explanation only. Do not echo identifiers, contents, paths, secrets, or traces."
+          }
+        }
+      },
+      "PayloadTooLarge": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "const": "https://www.fnbapp.net/problems/object-exchange/1.0/payload-too-large"
+          },
+          "title": {
+            "const": "Exchange payload too large"
+          },
+          "status": {
+            "type": "integer",
+            "const": 413
+          },
+          "detail": {
+            "type": "string",
+            "description": "Generic explanation only. Do not echo identifiers, contents, paths, secrets, or traces."
+          }
+        }
+      },
+      "UnsupportedTransportVersion": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "const": "https://www.fnbapp.net/problems/object-exchange/1.0/unsupported-transport-version"
+          },
+          "title": {
+            "const": "Unsupported transport version"
+          },
+          "status": {
+            "type": "integer",
+            "const": 400
+          },
+          "detail": {
+            "type": "string",
+            "description": "Generic explanation only. Do not echo identifiers, contents, paths, secrets, or traces."
+          }
+        }
+      },
+      "UnsupportedProtocolRelease": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "const": "https://www.fnbapp.net/problems/object-exchange/1.0/unsupported-protocol-release"
+          },
+          "title": {
+            "const": "Unsupported protocol release"
+          },
+          "status": {
+            "type": "integer",
+            "const": 400
+          },
+          "detail": {
+            "type": "string",
+            "description": "Generic explanation only. Do not echo identifiers, contents, paths, secrets, or traces."
+          }
+        }
+      },
+      "EvaluationFailure": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "const": "https://www.fnbapp.net/problems/object-exchange/1.0/evaluation-failure"
+          },
+          "title": {
+            "const": "Exchange evaluation unavailable"
+          },
+          "status": {
+            "type": "integer",
+            "const": 500
+          },
+          "detail": {
+            "type": "string",
+            "description": "Generic explanation only. Do not echo identifiers, contents, paths, secrets, or traces."
+          }
+        }
+      },
+      "Protocol_actor": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/actor.schema.json"
+      },
+      "Protocol_ai_inference": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/ai-inference.schema.json"
+      },
+      "Protocol_asset": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/asset.schema.json"
+      },
+      "Protocol_audit_tombstone": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/audit-tombstone.schema.json"
+      },
+      "Protocol_block_draft": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/block-draft.schema.json"
+      },
+      "Protocol_block": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/block.schema.json"
+      },
+      "Protocol_correction_patch": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/correction-patch.schema.json"
+      },
+      "Protocol_flow_event": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/flow-event.schema.json"
+      },
+      "Protocol_invalidation_record": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/invalidation-record.schema.json"
+      },
+      "Protocol_memory": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/memory.schema.json"
+      },
+      "Protocol_node": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/node.schema.json"
+      },
+      "Protocol_permission_snapshot": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/permission-snapshot.schema.json"
+      },
+      "Protocol_relationship": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/relationship.schema.json"
+      },
+      "Protocol_source_state_change": {
+        "$ref": "https://raw.githubusercontent.com/FNB2026/fnb-open/v0.1.0-preview.1/specs/v0.1/source-state-change.schema.json"
+      }
+    }
+  }
+}
