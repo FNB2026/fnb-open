@@ -1,0 +1,324 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "Unpublished SDK workspace and development lock inventory",
+  "documentNamespace": "https://www.fnbapp.net/spdx/sdk-workspace/5444e899599a5eb9a57dd6173d336daf48de2bd64c187962e8af0159cd0f60b1",
+  "creationInfo": {
+    "created": "2026-10-09T00:00:00Z",
+    "creators": [
+      "Tool: fnb-open-sdk-generator"
+    ]
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-SDK",
+      "name": "fnb-object-exchange-sdk-workspace",
+      "versionInfo": "0.1.0-preview.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0"
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-1",
+      "name": "@typescript/typescript-aix-ppc64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-aix-ppc64/-/typescript-aix-ppc64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-2",
+      "name": "@typescript/typescript-darwin-arm64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-3",
+      "name": "@typescript/typescript-darwin-x64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-4",
+      "name": "@typescript/typescript-freebsd-arm64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-freebsd-arm64/-/typescript-freebsd-arm64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-5",
+      "name": "@typescript/typescript-freebsd-x64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-freebsd-x64/-/typescript-freebsd-x64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-6",
+      "name": "@typescript/typescript-linux-arm",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-linux-arm/-/typescript-linux-arm-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-7",
+      "name": "@typescript/typescript-linux-arm64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-8",
+      "name": "@typescript/typescript-linux-loong64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-linux-loong64/-/typescript-linux-loong64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-9",
+      "name": "@typescript/typescript-linux-mips64el",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-linux-mips64el/-/typescript-linux-mips64el-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-10",
+      "name": "@typescript/typescript-linux-ppc64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-linux-ppc64/-/typescript-linux-ppc64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-11",
+      "name": "@typescript/typescript-linux-riscv64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-linux-riscv64/-/typescript-linux-riscv64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-12",
+      "name": "@typescript/typescript-linux-s390x",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-linux-s390x/-/typescript-linux-s390x-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-13",
+      "name": "@typescript/typescript-linux-x64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-14",
+      "name": "@typescript/typescript-netbsd-arm64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-netbsd-arm64/-/typescript-netbsd-arm64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-15",
+      "name": "@typescript/typescript-netbsd-x64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-netbsd-x64/-/typescript-netbsd-x64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-16",
+      "name": "@typescript/typescript-openbsd-arm64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-openbsd-arm64/-/typescript-openbsd-arm64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-17",
+      "name": "@typescript/typescript-openbsd-x64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-openbsd-x64/-/typescript-openbsd-x64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-18",
+      "name": "@typescript/typescript-sunos-x64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-sunos-x64/-/typescript-sunos-x64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-19",
+      "name": "@typescript/typescript-win32-arm64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-20",
+      "name": "@typescript/typescript-win32-x64",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    },
+    {
+      "SPDXID": "SPDXRef-Dev-21",
+      "name": "typescript",
+      "versionInfo": "7.0.2",
+      "downloadLocation": "https://registry.npmjs.org/typescript/-/typescript-7.0.2.tgz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "comment": "Development lock inventory; optional platform packages are not all installed. Not a runtime dependency."
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-1",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-2",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-3",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-4",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-5",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-6",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-7",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-8",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-9",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-10",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-11",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-12",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-13",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-14",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-15",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-16",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-17",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-18",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-19",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-20",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    },
+    {
+      "spdxElementId": "SPDXRef-Dev-21",
+      "relationshipType": "BUILD_TOOL_OF",
+      "relatedSpdxElement": "SPDXRef-SDK"
+    }
+  ]
+}
