@@ -156,6 +156,54 @@ class ExchangeTests(unittest.TestCase):
         self.request["objects"][0]["object"] = {}
         self.assert_outcome(self.evaluate(), "rejected")
 
+    def test_invalid_datetime_is_rejected_for_standalone_object(self):
+        for timestamp in ("not-a-timestamp", "2026-01-01T12:00:00", "2026-02-30T12:00:00Z"):
+            with self.subTest(timestamp=timestamp):
+                value = copy.deepcopy(self.item("flow-event"))
+                value["occurred_at"] = timestamp
+                request = {**self.request, "objects": [{"schema": PREFIX + "flow-event.schema.json",
+                                                        "object": value}], "validation_contexts": []}
+                self.assert_outcome(self.evaluate(request), "rejected")
+
+    def test_missing_format_capability_fails_closed(self):
+        schemas = self.probe.verified_schemas()
+        capabilities = dict(contract.PUBLIC.FORMAT_CHECKER.checkers)
+        capabilities.pop("date-time")
+        with patch.object(contract.PUBLIC.FORMAT_CHECKER, "checkers", capabilities):
+            # Declaring this release requires all its format capabilities, even
+            # when the particular request is a valid standalone actor.
+            actor = self.request["objects"][0]
+            request = {**self.request, "objects": [actor], "validation_contexts": []}
+            self.assert_problem(self.evaluate(request), "evaluation-failure")
+            with self.assertRaises(RuntimeError):
+                contract.PUBLIC.validate_instance(schemas,
+                    "flow-event.schema.json", self.item("flow-event"), "format guard")
+
+    def test_timestamp_instants_case_offsets_and_full_precision(self):
+        key = contract.PUBLIC.datetime_key
+        self.assertEqual(key("2026-01-01t00:00:00z"), key("2026-01-01T08:00:00+08:00"))
+        self.assertEqual(key("2026-01-01T00:00:00.1Z"), key("2026-01-01T00:00:00.100000000Z"))
+        self.assertLess(key("2026-01-01T00:00:00.0000001Z"), key("2026-01-01T00:00:00.0000002Z"))
+        material = world("source-redaction")
+        snapshot = material["objects"]["permission_snapshot"]
+        snapshot["captured_at"] = "2026-01-01t00:00:00.0000001z"
+        snapshot["expires_at"] = "2026-01-01T08:00:00.0000002+08:00"
+        request = envelope(material)
+        self.assert_outcome(self.evaluate(request), "accepted")
+        self.item("permission-snapshot", request)["expires_at"] = "2026-01-01T00:00:00.0000000Z"
+        self.assert_outcome(self.evaluate(request), "rejected")
+        request = copy.deepcopy(self.request)
+        request["validation_contexts"] = []
+        correction = self.item("correction-patch", request)
+        block = self.item("block", request)
+        block["confirmation_operation"] = "rewrite"
+        block["correction_id"] = correction["correction_id"]
+        self.item("block-draft", request)["status"] = "rewritten"
+        correction.update(operation="replace", path="/proposed_summary", after=block.get("summary"),
+                          created_at="2026-01-01T00:00:00.0000002Z")
+        block["confirmed_at"] = "2026-01-01T00:00:00.0000001Z"
+        self.assert_outcome(self.evaluate(request), "rejected")
+
     def test_unknown_schema_never_resolved(self):
         self.request["objects"][0]["schema"] = "https://sender.invalid/private.schema.json"
         self.assert_outcome(self.evaluate(), "rejected")

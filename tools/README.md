@@ -21,6 +21,10 @@ dependency.
 file pins every transitive dependency and accepted distribution hash so local and
 GitHub Actions validation use the same JSON Schema behavior.
 
+`rfc3339-validator` activates `date-time` validation. The public validator fails
+closed if any format declared by a schema lacks a registered handler; a missing
+optional dependency must not silently turn a malformed timestamp into a pass.
+
 ## Generated bindings
 
 ```bash

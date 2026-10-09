@@ -19,7 +19,7 @@ RUNNER_NAME = "fnb-conformance"
 # The runner is versioned independently of the protocol release it verifies: a
 # tooling change must not be reported as a protocol change, and vice versa. The
 # release under test is carried separately, as protocol_release in the report.
-RUNNER_VERSION = "0.2.0"
+RUNNER_VERSION = "0.2.1"
 DEFAULT_MANIFEST = Path(
     "specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json"
 )

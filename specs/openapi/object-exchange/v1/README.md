@@ -32,6 +32,11 @@ python3 tools/object-exchange-contract.py
 python3 -m unittest discover -s tests/conformance/transport -p 'test_*.py' -v
 ```
 
+The lock includes `rfc3339-validator` to activate `date-time` assertion in
+`jsonschema`. Passing a `FormatChecker` alone does not guarantee that optional
+format handlers are installed. The public validator and transport preflight
+reject unavailable required handlers rather than silently ignore a format.
+
 The contract probe is a **test-side evaluator**, not an FNB reference
 implementation, a network service, or an implementation certification runner.
 It uses only verified local schemas, existing public rules, and public synthetic

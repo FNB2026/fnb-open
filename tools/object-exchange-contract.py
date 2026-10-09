@@ -142,6 +142,8 @@ class ContractProbe:
         prefix = f"https://raw.githubusercontent.com/FNB2026/fnb-open/{RELEASE}/specs/v0.1/"
         if any(schema["$id"] != prefix + name for name, schema in schemas.items()):
             raise RuntimeError("invalid local schema identities")
+        for schema in schemas.values():
+            PUBLIC.ensure_format_support(schema)
         return schemas
 
     def judge(self, envelope, schemas):
@@ -180,7 +182,7 @@ class ContractProbe:
                     require(correction["operation"] == "replace")
                     require(correction.get("path") == "/proposed_summary")
                     require(correction.get("after") == value.get("summary"))
-                    require(PUBLIC.parse_datetime(value["confirmed_at"]) >= PUBLIC.parse_datetime(correction["created_at"]))
+                    require(PUBLIC.datetime_key(value["confirmed_at"]) >= PUBLIC.datetime_key(correction["created_at"]))
             elif kind == "invalidation-record":
                 if value["trigger_type"] == "parent_invalidation":
                     parent_key = (kind, value["parent_invalidation_id"])

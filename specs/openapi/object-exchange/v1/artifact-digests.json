@@ -13,8 +13,8 @@
     },
     {
       "path": "specs/openapi/object-exchange/v1/README.md",
-      "bytes": 4668,
-      "sha256": "dbf275196f652c2f77147aed6b7076360993fc02ea452b3e3fbd633db9f0aebb"
+      "bytes": 4974,
+      "sha256": "c9985c1ca77886069952a8f3c12ad4aadcca72ef30eb9c20ce83a36b7a2e1d7c"
     },
     {
       "path": "rfcs/0004-protocol-object-exchange.md",
@@ -23,13 +23,13 @@
     },
     {
       "path": "tools/object-exchange-contract.py",
-      "bytes": 14047,
-      "sha256": "7cc27a2f8bf620e838102c2f06e287359a219468c7f3b4c61bb4131d6168ed56"
+      "bytes": 14132,
+      "sha256": "69923bdecf56b35231ba5bc4c0cac6084988a2f279c542d08d81129dc7887a3d"
     },
     {
       "path": "tests/conformance/transport/test_object_exchange.py",
-      "bytes": 22696,
-      "sha256": "7b19d752037ae4d70829ef4b8159e93c29a11ad79e154a601093daf3b658c30c"
+      "bytes": 25727,
+      "sha256": "6d8b46b54e2d61cf029a00e2160c0d414cd43afad18e63fe422712e41607888a"
     },
     {
       "path": "tests/conformance/transport/openapi-3.1.schema.json",
@@ -38,13 +38,13 @@
     },
     {
       "path": "tools/validate-public-artifacts.py",
-      "bytes": 24756,
-      "sha256": "769f8a31b30fda80e6983d2f357b8407eb7f020fd3fd47642dc513a311c33758"
+      "bytes": 26112,
+      "sha256": "c69afc27693df779ac0a8e2fb9943c1ed04f24412e6c8ff159669f60f1780b08"
     },
     {
       "path": "tools/fnb-conformance.py",
       "bytes": 27368,
-      "sha256": "a7e19ba649ba421e29a0029e50d241b38b45c21a809e53c221912a86864fb182"
+      "sha256": "89c32a985e0c0df232089f82009424726058353cb2726a8869cf923f60a99a63"
     },
     {
       "path": "specs/v0.1/releases/v0.1.0-preview.1/schema-digests.json",
@@ -53,8 +53,8 @@
     },
     {
       "path": "tools/requirements-validation.lock",
-      "bytes": 11305,
-      "sha256": "105767850666d711cf1ffe4d7910617c565c102707647ce34c1064028564b56e"
+      "bytes": 12089,
+      "sha256": "9e5924af4b95ce67b8e3f5568d25be9ebc2efa601fb9861d562bf2d4cf588cb6"
     }
   ]
 }
