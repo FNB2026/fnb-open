@@ -31,6 +31,33 @@ test('A35 A36 A37 A38: deterministic inputs, zero-runtime-dependency audit and o
     assert.ok(!item.hasInstallScript);
   }
   const sbom = JSON.parse(readFileSync(join(cwd, 'sbom.spdx.json'))); assert.equal(sbom.packages.length, Object.keys(lock.packages).length);
+  assert.equal(sbom.spdxVersion, 'SPDX-2.3'); assert.equal(sbom.dataLicense, 'CC0-1.0');
+  const lockIdentity = command(python, ['-c', 'import hashlib,json; print(hashlib.sha256(json.dumps(json.load(open("package-lock.json")),sort_keys=True).encode()).hexdigest())']).trim();
+  assert.ok(sbom.documentNamespace.endsWith(lockIdentity));
+  const ids = new Set(sbom.packages.map(item => item.SPDXID));
+  assert.equal(ids.size, sbom.packages.length);
+  const sdk = sbom.packages.find(item => item.SPDXID === 'SPDXRef-SDK');
+  assert.equal(sdk.name, pkg.name); assert.equal(sdk.versionInfo, pkg.version);
+  for (const item of sbom.packages) {
+    assert.equal(item.licenseDeclared, 'Apache-2.0'); assert.equal(item.filesAnalyzed, false);
+    if (item !== sdk) {
+      const entry = lock.packages[`node_modules/${item.name}`];
+      assert.ok(entry, item.name); assert.equal(item.versionInfo, entry.version);
+      assert.equal(item.downloadLocation, entry.resolved);
+    }
+  }
+  for (const relation of sbom.relationships) {
+    assert.ok(relation.spdxElementId === 'SPDXRef-DOCUMENT' || ids.has(relation.spdxElementId));
+    assert.ok(ids.has(relation.relatedSpdxElement));
+    assert.ok(['DESCRIBES', 'BUILD_TOOL_OF'].includes(relation.relationshipType));
+  }
+  assert.equal(sbom.relationships.length, sbom.packages.length);
+  assert.equal(sbom.relationships.filter(item => item.relationshipType === 'DESCRIBES').length, 1);
+  for (const item of sbom.packages.filter(item => item !== sdk)) {
+    assert.equal(sbom.relationships.filter(relation => relation.spdxElementId === item.SPDXID
+      && relation.relationshipType === 'BUILD_TOOL_OF' && relation.relatedSpdxElement === sdk.SPDXID).length, 1);
+  }
+  assert.deepEqual(readFileSync(join(cwd, 'LICENSE-APACHE-2.0.txt')), readFileSync(join(cwd, '../../LICENSE-APACHE-2.0.txt')));
   const provenance = JSON.parse(readFileSync(join(cwd, 'provenance.json')));
   for (const [name, hash] of Object.entries(provenance.binding_sha256)) {
     assert.equal(digest(readFileSync(join(cwd, '../../', name))), hash);
@@ -55,4 +82,12 @@ test('A35 A36 A37 A38: deterministic inputs, zero-runtime-dependency audit and o
   writeFileSync(join(scratch, 'consumer.mts'), `import {createExchangeClient, type ObjectExchangeEnvelope} from 'fnb-object-exchange-sdk-workspace';\nimport type {Memory} from 'fnb-object-exchange-sdk-workspace/protocol';\ndeclare const memory: Memory;\nconst request: ObjectExchangeEnvelope = {transport_version:'1.0',protocol_release:'v0.1.0-preview.1',exchange_id:'synthetic',objects:[{schema:'opaque',object:memory}],validation_contexts:[]};\nvoid createExchangeClient({endpoint:'http://127.0.0.1:8765/exchange'}).exchange(request);\n`);
   command(join(cwd, 'node_modules/.bin/tsc'), ['--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2022', 'consumer.mts'], scratch);
   assert.ok(existsSync(join(scratch, 'node_modules/fnb-object-exchange-sdk-workspace/dist/generated/protocol/memory.d.ts')));
+  const installed = join(scratch, 'node_modules/fnb-object-exchange-sdk-workspace');
+  for (const [name, hash] of Object.entries(provenance.binding_sha256)) {
+    const file = name.split('/').at(-1);
+    if (file !== 'index.d.ts') assert.equal(digest(readFileSync(join(installed, 'dist/generated/protocol', file))), hash);
+  }
+  for (const name of ['LICENSE-APACHE-2.0.txt', 'NOTICE.md', 'provenance.json', 'sbom.spdx.json']) {
+    assert.deepEqual(readFileSync(join(installed, name)), readFileSync(join(cwd, name)));
+  }
 });

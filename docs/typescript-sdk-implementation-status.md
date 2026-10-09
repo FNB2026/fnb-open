@@ -11,6 +11,10 @@ This separate implementation PR is **DRAFT / IMPLEMENTATION STARTED**, not
 approved for merge, SDK release, or npm publication. Mock #28 remains CLOSED /
 ESTABLISHED and its files are unchanged. No Go SDK or private integration.
 
+The endpoint revision and four-gate reproducible evidence are documented in
+[revision evidence](typescript-sdk-review-evidence.md). These developer tests
+do not close the independent review gates listed below.
+
 ## Change boundary
 
 New explicitly Apache-2.0 `sdk/typescript/` workspace, one additive Node 22 CI

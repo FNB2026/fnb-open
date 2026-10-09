@@ -88,9 +88,14 @@ export function createExchangeClient(options: ClientOptions): ExchangeClient {
   try { endpoint = new URL(options.endpoint); } catch { return invalid(); }
   if (endpoint.username || endpoint.password || endpoint.pathname !== "/exchange") return invalid();
   if (endpoint.protocol !== "https:") {
-    // Deliberately reject hostname resolution and alternative numeric spellings.
-    if (endpoint.protocol !== "http:" || !/^127\.(?:[0-9]{1,3}\.){2}[0-9]{1,3}$/.test(endpoint.hostname)
-        || !/^http:\/\/127\.(?:[0-9]{1,3}\.){2}[0-9]{1,3}(?::[0-9]+)?\/exchange$/i.test(options.endpoint)) return invalid();
+    // Check original octets BEFORE trusting WHATWG URL normalization (which
+    // accepts octal/leading-zero and shortened numeric IPv4 spellings).
+    const literal = /^http:\/\/([^/:]+)(?::[0-9]+)?\/exchange$/i.exec(options.endpoint)?.[1];
+    const octets = literal?.split(".");
+    if (endpoint.protocol !== "http:" || !literal || !octets || octets.length !== 4
+        || octets[0] !== "127"
+        || octets.some(part => !/^(?:0|[1-9][0-9]{0,2})$/.test(part) || Number(part) > 255)
+        || endpoint.hostname !== literal) return invalid();
   }
   const fetcher = options.fetch ?? globalThis.fetch;
   if (typeof fetcher !== "function") return invalid();
