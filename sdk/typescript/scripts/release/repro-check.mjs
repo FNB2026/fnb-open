@@ -23,9 +23,10 @@ function versionOf(command, args) {
   try { return run(command, args, ROOT).trim(); } catch { return null; }
 }
 
-function buildOnce(commit, label) {
+function buildOnce(commit, label, created) {
   const checkout = mkdtempSync(join(tmpdir(), `fnb-repro-${label}-`));
   execFileSync('git', ['worktree', 'add', '--detach', checkout, commit], { cwd: ROOT, stdio: 'pipe' });
+  created.push(checkout); // register before any fallible step so cleanup still runs
   const out = join(checkout, 'out');
   const sdk = join(checkout, 'sdk/typescript');
   const python = process.env.FNB_TEST_PYTHON;
@@ -44,12 +45,13 @@ function main(argv) {
   if (!commit) { process.stderr.write('usage: repro-check.mjs --commit <sha>\n'); return 2; }
   const keep = argv.includes('--keep');
   const results = [];
+  const checkouts = [];
   try {
-    for (const label of ['a', 'b']) results.push(buildOnce(commit, label));
+    for (const label of ['a', 'b']) results.push(buildOnce(commit, label, checkouts));
   } finally {
-    if (!keep) for (const result of results) {
-      try { execFileSync('git', ['worktree', 'remove', '--force', result.checkout], { cwd: ROOT, stdio: 'pipe' }); } catch { /* best effort */ }
-      rmSync(result.checkout, { recursive: true, force: true });
+    if (!keep) for (const checkout of checkouts) {
+      try { execFileSync('git', ['worktree', 'remove', '--force', checkout], { cwd: ROOT, stdio: 'pipe' }); } catch { /* best effort */ }
+      rmSync(checkout, { recursive: true, force: true });
     }
   }
   const [first, second] = results;
