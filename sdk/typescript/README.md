@@ -2,15 +2,21 @@
 
 License: Apache-2.0; see [NOTICE](NOTICE.md) and bundled license text.
 Planning is **FROZEN / APPROVED**, merged as
-`ff5d8906fb24b513bb641fdbd2f087c327bc101e` after independent review of #29.
-This is a separate implementation Draft, not a released SDK or approved package.
-The workspace name is private and is not an approved npm identity.
+`ff5d8906fb24b513bb641fdbd2f087c327bc101e` after independent review of #29; the
+release boundary is approved and merged as
+`5d1a45a8a65c532ad4d33704ff7bb726d7a599cf` after independent review of #31.
+
+**This package is not published.** No tag, GitHub Release or registry publication
+exists, and the workspace name is private and is not an approved npm identity.
+The release-preparation candidate and its external evidence are described in
+[RELEASE-NOTES.md](RELEASE-NOTES.md); preparing a candidate is not publishing it.
 
 ## Development
 
-Use Node `22.22.2`, TypeScript `7.0.2` and the repository's hash-locked Python
-validation environment. Other local Node versions provide diagnostic evidence
-only; native-fetch acceptance comes from the Node 22 CI job.
+Use Node `22.23.3` (the selected supported Node 22 patch), TypeScript `7.0.2` and
+the repository's hash-locked Python validation environment. Other local Node
+versions provide diagnostic evidence only; native-fetch acceptance comes from the
+Node 22 CI job.
 
 ```bash
 python3 sdk/typescript/scripts/generate.py --check
@@ -66,6 +72,25 @@ Tests use unchanged established Mock, synthetic worlds, a separate loopback
 fault server and trusted injected responses. Local `npm pack` and offline
 temporary-consumer install are tests, **not npm publication**. Package build
 bytes, licenses/provenance/inventory and ESM/types resolution are exercised.
+
+## Release preparation (candidate only)
+
+The release tooling under [scripts/release](scripts/release) builds and verifies
+the external evidence bundle for the GitHub Preview path: a closed 28-path
+package allowlist, two isolated byte-compared packs, an external SPDX 2.3 SBOM
+for the actual archive, external provenance bound to the candidate commit and
+toolchain, and a self-excluding `artifact-digests.json` manifest.
+
+```bash
+node sdk/typescript/scripts/release/evidence.mjs generate \
+  --tarball <packed.tgz> --out <evidence-dir> --commit <sha> --created <iso>
+node sdk/typescript/scripts/release/evidence.mjs verify --dir <evidence-dir>
+python3 sdk/typescript/scripts/release/validate-sbom.py <evidence-dir>/release-sbom.spdx.json
+```
+
+Evidence is written outside the tracked tree, so the candidate source commit,
+the external provenance and any future signed tag cannot form a hash cycle. The
+tooling never creates a tag, Release, credential or registry publication.
 
 The [implementation ledger](../../docs/typescript-sdk-implementation-status.md)
 maps A01–A40 and names outstanding evidence/review gates. No tag, release, npm
