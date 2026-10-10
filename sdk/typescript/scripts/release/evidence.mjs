@@ -274,11 +274,12 @@ function main(argv) {
   const flags = new Map();
   for (let index = 0; index < rest.length; index += 2) flags.set(rest[index].replace(/^--/, ''), rest[index + 1]);
   if (command === 'generate') {
+    const python = process.env.FNB_TEST_PYTHON ?? 'python3';
     const toolchain = {
       node: process.version,
       npm: toolVersion('npm', ['--version']),
       typescript: JSON.parse(readFileSync(join(PACKAGE_DIR, 'package-lock.json'), 'utf8')).packages['node_modules/typescript'].version,
-      python: toolVersion('python3', ['--version']),
+      python: toolVersion(python, ['--version']),
       os: process.platform,
       arch: process.arch,
     };
