@@ -43,6 +43,10 @@ function toolVersion(command, args) {
   try { return execFileSync(command, args, { encoding: 'utf8' }).trim(); } catch { return null; }
 }
 
+function runValidator(command, args) {
+  execFileSync(command, args, { stdio: 'inherit' });
+}
+
 // ---------------------------------------------------------------- SPDX 2.3 SBOM
 
 export function buildSbom({ members, packageName, version, commit, nodeVersion, created }) {
@@ -188,6 +192,8 @@ export function buildManifest({ directory, commit, members }) {
     package: {
       name: pkg.name,
       version: pkg.version,
+      private: pkg.private,
+      license: pkg.license,
       tarball: TARBALL_NAME,
       memberCount: members.length,
       members: members.map(member => ({ path: member.path, size: member.size, sha256: member.sha256 })),
@@ -277,9 +283,14 @@ export function verifyBundle({ directory }) {
   // Members must match the actual archive bytes and the manifest digests.
   const tarballPath = join(directory, TARBALL_NAME);
   let parsed = null;
+  const archiveBytes = new Map();
   if (existsSync(tarballPath)) {
-    parsed = verifyArchive(readTarGz(bytes(tarballPath)));
+    const entries = readTarGz(bytes(tarballPath));
+    parsed = verifyArchive(entries);
     if (!parsed.ok) errors.push(...parsed.errors);
+    for (const entry of entries) {
+      if (entry.typeflag === '0' || entry.typeflag === '\0') archiveBytes.set(entry.name.replace(/^package\//, ''), entry.data);
+    }
   }
   for (const member of members) {
     if (typeof member?.path !== 'string' || !isHex(member?.sha256, HEX64) || !Number.isInteger(member?.size) || member.size < 0) {
@@ -291,10 +302,35 @@ export function verifyBundle({ directory }) {
     if (match && (match.size !== member.size || match.sha256 !== member.sha256)) errors.push(`manifest member digest differs from archive: ${member.path}`);
   }
 
+  // The declared identity must match the package.json actually inside the archive,
+  // so tampering the manifest and provenance together (with refreshed asset
+  // digests) still fails: the archived bytes are not under the attacker's control.
+  const archivedPackageJson = archiveBytes.get('package.json');
+  if (archivedPackageJson) {
+    let identity = null;
+    try { identity = JSON.parse(archivedPackageJson.toString('utf8')); }
+    catch (error) { errors.push(`archived package.json is not valid JSON: ${error.message}`); }
+    if (identity) {
+      for (const key of ['name', 'version', 'private', 'license']) {
+        if (identity[key] !== pkg[key]) errors.push(`archived package.json ${key} (${JSON.stringify(identity[key])}) differs from the manifest (${JSON.stringify(pkg[key])})`);
+      }
+    }
+  } else if (parsed) {
+    errors.push('archive does not contain package.json for identity binding');
+  }
+
+  // External LICENSE/NOTICE copies must be byte-identical to the packaged files.
+  for (const name of ['LICENSE-APACHE-2.0.txt', 'NOTICE.md']) {
+    const inside = archiveBytes.get(name);
+    if (inside && existsSync(join(directory, name)) && !inside.equals(bytes(join(directory, name)))) {
+      errors.push(`external ${name} differs from the packaged copy`);
+    }
+  }
+
   // Cross-check manifest identity against the external provenance.
+  let provenance = null;
   const provenancePath = join(directory, PROVENANCE_NAME);
   if (existsSync(provenancePath)) {
-    let provenance = null;
     try { provenance = JSON.parse(readFileSync(provenancePath, 'utf8')); }
     catch (error) { errors.push(`${PROVENANCE_NAME} is not valid JSON: ${error.message}`); }
     if (provenance) {
@@ -304,6 +340,20 @@ export function verifyBundle({ directory }) {
       if (provenance.package?.tarball !== pkg.tarball) errors.push('provenance tarball identity differs from manifest');
       if (provenance.package?.name !== pkg.name) errors.push('provenance package name differs from manifest');
       if (provenance.package?.version !== pkg.version) errors.push('provenance package version differs from manifest');
+      if (provenance.package?.private !== pkg.private) errors.push('provenance package private flag differs from manifest');
+      if (provenance.package?.license !== pkg.license) errors.push('provenance package license differs from manifest');
+    }
+  }
+
+  // External SBOM must describe exactly the real archive members (set and digests).
+  const sbomPath = join(directory, SBOM_NAME);
+  if (existsSync(sbomPath)) {
+    let sbom = null;
+    try { sbom = JSON.parse(readFileSync(sbomPath, 'utf8')); }
+    catch (error) { errors.push(`${SBOM_NAME} is not valid JSON: ${error.message}`); }
+    if (sbom && parsed) {
+      const check = verifySbom(sbom, { members: parsed.members, packageName: pkg.name, version: pkg.version });
+      for (const message of check.errors) errors.push(`SBOM: ${message}`);
     }
   }
 
@@ -372,8 +422,19 @@ function main(argv) {
     return 0;
   }
   if (command === 'verify') {
-    const result = verifyBundle({ directory: resolve(flags.get('dir')) });
+    const directory = resolve(flags.get('dir'));
+    const result = verifyBundle({ directory });
     for (const error of result.errors) process.stdout.write(`FAIL ${error}\n`);
+    // Non-skippable independent SPDX schema validation of the external SBOM: the
+    // command fails rather than silently skipping this step.
+    const python = process.env.FNB_TEST_PYTHON;
+    if (!python) {
+      process.stdout.write('FAIL FNB_TEST_PYTHON is required to run the SPDX schema validation\n');
+      return 1;
+    }
+    const validator = fileURLToPath(new URL('validate-sbom.py', import.meta.url));
+    try { runValidator(python, [validator, join(directory, SBOM_NAME)]); }
+    catch (error) { process.stdout.write(`FAIL SPDX schema validation failed: ${error.message}\n`); return 1; }
     process.stdout.write(result.ok ? 'release evidence bundle verified\n' : `release evidence bundle invalid (${result.errors.length})\n`);
     return result.ok ? 0 : 1;
   }

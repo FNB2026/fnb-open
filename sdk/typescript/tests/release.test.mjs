@@ -104,6 +104,24 @@ test('A46: strict tar framing fails closed on truncation, padding and trailing d
   assert.throws(() => readTarGz(gzipSync(badPadding)), /non-zero member padding/);
 });
 
+test('A48: tar extension records are not hidden from the closed-set check', () => {
+  const good = ALLOWLIST.map(path => ({ name: `package/${path}`, mode: 0o644, typeflag: '0', size: 3, data: Buffer.from('hi\n') }));
+  assert.equal(verifyArchive(good).ok, true);
+  // Exactly 28 regular members plus one GNU long-name record must still be rejected,
+  // and the reader must surface the extension record instead of consuming it.
+  const withLongName = [...good, { name: 'package/@LongLink', mode: 0o644, typeflag: 'L', size: 5, data: Buffer.from('x/y\n') }];
+  const parsed = readTarGz(writeTarGz(withLongName));
+  assert.equal(parsed.length, 29);
+  assert.equal(parsed.some(entry => entry.typeflag === 'L'), true);
+  assert.equal(verifyArchive(parsed).ok, false);
+  assert.ok(verifyArchive(parsed).errors.some(error => error.includes('non-regular member')));
+  // PAX extended headers and other non-regular records are rejected the same way.
+  for (const typeflag of ['x', 'g', 'K', '2', '1', '5']) {
+    const archive = readTarGz(writeTarGz([...good, { name: 'package/extra', mode: 0o644, typeflag, size: 3, data: Buffer.from('x\n\n') }]));
+    assert.equal(verifyArchive(archive).ok, false, `typeflag ${JSON.stringify(typeflag)} must be rejected`);
+  }
+});
+
 test('A42: same-workspace pack determinism (NOT an independent-environment proof)', () => {
   // This runs one build and two packs in a single workspace, so it proves pack
   // determinism only. Independent clean-checkout reproducibility is demonstrated
@@ -172,6 +190,49 @@ test('A47: verifyBundle treats assets, members and provenance identity as closed
   const extra = cloneBundle();
   writeFileSync(join(extra, 'unexpected.txt'), 'x');
   assert.equal(verifyBundle({ directory: extra }).ok, false);
+});
+
+test('A49: evidence is bound to the real archive, so cross-file tampering still fails', () => {
+  const refreshAssetDigests = directory => {
+    const path = join(directory, MANIFEST_NAME);
+    const manifest = JSON.parse(readFileSync(path, 'utf8'));
+    for (const asset of manifest.assets) {
+      const data = readFileSync(join(directory, asset.filename));
+      asset.byteLength = data.length;
+      asset.sha256 = digest(data);
+    }
+    writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
+  };
+
+  // (a) Tamper the manifest and provenance package identity together and refresh the
+  // asset digests: the archived package.json still disagrees, so this must fail.
+  const identity = cloneBundle();
+  mutateManifest(identity, manifest => { manifest.package.name = 'evil-name'; manifest.package.version = '9.9.9'; });
+  const provenancePath = join(identity, 'release-provenance.json');
+  const provenance = JSON.parse(readFileSync(provenancePath, 'utf8'));
+  provenance.package.name = 'evil-name';
+  provenance.package.version = '9.9.9';
+  writeFileSync(provenancePath, `${JSON.stringify(provenance, null, 2)}\n`);
+  refreshAssetDigests(identity);
+  const identityResult = verifyBundle({ directory: identity });
+  assert.equal(identityResult.ok, false);
+  assert.ok(identityResult.errors.some(error => error.includes('archived package.json')));
+
+  // (b) Tamper one SBOM member digest and refresh the manifest asset digest: the SBOM
+  // still disagrees with the real archive members, so this must fail.
+  const sbomTamper = cloneBundle();
+  const sbomPath = join(sbomTamper, 'release-sbom.spdx.json');
+  const sbom = JSON.parse(readFileSync(sbomPath, 'utf8'));
+  const target = sbom.files[0];
+  target.checksums = target.checksums.map(entry => entry.algorithm === 'SHA256' ? { ...entry, checksumValue: 'b'.repeat(64) } : entry);
+  writeFileSync(sbomPath, `${JSON.stringify(sbom, null, 2)}\n`);
+  refreshAssetDigests(sbomTamper);
+  const sbomResult = verifyBundle({ directory: sbomTamper });
+  assert.equal(sbomResult.ok, false);
+  assert.ok(sbomResult.errors.some(error => error.startsWith('SBOM:') && error.includes('SHA256 mismatch')));
+
+  // A pristine bundle still verifies.
+  assert.equal(verifyBundle({ directory: cloneBundle() }).ok, true);
 });
 
 test('A44: generated SPDX 2.3 SBOM matches the archive and validates against the vendored official schema', () => {
