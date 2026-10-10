@@ -77,20 +77,29 @@ bytes, licenses/provenance/inventory and ESM/types resolution are exercised.
 
 The release tooling under [scripts/release](scripts/release) builds and verifies
 the external evidence bundle for the GitHub Preview path: a closed 28-path
-package allowlist, two isolated byte-compared packs, an external SPDX 2.3 SBOM
-for the actual archive, external provenance bound to the candidate commit and
-toolchain, and a self-excluding `artifact-digests.json` manifest.
+package allowlist, an external SPDX 2.3 SBOM for the actual archive, external
+provenance bound to the candidate commit and toolchain, and a self-excluding
+`artifact-digests.json` manifest. `verify` treats the asset set, the package
+member set and the provenance identity as closed sets.
 
 ```bash
 node sdk/typescript/scripts/release/evidence.mjs generate \
   --tarball <packed.tgz> --out <evidence-dir> --commit <sha> --created <iso>
 node sdk/typescript/scripts/release/evidence.mjs verify --dir <evidence-dir>
 python3 sdk/typescript/scripts/release/validate-sbom.py <evidence-dir>/release-sbom.spdx.json
+# Independent clean-checkout reproducibility evidence (two detached checkouts):
+FNB_TEST_PYTHON=<python> node sdk/typescript/scripts/release/repro-check.mjs --commit <sha>
 ```
 
 Evidence is written outside the tracked tree, so the candidate source commit,
 the external provenance and any future signed tag cannot form a hash cycle. The
 tooling never creates a tag, Release, credential or registry publication.
+
+`verifyTagBindingPolicy` is a read-only **policy preflight** over supplied
+parameters only: it checks a declared tag message against a declared manifest
+digest and approved-fingerprint list. It performs **no** cryptographic signature
+verification and cannot establish authenticity; real publication must
+independently verify the signed tag object and the trusted key identity.
 
 The [implementation ledger](../../docs/typescript-sdk-implementation-status.md)
 maps A01–A40 and names outstanding evidence/review gates. No tag, release, npm

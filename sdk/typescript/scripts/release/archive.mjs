@@ -57,22 +57,29 @@ function headerChecksum(header) {
   return total;
 }
 
-// Reads a gzipped tar archive into explicit entries. Rejects malformed headers,
-// truncated members and non-regular member types rather than guessing.
+// Reads a gzipped tar archive into explicit entries. Fails closed on malformed
+// headers, truncated members, non-zero member padding, a missing end-of-archive
+// marker, or any non-zero bytes after that marker: unexpected data is never
+// silently dropped by stopping the scan early.
 export function readTarGz(buffer) {
   const raw = gunzipSync(buffer);
   const entries = [];
   let offset = 0;
   let longName = null;
+  let ended = false;
   while (offset + BLOCK <= raw.length) {
     const header = raw.subarray(offset, offset + BLOCK);
-    if (header.every(byte => byte === 0)) break;
+    if (header.every(byte => byte === 0)) { ended = true; break; }
     if (headerChecksum(header) !== octal(header, 148, 156)) throw new Error('tar header checksum mismatch');
     const size = octal(header, 124, 136);
     const typeflag = String.fromCharCode(header[156]);
-    const body = raw.subarray(offset + BLOCK, offset + BLOCK + size);
-    if (body.length !== size) throw new Error('truncated tar member');
-    offset += BLOCK + Math.ceil(size / BLOCK) * BLOCK;
+    const bodyStart = offset + BLOCK;
+    const padded = Math.ceil(size / BLOCK) * BLOCK;
+    if (bodyStart + size > raw.length) throw new Error('truncated tar member');
+    const body = raw.subarray(bodyStart, bodyStart + size);
+    const padding = raw.subarray(bodyStart + size, bodyStart + padded);
+    if (padding.some(byte => byte !== 0)) throw new Error('non-zero member padding');
+    offset = bodyStart + padded;
     if (typeflag === 'L') { longName = body.toString('utf8').replace(/\0.*$/, ''); continue; }
     const prefix = text(header, 345, 500);
     const base = longName ?? text(header, 0, 100);
@@ -80,6 +87,10 @@ export function readTarGz(buffer) {
     const name = prefix ? `${prefix}/${base}` : base;
     entries.push({ name, mode: octal(header, 100, 108), typeflag, size, data: Buffer.from(body) });
   }
+  if (!ended) throw new Error('missing tar end-of-archive marker');
+  const trailer = raw.subarray(offset);
+  if (trailer.length < BLOCK * 2) throw new Error('truncated tar end-of-archive marker');
+  if (trailer.some(byte => byte !== 0)) throw new Error('non-zero data after tar end-of-archive marker');
   if (longName !== null) throw new Error('dangling tar long name');
   return entries;
 }

@@ -49,15 +49,20 @@ or traversal members are rejected by the release tooling.
 ## Verification performed by this preparation
 
 - Closed 28-path package allowlist and archive member validation (regular files,
-  safe modes, no duplicates/traversal/symlinks).
-- Two isolated build/pack runs compared by tarball SHA-256 and per-member bytes.
+  safe modes, no duplicates/traversal/symlinks) plus strict tar framing checks
+  that fail closed on truncation, bad padding or trailing data.
+- Same-workspace pack determinism, and separately an independent clean-checkout
+  reproducibility check (`scripts/release/repro-check.mjs`) comparing two
+  detached checkouts by tarball SHA-256 and member bytes.
 - Offline tarball install, ESM runtime, NodeNext declaration and synthetic Mock
   exchange checks; zero runtime npm dependencies and no install scripts.
-- External SPDX 2.3 SBOM for the actual archive, external provenance bound to the
-  candidate commit and toolchain, and a self-excluding digest manifest.
-- SDK matrix (26 tests) and Python ordinary/`-O` suites.
+- External SPDX 2.3 SBOM for the actual archive (validated against the vendored
+  official schema), external provenance bound to the candidate commit and
+  toolchain, and a self-excluding digest manifest verified as a closed set.
+- The pre-existing 26-test SDK suite plus the release-preparation tests, and the
+  Python transports suite in ordinary and `-O` modes.
 
-Exact numbers, hashes, the candidate commit and any not-run items are recorded in
+Exact counts, hashes, the candidate commit and any not-run items are recorded in
 the release-preparation report and the independent review, not asserted here.
 
 ## Limitations and known issues
