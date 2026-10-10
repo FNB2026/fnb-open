@@ -15,3 +15,9 @@ packages; these are not runtime dependencies. It is not a release attestation.
 Node's runtime/native fetch is supplied by the caller/runtime, not vendored here.
 The generated SPDX document's metadata is explicitly CC0-1.0 as declared in
 its dataLicense field; this does not relicense referenced packages or code.
+
+The release-preparation candidate additionally produces an **external** SPDX 2.3
+SBOM, provenance and self-excluding digest manifest outside the tracked tree.
+Those describe the actual archive and are distinct from the embedded
+development-lock inventory above. This directory and its archive remain
+unpublished; nothing here is a signed release attestation.
