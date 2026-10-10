@@ -8,7 +8,7 @@
 //
 //   FNB_TEST_PYTHON=/path/to/python node scripts/release/repro-check.mjs --commit <sha>
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { readTarGz, verifyArchive, sha256 } from './archive.mjs';
@@ -29,6 +29,7 @@ function buildOnce(commit, label) {
   const out = join(checkout, 'out');
   const sdk = join(checkout, 'sdk/typescript');
   const python = process.env.FNB_TEST_PYTHON;
+  mkdirSync(out, { recursive: true });
   run('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund'], sdk);
   if (python) run(python, ['scripts/generate.py', '--check'], sdk);
   run('npm', ['run', 'build'], sdk);
