@@ -14,7 +14,7 @@ Applies to candidate version: `0.1.0-preview.1` (GitHub Preview Path A, `private
 | # | Precondition | How verified | Current |
 | --- | --- | --- | --- |
 | 0.1 | Release evidence independently reviewed against the **final** source commit | `A2.md` + independent audit | ✅ (R3 audit PASS, commit `a2f749f`) |
-| 0.2 | Signing identity approved; public key + policy published on the independent channel | `https://trust.fnbapp.net/` | ✅ |
+| 0.2 | Signing identity approved; public key + policy published on the independent channel | `https://trust.fnbapp.net/fnb-sdk-signing-policy.md` | ✅ |
 | 0.3 | GitHub **Immutable Releases enabled** for the repo | `GET /repos/FNB2026/fnb-open/immutable-releases` → `enabled` | ✅ `enabled: true` |
 | 0.4 | Candidate tag name **not already used** | `git ls-remote --tags origin` | ✅ free |
 | 0.5 | Explicit **publication authorization** (G16) for this exact version/SHA/tag/manifest/asset set | Human decision record | ❌ **NOT AUTHORIZED** |
@@ -176,7 +176,7 @@ gh release create "$TAG_NAME" \
   --title "FNB Object Exchange TypeScript SDK Preview 0.1.0-preview.1" \
   --notes-file RELEASE-NOTES.md
 
-# 3.2 attach the SIX assets (names must match the manifest exactly)
+# 3.2 attach the SEVEN assets (A0-APPROVED asset set; names must match the manifest exactly)
 gh release upload "$TAG_NAME" \
   --repo FNB2026/fnb-open \
   fnb-object-exchange-ts-sdk-0.1.0-preview.1.tgz \
@@ -184,12 +184,16 @@ gh release upload "$TAG_NAME" \
   release-sbom.spdx.json \
   RELEASE-NOTES.md \
   LICENSE-APACHE-2.0.txt \
-  NOTICE.md
+  NOTICE.md \
+  artifact-digests.json
 
-# 3.3 verify uploaded asset digests equal the manifest BEFORE publishing
+# 3.3 verify uploaded asset digests BEFORE publishing
 gh release view "$TAG_NAME" --repo FNB2026/fnb-open --json assets \
   --jq '.assets[] | "\(.name) \(.size)"'
-#    → compare each sha256/size against artifact-digests.json
+#    → expect SEVEN assets. For the SIX listed assets, compare sha256/size against
+#      artifact-digests.json. For the SEVENTH (artifact-digests.json, self-excluding),
+#      verify it against the frozen MANIFEST_SHA256 and the signed tag's
+#      manifest-sha256 binding — no self-referential digest is created.
 
 # 3.4 publish (this triggers immutability + release attestation)
 gh release edit "$TAG_NAME" --repo FNB2026/fnb-open --draft=false --prerelease
@@ -201,7 +205,7 @@ Post-publish verification (required):
 # release is immutable + not a full release (preview/prerelease)
 gh release view "$TAG_NAME" --repo FNB2026/fnb-open \
   --json isImmutable,isPrerelease,isDraft,tagName,assets
-#   expect: isDraft=false, tagName locks to $TAG_TARGET, assets = 6
+#   expect: isDraft=false, tagName locks to $TAG_TARGET, assets = 7
 
 # release attestation (auto-generated for immutable releases)
 gh attestation verify fnb-object-exchange-ts-sdk-0.1.0-preview.1.tgz \
@@ -210,13 +214,15 @@ gh attestation verify fnb-object-exchange-ts-sdk-0.1.0-preview.1.tgz \
 
 Notes:
 - `--verify-tag` prevents `gh` from creating an unsigned tag.
-- **Asset set — OPEN QUESTION for A0 (frozen baseline unchanged).** The frozen baseline is **six**
-  assets. A2 recommends that **A0 adjudicate** whether the GitHub Release should carry **seven** files:
-  the six assets **plus** the self-excluding `artifact-digests.json`. A manifest not listing itself does
-  **not** forbid it from being attached to the Release. **The six-asset baseline must not be changed
-  unilaterally** — this is a scope-change request awaiting explicit A0 adjudication.
-- `artifact-digests.json` is **self-excluding** and remains the authored manifest referenced by the
-  tag message; it is not listed inside itself.
+- **Asset set — A0-APPROVED: SEVEN assets.** Per A0 ruling `SDK_PREVIEW_RELEASE_ASSET_SET = APPROVED_7_ASSETS`,
+  the GitHub Release attachment set is the six assets **plus** the self-excluding `artifact-digests.json`
+  (seven files total). This is a **governance record**, not a pending question.
+- The **seven** assets belong to the **GitHub Release attachment set**. This does **not** change any
+  frozen R3 content, SHA-256, signature, or the Tag↔manifest binding.
+- `artifact-digests.json` remains **self-excluding**: internally it records only the other **six**
+  assets and does **not** list itself.
+- Integrity of the seventh file (the manifest itself) is verified via the **frozen `MANIFEST_SHA256`**
+  and the **signed tag's `manifest-sha256` binding**; **no self-referential digest is created**.
 - Immutability locks the **tag** and the **assets** after publish. `title` / `notes` / the
   `prerelease` flag **remain editable**.
 - Immutability protects **future** releases only; the pre-existing `v0.1.0-preview.1` is unaffected
