@@ -61,8 +61,7 @@ Canonical tag message (byte-exact; the file is the source of truth):
 ```text
 FNB Object Exchange TypeScript SDK Preview
 
-manifest-sha256:
-365156df8c9eeb567989b24cc737a378109fc043f00a3270838939268832d250
+manifest-sha256: 365156df8c9eeb567989b24cc737a378109fc043f00a3270838939268832d250
 ```
 
 Commands (do **not** run before authorization):
@@ -72,8 +71,7 @@ Commands (do **not** run before authorization):
 cat > /tmp/tag-message.txt <<'EOF'
 FNB Object Exchange TypeScript SDK Preview
 
-manifest-sha256:
-365156df8c9eeb567989b24cc737a378109fc043f00a3270838939268832d250
+manifest-sha256: 365156df8c9eeb567989b24cc737a378109fc043f00a3270838939268832d250
 EOF
 
 # 2) FORCE A COLD CACHE so signing cannot happen silently.
@@ -86,30 +84,47 @@ gpgconf --kill all        # or: gpg-connect-agent 'RELOADAGENT' /bye  +  wait fo
 #    Record the timestamp at which the prompt appeared (Phase 2 confirmation item).
 git tag -s -a "$TAG_NAME" -F /tmp/tag-message.txt "$TAG_TARGET"
 
-# 4) preview/verify locally BEFORE pushing (Phase 2)
-git verify-tag "$TAG_NAME"
-git for-each-ref "refs/tags/$TAG_NAME" --format='%(objecttype) %(objectname)'
+# 4) LOCAL verification (Phase 2a) — MUST PASS BEFORE ANY PUSH
+git verify-tag "$TAG_NAME"            # good signature from the approved key
+git cat-file -p "$TAG_NAME"           # annotated tag object + message
+git rev-parse "$TAG_NAME^{commit}"    # == $TAG_TARGET
 
 # 5) push ONLY the tag (never push a branch to main)
 git push origin "refs/tags/$TAG_NAME"
+
+# 6) REMOTE read-back re-verification (Phase 2b), independently, after the push
+git ls-remote origin "refs/tags/$TAG_NAME"
+# then re-verify in a clean clone / clean GNUPGHOME (see Phase 2b)
 ```
+
+Order is **local sign → local verify → push → remote read-back**. Never push before Phase 2a passes.
 
 Rules:
 - **Annotated + signed** required. A lightweight or unsigned tag is **unacceptable**.
 - **Signing must be human-attended.** Because the agent cache may be warm, clearing it (`gpgconf --kill all`)
   before `git tag -s` is **mandatory**; a signature produced without any visible prompt is a **process
-  failure** and must be discarded (delete the unused local tag, clear cache, retry).
+  failure** and must be handled per the failure-state rules below.
 - The tag must point at `TAG_TARGET` (the reviewed source commit), **not** at a merge commit —
   this keeps `provenance.commit == manifest.commit == tag target` without regenerating evidence.
-- Do not move, delete or re-create the tag after publication (immutability will lock it).
+- **Failure handling depends on whether the tag has been pushed — these are two distinct states:**
+  - **State A — tag is still LOCAL (not pushed):** abortable. `git tag -d "$TAG_NAME"`, clear the cache,
+    and redo from step 3. Nothing published has changed.
+  - **State B — tag has been PUSHED:** **STOP and escalate to a human.** Do **not** delete, move or
+    re-create a pushed tag — that rewrites published history, and immutability may already lock it.
+    **There is no automated rollback for a pushed tag.** Correction requires an explicit human decision
+    (a new version/tag), never rewriting the pushed tag.
 
 ---
 
-## Phase 2 — Verify the tag (before touching the release)
+## Phase 2 — Verify the tag
+
+Two stages: **2a local** (before push — abortable) and **2b remote read-back** (after push — **no rollback**).
+
+### Phase 2a — local verification (before push)
 
 ```bash
-git verify-tag "$TAG_NAME"            # expect: "Good signature" from the approved key
-git cat-file -p "$TAG_NAME"           # inspect: tag object type, target commit, message
+git verify-tag "$TAG_NAME"            # expect a good signature from the approved key
+git cat-file -p "$TAG_NAME"           # tag object type, target commit, message
 git rev-parse "$TAG_NAME^{commit}"    # expect == $TAG_TARGET
 ```
 
@@ -117,11 +132,34 @@ Confirm:
 1. **Signer fingerprint** == `1986135564B368B8DD3B5C6FB4D67D6F06FADC54` (compare full fingerprint, out of band).
 2. **Tag object** is `tag` (annotated), not `commit` (lightweight).
 3. **Target commit** == `TAG_TARGET` == the commit bound in `artifact-digests.json` / provenance.
-4. **Tag message** contains `manifest-sha256: 365156df…32d250` and the digest matches the actual manifest file.
-5. **Human-attended signing**: record that a pinentry prompt was actually observed and confirmed during
-   Phase 1 (with timestamp). No prompt ⇒ **process failure** ⇒ delete the local tag and retry with a cold cache.
+4. **Tag message** is the single line `manifest-sha256: 365156df…32d250`, and the digest equals the actual manifest file.
+5. **Human-attended signing**: a pinentry prompt was actually observed and confirmed during Phase 1 (timestamp recorded).
 
-If any check fails: stop; do not create the release; delete the local tag (it was never pushed).
+If any check fails while the tag is **still local** (State A) → discard and redo:
+
+```bash
+git tag -d "$TAG_NAME"    # LOCAL ONLY — never run this for a pushed tag
+gpgconf --kill all
+# redo Phase 1 from step 2
+```
+
+### Phase 2b — remote read-back (after push)
+
+Independently re-verify from the remote (fresh worktree/clone + clean `GNUPGHOME`):
+
+```bash
+git ls-remote origin "refs/tags/$TAG_NAME"   # expect the ANNOTATED TAG object id (not the commit)
+git fetch --tags origin
+git verify-tag "$TAG_NAME"
+git cat-file -p "$TAG_NAME"
+git rev-parse "$TAG_NAME^{commit}"
+```
+
+Confirm the remote tag object, signer fingerprint, target commit and message digest all match Phase 2a.
+
+**If Phase 2b fails after the tag has been pushed (State B) → STOP and escalate to a human.
+Do not delete, move or roll back the pushed tag.** There is no automated recovery; correction
+requires an explicit human decision (a new version/tag), never rewriting a pushed tag.
 
 ---
 
@@ -172,14 +210,29 @@ gh attestation verify fnb-object-exchange-ts-sdk-0.1.0-preview.1.tgz \
 
 Notes:
 - `--verify-tag` prevents `gh` from creating an unsigned tag.
-- `artifact-digests.json` is **self-excluding** and is **not** an uploaded release asset; it remains
-  the authored manifest referenced by the tag message.
+- **Asset set — OPEN QUESTION for A0 (frozen baseline unchanged).** The frozen baseline is **six**
+  assets. A2 recommends that **A0 adjudicate** whether the GitHub Release should carry **seven** files:
+  the six assets **plus** the self-excluding `artifact-digests.json`. A manifest not listing itself does
+  **not** forbid it from being attached to the Release. **The six-asset baseline must not be changed
+  unilaterally** — this is a scope-change request awaiting explicit A0 adjudication.
+- `artifact-digests.json` is **self-excluding** and remains the authored manifest referenced by the
+  tag message; it is not listed inside itself.
 - Immutability locks the **tag** and the **assets** after publish. `title` / `notes` / the
   `prerelease` flag **remain editable**.
-- Immutability protects **future** releases only; the pre-existing `v0.1.0-preview.1` is unaffected.
+- Immutability protects **future** releases only; the pre-existing `v0.1.0-preview.1` is unaffected
+  (verified `isImmutable:false`).
 
-Rollback: before publish → delete the draft release and the tag. **After publish → no rollback**;
-correction requires a **new version/tag** (never replacement of published bytes).
+**Command applicability (verified read-only, 2026-10-15).** GitHub CLI in use: `gh` **2.95.0**.
+`gh attestation verify` is available; `gh release view --json isImmutable,isPrerelease,isDraft,tagName`
+is supported (confirmed against the existing release, which reported `isImmutable:false`).
+These commands have **not been executed** for a real release — they remain **NOT RUN, not PASS**.
+
+Rollback rules (see also Phase 1 State A/B and Phase 2b):
+- A **pushed** tag has **no automated rollback** — correcting it requires an explicit human decision
+  and a **new version/tag**; never rewrite a pushed tag.
+- A **draft release** (not yet published) may be discarded before publish.
+- **After publish → no rollback**: immutability locks the tag and assets; correction requires a
+  **new version/tag**, never replacement of published bytes.
 
 ---
 
@@ -198,7 +251,10 @@ that separate decision explicitly allows it. This runbook does not authorize any
 | --- | --- |
 | `main` moved after freeze | Re-freeze; re-check whether evidence still binds; if artifacts changed, regenerate + independently review **before** proceeding |
 | Tag already exists remotely | **Stop.** Never overwrite/force-move. Investigate provenance of the existing tag |
-| `git verify-tag` fails / unexpected signer | **Stop.** Do not create release. Investigate keys |
+| **Local tag fails verification (State A, not pushed)** | Discard the local tag (`git tag -d`), clear cache, and redo. Nothing published has changed |
+| **Pushed tag fails verification (State B)** | **Stop and escalate to a human.** No automated rollback; never delete/move/re-create a pushed tag. Correction = explicit human decision / new version-tag |
+| Pushed tag needs correction | **Human decision only.** Never rewrite published history; immutability may already lock the tag |
+| `git verify-tag` fails / unexpected signer | **Stop.** Do not create release. Investigate keys (branch by State A/B above) |
 | Asset digest mismatch vs manifest | **Stop.** Do not publish. Fix the artifact, regenerate evidence, re-review |
 | Immutable setting not enabled | **Stop.** Enable (repo-level) or obtain explicit reduced-guarantee approval; do not silently degrade |
 | No one available for pinentry | **Stop.** Signing requires human confirmation; never automate the passphrase |
