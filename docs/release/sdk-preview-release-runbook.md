@@ -64,6 +64,10 @@ FNB Object Exchange TypeScript SDK Preview
 manifest-sha256: 365156df8c9eeb567989b24cc737a378109fc043f00a3270838939268832d250
 ```
 
+> The canonical tag message is a **fixed format** (title line, blank line, `manifest-sha256:` line).
+> **Do not modify** the canonical message file (`/tmp/tag-message.txt`) or the signed message bytes;
+> the digest to verify is on the message's **last line**.
+
 Commands (do **not** run before authorization):
 
 ```bash
@@ -132,7 +136,7 @@ Confirm:
 1. **Signer fingerprint** == `1986135564B368B8DD3B5C6FB4D67D6F06FADC54` (compare full fingerprint, out of band).
 2. **Tag object** is `tag` (annotated), not `commit` (lightweight).
 3. **Target commit** == `TAG_TARGET` == the commit bound in `artifact-digests.json` / provenance.
-4. **Tag message** is the single line `manifest-sha256: 365156df…32d250`, and the digest equals the actual manifest file.
+4. **Tag message** matches the fixed canonical format — title line, blank line, then the `manifest-sha256:` line; the digest to verify is on the message's **last line** and equals the actual manifest file. Do not modify the canonical message file or the signed message bytes.
 5. **Human-attended signing**: a pinentry prompt was actually observed and confirmed during Phase 1 (timestamp recorded).
 
 If any check fails while the tag is **still local** (State A) → discard and redo:
@@ -176,7 +180,9 @@ gh release create "$TAG_NAME" \
   --title "FNB Object Exchange TypeScript SDK Preview 0.1.0-preview.1" \
   --notes-file RELEASE-NOTES.md
 
-# 3.2 attach the SEVEN assets (A0-APPROVED asset set; names must match the manifest exactly)
+# 3.2 attach the SEVEN files of the GitHub Release attachment set (A0-APPROVED)
+#     SIX of the seven are assets and MUST match artifact-digests.json exactly;
+#     the SEVENTH (artifact-digests.json) IS the manifest itself and stays self-excluding.
 gh release upload "$TAG_NAME" \
   --repo FNB2026/fnb-open \
   fnb-object-exchange-ts-sdk-0.1.0-preview.1.tgz \
