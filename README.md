@@ -63,7 +63,7 @@ FNB is built on the belief that:
 ### Public Now
 - Manifesto
 - Domain model documentation
-- Protocol RFCs (RFC-0001, RFC-0002, and RFC-0003 Accepted)
+- Protocol RFCs (RFC-0001 through RFC-0004 Accepted)
 - JSON Schema v0.1, frozen at the immutable `v0.1.0-preview.1` tag
 - Byte-exact SHA-256 schema digest manifest for that frozen release
 - End-to-end and additional synthetic protocol examples
@@ -72,14 +72,15 @@ FNB is built on the belief that:
 - Generated declaration-only TypeScript protocol bindings
 - Deterministic synthetic fixture worlds reproducible from a scenario and a seed
 - Third-party implementation conformance through adapter contract 1.0
+- [Object Exchange OpenAPI preview](./specs/openapi/object-exchange/v1/README.md), implementing the accepted RFC-0004 binding
+- [Local synthetic Object Exchange Mock](./tools/object-exchange-mock.md), a development tool
+- [TypeScript Object Exchange SDK source](./sdk/typescript/README.md) and release-preparation artifacts; the SDK remains unpublished and requires separate publication authorization
 - Community governance
 
 ### Planned Public Later (Phase 2+)
 - Additional JSON Schema definitions and conformance rules
-- OpenAPI preview
-- TypeScript SDK
+- TypeScript SDK preview publication, subject to the [release runbook](./docs/release/sdk-preview-release-runbook.md) and publication authorization
 - Go SDK
-- Mock server
 - Plugin starter
 
 ### Not Public Before Beta Readiness
@@ -189,7 +190,7 @@ FNB 相信：
 ### 现已公开
 - 宣言
 - 领域模型文档
-- 协议 RFC（RFC-0001、RFC-0002、RFC-0003 已接受）
+- 协议 RFC（RFC-0001 至 RFC-0004 已接受）
 - JSON Schema v0.1，已冻结于不可变标签 `v0.1.0-preview.1`
 - 该冻结版本的逐字节 SHA-256 schema 摘要清单
 - 端到端及其他合成协议示例
@@ -198,14 +199,15 @@ FNB 相信：
 - 由协议生成的、仅含声明的 TypeScript 类型绑定
 - 可由「场景 + seed」复现的确定性合成测试世界
 - 通过 adapter contract 1.0 验证第三方实现的一致性
+- [Object Exchange OpenAPI 预览](./specs/openapi/object-exchange/v1/README.md)，对应已接受的 RFC-0004
+- [本地合成 Object Exchange Mock](./tools/object-exchange-mock.md)，用于开发测试
+- [TypeScript Object Exchange SDK 源码](./sdk/typescript/README.md)及发行准备制品；SDK 尚未发布，须另行取得发布授权
 - 社区治理
 
 ### 计划后续公开（Phase 2+）
 - 更多 JSON Schema 定义与一致性规则
-- OpenAPI 预览
-- TypeScript SDK
+- TypeScript SDK 预览发行，须满足[发行 runbook](./docs/release/sdk-preview-release-runbook.md)并取得发布授权
 - Go SDK
-- Mock 服务器
 - 插件启动模板
 
 ### Beta 就绪前不公开

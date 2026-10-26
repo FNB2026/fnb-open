@@ -31,10 +31,11 @@
       and a seed, using no real user data
 - [x] Publish an implementation adapter contract and a runner command that tests
       a third-party implementation in any language
-- [ ] Publish OpenAPI preview
-- [ ] Publish TypeScript SDK preview
+- [x] Provide the accepted RFC-0004 Object Exchange OpenAPI preview
+- [x] Implement TypeScript Object Exchange SDK source and prepare a release candidate (unpublished)
+- [ ] Publish TypeScript SDK preview after separate publication authorization and release gates
 - [ ] Publish Go SDK preview
-- [ ] Publish mock server with synthetic data
+- [x] Provide a local Object Exchange Mock development tool with synthetic data
 
 ## Phase 3: Plugin Ecosystem Preview 📋
 
