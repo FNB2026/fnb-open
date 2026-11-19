@@ -10,14 +10,15 @@
 
 ---
 
-FNB is a **local-first relationship and memory operating system for the
+FNB is developing a **local-first relationship and memory operating system for the
 post-platform AI era**.
 
-It turns flows of life, digital assets, conversations, events, and relationships into user-owned, auditable, explainable, permissioned domain objects.
+Its design centers on relationships governed by their participants, memories with
+traceable sources, and AI inferences that people can review and correct.
 
 This repository contains the public manifesto, domain model, protocol artifacts, synthetic examples, and community governance documents.
 
-**The official product implementation remains private** until the security, privacy, and beta readiness gates are complete.
+**The official product is in development and validation.** Its implementation remains private until the security, privacy, and beta readiness gates are complete. Public protocol evidence is available in the [preview status and verification notes](./docs/protocol-preview-status.md).
 
 ---
 
@@ -137,13 +138,13 @@ full license texts.
 
 # FNB Open
 
-FNB 是一个**面向后平台 AI 时代的本地优先关系与记忆操作系统**。
+FNB 正在探索**面向后平台 AI 时代的本地优先关系与记忆操作系统**。
 
-它将人生流、数字资产、对话、事件和关系，转化为用户拥有的、可审计、可解释、有权限控制的领域对象。
+设计聚焦于由参与者治理的关系、有来源的记忆，以及可由人审阅和修正的 AI 推断。
 
 本仓库包含公开发布的宣言、领域模型、协议制品、合成样本和社区治理文档。
 
-**官方产品实现保持私有**，直到安全、隐私和 Beta 就绪门禁全部通过。
+**官方产品仍在研发与验证中。** 官方产品实现保持私有，直到安全、隐私和 Beta 就绪门禁全部通过。公开协议证据见[预览状态与验证说明](./docs/protocol-preview-status.md)。
 
 ---
 
