@@ -83,16 +83,18 @@ Met since, without changing any frozen byte:
   scenario and a seed, instead of needing real data
 - Let a third party's implementation, in any language, be judged by the official
   runner through adapter contract 1.0
+- Accept RFC-0004 and provide its separate [Object Exchange OpenAPI preview](../specs/openapi/object-exchange/v1/README.md) and [local synthetic Mock](../tools/object-exchange-mock.md)
+- Implement the [TypeScript Object Exchange SDK source](../sdk/typescript/README.md) and prepare a release candidate, while keeping SDK publication separately gated
 
 Still open:
 
 1. Keep schema, example, cross-reference, and negative-fixture validation green
    (a continuing gate rather than a one-time milestone)
-2. Publish a deliberately narrow protocol-object exchange OpenAPI preview and
-   local mock server
-3. Generate transport SDK surfaces only from public protocol artifacts, once the
-   object-exchange binding is frozen, without connecting them to private product
-   services
+2. Publish the TypeScript SDK preview only after explicit publication authorization
+   and the [release runbook](release/sdk-preview-release-runbook.md) gates
+3. Consider additional SDK languages separately; no Go SDK is supplied by the
+   current source tree. Keep transport surfaces based solely on public artifacts,
+   without connecting them to private product services
 
 The shipped runner now evaluates third-party implementations as well as the
 published release bundle: `fnb-conformance test-implementation --adapter <path>`
